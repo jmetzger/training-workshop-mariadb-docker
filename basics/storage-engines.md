@@ -39,4 +39,5 @@ How your data is stored
   * CSV
   * Blackhole (/dev/null)
   * Archive
+  * Partition
   * Federated/FederatedX
