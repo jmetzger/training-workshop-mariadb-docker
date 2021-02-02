@@ -11,6 +11,7 @@ mysql> show tables;
 
 ## describe 
 
+```
 MariaDB [training]> describe mitarbeiter;
 +---------+---------------------+------+-----+---------+-------+
 | Field   | Type                | Null | Key | Default | Extra |
@@ -20,6 +21,7 @@ MariaDB [training]> describe mitarbeiter;
 | vorname | varchar(30)         | YES  |     | NULL    |       |
 +---------+---------------------+------+-----+---------+-------+
 3 rows in set (0.001 sec)
+```
 
 ## show create 
 
