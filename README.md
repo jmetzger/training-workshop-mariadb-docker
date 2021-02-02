@@ -14,7 +14,11 @@
      
   1. Configuration 
      * [Adjust configuration and restart](config-and-restart.md) 
-     
+    
+  !. Database - Objects  
+     * [Create Database]
+     * [Show all tables within db](show-tables.md) 
+    
   1. Security 
      * [Secure with SSL server/client](security/ssl.md) 
 
