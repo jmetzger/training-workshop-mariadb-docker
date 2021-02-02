@@ -1,5 +1,4 @@
-# MySQL performance training (individual) + 18.01. - 21.01.2021 
-
+# MariaDB Komplettkurs 
 ## Agenda 
 
   1. Architectur of MariaDB 
