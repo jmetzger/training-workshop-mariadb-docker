@@ -12,6 +12,9 @@
      * [Start/Status/Stop von MariaDB](start-status-stop.md)
      * [Does mariadb listen to the outside world](/installation/listening-where.md)
      
+  1. Configuration 
+     * [Adjust configuration and restart](config-and-restart.md) 
+     
   1. Security 
      * [Secure with SSL server/client](security/ssl.md) 
 
