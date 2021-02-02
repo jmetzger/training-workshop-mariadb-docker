@@ -6,9 +6,9 @@
 ## repo 
 sudo apt-get install software-properties-common
 sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+# does an apt update after setting repo - automatically 
 sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mirror.dogado.de/mariadb/repo/10.5/ubuntu focal main'
-
-apt install mariadb-server 
+sudo apt install mariadb-server 
 
 ```
 
