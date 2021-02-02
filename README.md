@@ -67,6 +67,7 @@
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
   
   1. Documentation 
+     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
 
 ## Add-Ons (Further read) 
