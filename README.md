@@ -9,6 +9,7 @@
 
   1. Installation 
      * [Installation (Ubuntu)](installation-ubuntu.md)
+     * [Start/Status/Stop von MariaDB](start-status-stop.md)
      
   1. Security 
      * [Secure with SSL server/client](security/ssl.md) 
