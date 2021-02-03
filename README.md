@@ -15,8 +15,8 @@
   1. Configuration 
      * [Adjust configuration and restart](config-and-restart.md) 
     
-  !. Database - Objects  
-     * [Create Database]
+  1. Database - Objects  
+     * [Create Database](create-database.md)
      * [Show all tables within db](show-tables.md) 
     
   1. Security 
