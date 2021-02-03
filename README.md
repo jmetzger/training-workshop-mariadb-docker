@@ -14,6 +14,7 @@
      
   1. Configuration 
      * [Adjust configuration and restart](config-and-restart.md) 
+     * [Set global server system variable](set-global-variable.md)
     
   1. Database - Objects  
      * [Create Database](create-database.md)
