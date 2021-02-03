@@ -75,6 +75,9 @@
      * [pt-query-digist - analyze slow logs](/tools/pt-query-digest.md) 
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
   
+  1. Extras 
+     * [User Variables](user-variables.md) 
+  
   1. Documentation 
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
