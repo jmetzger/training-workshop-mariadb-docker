@@ -109,9 +109,9 @@
      * [MariaDB Galera Cluster](http://schulung.t3isp.de/documents/pdfs/mariadb/mariadb-galera-cluster.pdf)
      * [MySQL Galera Cluster](https://galeracluster.com/downloads/)   
    
-   1. Questions and Answers 
-      * [Questions and Answers](q-and-a.md)
-      * [migration-mysql-update-5.6->5.7](migration-mysql.md)
+  1. Questions and Answers 
+     * [Questions and Answers](q-and-a.md)
+     * [migration-mysql-update-5.6->5.7](migration-mysql.md)
     
-   1. MySQL Do-Nots
-      * [mysql-do-nots](/performance/mysql-do-nots.md)
+  1. MySQL Do-Nots
+     * [mysql-do-nots](/performance/mysql-do-nots.md)
