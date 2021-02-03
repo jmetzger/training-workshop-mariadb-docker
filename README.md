@@ -16,9 +16,9 @@
      * [Adjust configuration and restart](config-and-restart.md) 
      * [Set global server system variable](set-global-variable.md)
     
-  1. Information Schema / Status 
+  1. Information Schema / Status / Processes
      * [Show server status](show-server-status.md)
-  
+     * [Kill long running process](kill-process.md)
     
   1. Database - Objects  
      * [Create Database](create-database.md)
