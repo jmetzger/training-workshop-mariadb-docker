@@ -19,7 +19,11 @@
   1. Information Schema / Status / Processes
      * [Show server status](show-server-status.md)
      * [Kill long running process](kill-process.md)
-    
+ 
+  1. Security and User Rights 
+     * [Get Rights of user](get-rights-for-user.md)
+     * [Secure with SSL server/client](security/ssl.md) 
+ 
   1. Database - Objects  
      * [Create Database](create-database.md)
      * [Show all tables within db](show-tables.md) 
