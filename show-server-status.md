@@ -11,5 +11,7 @@ status;
 ## With mysqladmin 
 
 ```
-mysqladmin status 
+mysqladmin status
+# or if you want to know more 
+mysqladmin extended status 
 ```
