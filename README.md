@@ -19,6 +19,7 @@
   1. Information Schema / Status / Processes
      * [Show server status](show-server-status.md)
      * [Kill long running process](kill-process.md)
+     * [Kill (kickout user) and stop server](kill-shutdown.md) 
  
   1. Security and User Rights 
      * [Get Rights of user](get-rights-for-user.md)
@@ -28,9 +29,6 @@
      * [Create Database](create-database.md)
      * [Show all tables within db](show-tables.md) 
     
-  1. Security 
-     * [Secure with SSL server/client](security/ssl.md) 
-
   1. InnoDB - Storage Engine 
      * [InnoDB - Storage Engine - Structure](/innodb/innodb-structure.md) 
      * [Important InnoDB - configuration - options to optimized performance](/innodb/innodb.md) 
