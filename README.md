@@ -24,6 +24,7 @@
   1. Security and User Rights 
      * [Get Rights of user](get-rights-for-user.md)
      * [Secure with SSL server/client](security/ssl.md) 
+     * [Create User/Grant/Revoke](grant-revoke.md)
  
   1. Database - Objects  
      * [Create Database](create-database.md)
