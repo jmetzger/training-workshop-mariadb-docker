@@ -38,4 +38,4 @@ revoke select on training.* from training@localhost
 ## Refs:
 
   * https://mariadb.com/kb/en/grant/#the-grant-option-privilege
-  * 
+  * https://mariadb.com/kb/en/revoke/
