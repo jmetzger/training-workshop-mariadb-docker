@@ -1,5 +1,7 @@
 # Where does the Server Listen 
 
+## How to check ? 
+
 ```
 lsof -i | grep mariadb
 # localhost means it does NOT listen to the outside now 
