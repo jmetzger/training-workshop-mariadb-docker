@@ -1,5 +1,7 @@
 # Installation Ubuntu 20.04 
 
+## Setup repo and install
+
  * https://downloads.mariadb.org/mariadb/repositories/
 
 ```
@@ -12,7 +14,7 @@ sudo apt install mariadb-server
 
 ```
 
-# Secure installation 
+## Secure installation 
 
 ```
 mariadb-secure-installation 
