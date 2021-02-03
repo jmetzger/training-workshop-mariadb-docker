@@ -26,7 +26,7 @@
      * [Secure with SSL server/client](security/ssl.md) 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
      * Authentification and Authorization
-     * User- and Permission-concepts (best-practice) 
+     * [User- and Permission-concepts (best-practice)](user-db-best-practice.md)
  
   1. Database - Objects  
      * [Create Database](create-database.md)
