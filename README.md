@@ -1,7 +1,7 @@
 # MariaDB Komplettkurs 
 ## Agenda 
 
-  1. Architectur of MariaDB 
+  1. Architecture of MariaDB 
      * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
      * [Query Cache Usage and Performance](/performance/query-cache.md)
      * [Optimizer-Basics](optimizer-basics.md) 
@@ -85,8 +85,6 @@
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
      * [Source-Code MariaDB](https://github.com/MariaDB/server)
      
-## Add-Ons (Further read) 
-
   1. Diagnosis and measurement of performance 
      * [Best practices to narrow down performance problems](performance/best-practice-analyze.md)
      
@@ -103,8 +101,7 @@
      * [Example sys-schema and Reference](/tools/sys.md)
      * [Change schema online (pt-online-schema-change)](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html)
      * [Optimizer-Hints](performance/optimizer-hints.md) 
-     
-    
+         
   1. Documentation / Literature 
      * [Effective MySQL](https://www.amazon.com/Effective-MySQL-Optimizing-Statements-Oracle/dp/0071782796)
      * [Last Training](https://github.com/jmetzger/training-mysql-developers-basics)
