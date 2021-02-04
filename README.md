@@ -76,6 +76,7 @@
      * [Percona-toolkit-Installation](/tools/percona-toolkit.md) 
      * [pt-query-digist - analyze slow logs](/tools/pt-query-digest.md) 
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
+     * [Ubuntu-with-Vagrant](/tools/ubuntu-with-vagrant.md) 
   
   1. Extras 
      * [User Variables](user-variables.md) 
