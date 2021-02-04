@@ -1,5 +1,14 @@
 # mysqldump 
 
+## Dumping (best option) without active binary log 
+
+```
+mysqldump --all-databases --single-transaction > /usr/src/all-databases
+# if you want to include procedures use --routines 
+# with event - scheduled tasks 
+mysqldump --all-databases --single-transaction --routines --events > /usr/src/all-databases
+```
+
 ## Useful options for PIT 
 
 ```
