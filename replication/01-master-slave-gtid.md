@@ -29,7 +29,7 @@ mariabackup --target-dir=/backups/20210121 --prepare
 
 ```
 # root@master:
-rsync -e ssh -avP /backups/20210121 kurs@10.10.9.144:/home/kurs/
+rsync -e ssh -avP /backups/20210121 student@10.10.9.144:/home/student/
 ```
 
 ## Step 3: Setup replication user on master 
