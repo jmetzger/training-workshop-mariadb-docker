@@ -7,6 +7,11 @@ apt update
 apt install mariadb-backup 
 # check if available
 mariabackup --version 
+
+# prepare for mariabackup if you use it with root and with unix_socket 
+/root/.my.cnf 
+[mariabackup]
+user=root
 ```
 
 ## Step 1: mariabackup on master 
