@@ -74,20 +74,15 @@ systemctl restart mariadb
 ## auf dem master config mit rsync rüberschrieben 
 ## root@master 
 rsync -e ssh -avP /etc/mysql/mariadb.conf.d/z_uniruhr.cnf kurs@10.10.9.144:/home/kurs/
-## root@slave 
-mv /home/kurs/z_uniruhr.cnf /etc/mysql/mariadb.conf.d/
-chown root:root /etc/mysql/mariadb.conf.d 
-systemctl restart mariadb 
-
 ```
 
 ## Step 5: Restore Data on slave 
 
 ```
 systemctl stop mariadb 
-mv /var/lib/mysql /var/lib/mysql.bkup4
+mv /var/lib/mysql /var/lib/mysql.bkup
 mariabackup --target-dir=/backups/20210121 --copy-back 
-chown -R mysql:mysql/var/lib/mysql 
+chown -R mysql:mysql /var/lib/mysql 
 systemctl start mariadb
 ```
 
