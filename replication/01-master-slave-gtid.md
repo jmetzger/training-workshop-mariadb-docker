@@ -15,7 +15,7 @@ mariabackup --target-dir=/backups/20210121 --prepare
 
 ```
 # root@master:
-rsync -e ssh -avP /backups/mysqldumpdir/20210121 kurs@10.10.9.144:/home/kurs/
+rsync -e ssh -avP /backups/20210121 kurs@10.10.9.144:/home/kurs/
 ```
 
 ## Step 3: Setup replication user on master 
@@ -54,6 +54,7 @@ systemctl restart mariadb
 server-id              = 3
 # activate master bin log, if this slave might be a master later 
 log_bin                = /var/log/mysql/mysql-bin.log
+binlog_format = ROW
 
 systemctl restart mariadb 
 ## auf dem master config mit rsync rüberschrieben 
