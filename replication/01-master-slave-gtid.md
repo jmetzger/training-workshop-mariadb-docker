@@ -1,5 +1,14 @@
 # Setting up new slave with master-slave replication 
 
+## Step 0.5a: Installation on ubuntu/debian 
+
+```
+apt update
+apt install mariadb-backup 
+# check if available
+mariabackup --version 
+```
+
 ## Step 1: mariabackup on master 
 
 ```
