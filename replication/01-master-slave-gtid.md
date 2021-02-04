@@ -81,7 +81,7 @@ rsync -e ssh -avP /etc/mysql/mariadb.conf.d/z_uniruhr.cnf kurs@10.10.9.144:/home
 ```
 systemctl stop mariadb 
 mv /var/lib/mysql /var/lib/mysql.bkup
-mariabackup --target-dir=/backups/20210121 --copy-back 
+mariabackup --target-dir=/home/student/20210121 --copy-back 
 chown -R mysql:mysql /var/lib/mysql 
 systemctl start mariadb
 ```
