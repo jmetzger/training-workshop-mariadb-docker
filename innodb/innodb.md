@@ -6,10 +6,20 @@
   * Free buffers = pages of 16 Kbytes 
   * Free buffer * 16Kbytes = free innodb buffer pool in KByte  
 ```
+# does not in windows -> pager grep
 pager grep -i 'free buffers'
+# does not work with workbench or heidisql because of formatting + \G only works in client
 show engine innodb status \G
 Free buffers       7905
 1 row in set (0.00 sec)
+```
+
+## Innodb buffer pool stats with status 
+
+```
+# Also works in heidisql or workbench 
+show status like '%buffer%';
+
 ```
 
 ## Overview innodb server variables / settings 
