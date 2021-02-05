@@ -31,6 +31,7 @@
   1. Database - Objects  
      * [Create Database](create-database.md)
      * [Show all tables within db](show-tables.md) 
+     * [Triggers](triggers.md) 
     
   1. InnoDB - Storage Engine 
      * [InnoDB - Storage Engine - Structure](/innodb/innodb-structure.md) 
