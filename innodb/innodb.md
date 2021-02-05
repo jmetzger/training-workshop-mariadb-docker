@@ -67,6 +67,14 @@ innodb_flush_neighbors=0
 # Default = 1 
 
 ```
+## innodb_log_file_size 
+
+```
+# Should holw 60-120 min of data flow 
+# Calculate like so:
+https://www.percona.com/blog/2008/11/21/how-to-calculate-a-good-innodb-log-file-size/
+
+```
 
 ## skip-name-resolv.conf 
 
