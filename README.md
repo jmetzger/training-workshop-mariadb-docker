@@ -19,7 +19,7 @@
      * [Set global server system variable](set-global-variable.md)
     
   1. Information Schema / Status / Processes
-     * [Show server status](show-server-status.md)
+     * [Show server/session status](show-server-status.md)
      * [Kill long running process](kill-process.md)
      * [Kill (kickout user) and stop server](kill-shutdown.md) 
  
