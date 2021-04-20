@@ -11,7 +11,7 @@
      * [Installation Centos](installation-centos.md) 
      * [Installation SLES15](https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5) 
      * [Installation (Ubuntu)](installation-ubuntu.md)
-     * [Start/Status/Stop von MariaDB](start-status-stop.md)
+     * [Start/Status/Stop/Enable von MariaDB](start-status-stop.md)
      * [Does mariadb listen to the outside world](/installation/listening-where.md)
      
   1. Configuration
