@@ -28,7 +28,7 @@
      * [Secure with SSL server/client](/security/ssl.md) 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
      * Authentification and Authorization
-     * [User- and Permission-concepts (best-practice)](user-db-best-practice.md)
+     * [User- and Permission-concepts (best-practice)](/security/user-db-best-practice.md)
  
   1. SELinux 
      * [Welche Ports sind freigegeben? (MariaDb startet damit)](selinux-ports.md)
