@@ -16,5 +16,3 @@ Gegeben wenn:
 - Waiting-wert: 0 
 
 ```
-
-* 
