@@ -1,6 +1,6 @@
 # Installation Centos 
 
-## Setup Repo 
+## Setup Repo and Install 
 
 ```
 Here is your custom MariaDB YUM repository entry for CentOS. Copy and paste it into a file under /etc/yum.repos.d/ (we suggest naming the file MariaDB.repo or something similar).
