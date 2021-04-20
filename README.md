@@ -105,7 +105,6 @@
      
   1. Performance and optimization of SQL statements
      * [Do not use '*' whenever possible](/performance/select-no-star-please.md)
-     * [Be aware of subselects - Example 1](/performance/subselects-1.md)
      * [Optimizer-hints (and why you should not use them)](performance/optimizer-hints.md)
      
   1. Replication 
