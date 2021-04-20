@@ -55,7 +55,7 @@
      * [mariabackup](backup-restore/mariabackup.md) 
      * [Use xtrabackup for MariaDB 5.5](backup-restore/xtrabackup-for-mariadb-5-5.md)
      * [Ready-made-back-scripts](backup-restore/scripts.md) 
-     * [Simple-Backup-Script](backup_restore/simple-backup.md)
+     * [Simple-Backup-Script](backup-restore/simple-backup.md)
 
   1. Performance 
      * [io-Last/CPU-Last](performance/last.md) 
