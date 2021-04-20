@@ -34,7 +34,7 @@
      * [Welche Ports sind freigegeben? (MariaDb startet damit)](selinux-ports.md)
  
   1. Database - Objects  
-     * [Create Database](create-database.md)
+     * [Create Database](/basics/create-database.md)
      * [Show structure of table](show-create-table-describe.md)
      * [Show all tables within db](show-tables.md) 
      * [Triggers](triggers.md) 
@@ -51,7 +51,7 @@
      
   1. Backup and Restore (Point-In-Time aka PIT) 
      * [Backup with mysqldump - best practices](backup-restore/mysqldump.md) 
-     * [Flashback](backup-restore/flashback.md) 
+     * [Flashback](/backup-restore/flashback.md) 
      * [mariabackup](backup-restore/mariabackup.md) 
      * [Use xtrabackup for MariaDB 5.5](backup-restore/xtrabackup-for-mariadb-5-5.md)
      * [Ready-made-back-scripts](backup-restore/scripts.md) 
@@ -67,8 +67,8 @@
   1. Optimal use of indexes
    
      * Index-Types 
-       * [Describe and indexes](/indexes/describe-table.md)
-       * [Find out indexes](indexes/findout-indexes.md) 
+     * [Describe and indexes](/indexes/describe-table.md)
+     * [Find out indexes](indexes/findout-indexes.md) 
      * [Index and Functions (Cool new feature in MySQL 5.7)](index-and-functions.md) 
      * [Index and Likes](/indexes/like-index-not-index.md)   
      * [profiling-get-time-for-execution-of.query](/indexes/profiling.md) 
