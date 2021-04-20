@@ -53,3 +53,12 @@ Mi 20. Jan 09:41:55 CET 2021
  mysqldump --tab=/backups --master-data=2 contributions
  mysqldump --tab=/backups --master-data=2 contributions > /backups/master-data.tx
 ```
+
+## Create new database base on sakila database 
+
+```
+cd /usr/src
+mysqldump sakila > sakila-all.sql 
+echo "create database mynewdb" | mysql
+mysql mynewdb < sakila-all.sql 
+```
