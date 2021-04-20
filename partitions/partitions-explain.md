@@ -3,9 +3,8 @@
 ## Walkthrough 
 
 ```
-#
-# EXPLAIN PARTITIONS
-#
+-- EXPLAIN PARTITIONS
+
 DROP TABLE IF EXISTS audit_log;
 CREATE TABLE audit_log (
   yr    YEAR NOT NULL,
