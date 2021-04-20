@@ -1208,8 +1208,6 @@ Gegeben wenn:
 
 ```
 
-* 
-
 <div class="page-break"></div>
 
 ### Views and performance
@@ -1266,9 +1264,8 @@ mysql> SHOW WARNINGS;
 ### Walkthrough 
 
 ```
-##
-## EXPLAIN PARTITIONS
-##
+-- EXPLAIN PARTITIONS
+
 DROP TABLE IF EXISTS audit_log;
 CREATE TABLE audit_log (
   yr    YEAR NOT NULL,
