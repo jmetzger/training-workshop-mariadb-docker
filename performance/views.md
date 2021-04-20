@@ -1,14 +1,26 @@
 # Views and performance 
 
 ## General  
-   * SHOW CREATE VIEW
+
+```
+SHOW CREATE VIEW
+```
+
+## Views and Algorithms
+
    * Views can use 3 algorithms:
      * merge 
      * simple rewrites (translates the query)  
    * temptable 
      * Creates a temptable to retrieve information
      * In this case no indexes can be used 
-     * Shows up explain with <derived>: 
+   * Shows up explain with derived
+   * undefined 
+     * MySQL chooses, if to use merge or temptable 
+     * prefers merge over temptable if possible 
+
+## Example 
+
 ```
 +----+-------------+------------+------+---------------+------+---------+------+------+-------+
 | id | select_type | table      | type | possible_keys | key  | key_len | ref  | rows | Extra |
@@ -17,17 +29,17 @@
 |  2 | DERIVED     | task       | ALL  | NULL          | NULL | NULL    | NULL |   33 | NULL  |
 +----+-------------+------------+------+---------------+------+---------+------+------+-------+
 ```
-   * undefined 
-     * MySQL chooses, if to use merge or temptable 
-     * prefers merge over temptable if possible  
-
-    
+      
 
 ## Handling (best practice)
 
    * You can define the algorithm when creating the view 
    * If you define merge and mysql cannot handle it
      * you will get a warning 
+
+
+## Example of handling 
+
 ```
 mysql> CREATE ALGORITHM=MERGE VIEW priority_counts AS SELECT priority_id, COUNT(1) AS quanity FROM task GROUP BY priority_id;
 Query OK, 0 rows affected, 1 warning (0.12 sec)
@@ -40,5 +52,8 @@ mysql> SHOW WARNINGS;
 +---------+------+-------------------------------------------------------------------------------+
 1 row in set (0.08 sec)
 ```
+   
+## Reference
+
    * Ref: https://dba.stackexchange.com/questions/54481/determining-what-algorithm-mysql-view-is-using
  
