@@ -40,3 +40,4 @@ end
 
 ```
 vagrant destroy -f 
+```
