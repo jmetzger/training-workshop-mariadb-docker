@@ -35,6 +35,7 @@
  
   1. Database - Objects  
      * [Create Database](create-database.md)
+     * [Show structure of table](show-create-table-describe.md)
      * [Show all tables within db](show-tables.md) 
      * [Triggers](triggers.md) 
      
