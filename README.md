@@ -24,8 +24,8 @@
      * [Kill (kickout user) and stop server](kill-shutdown.md) 
  
   1. Security and User Rights 
-     * [Get Rights of user](get-rights-for-user.md)
-     * [Secure with SSL server/client](security/ssl.md) 
+     * [Get Rights of user](/security/get-rights-for-user.md)
+     * [Secure with SSL server/client](/security/ssl.md) 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
      * Authentification and Authorization
      * [User- and Permission-concepts (best-practice)](user-db-best-practice.md)
