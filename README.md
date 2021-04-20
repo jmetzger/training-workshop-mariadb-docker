@@ -8,6 +8,7 @@
      * [Storage Engines](/basics/storage-engines.md) 
 
   1. Installation 
+     * [Installation Centos](installation-centos.md) 
      * [Installation SLES15](https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5) 
      * [Installation (Ubuntu)](installation-ubuntu.md)
      * [Start/Status/Stop von MariaDB](start-status-stop.md)
