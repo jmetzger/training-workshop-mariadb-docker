@@ -21,3 +21,11 @@ After the file is in place, install and start MariaDB with:
 sudo dnf install MariaDB-server
 sudo systemctl start mariadb
 ```
+
+## Secure installation 
+
+```
+mariadb-secure-installation 
+# OR: if not present before 10.4 
+mysql_secure_installation 
+```
