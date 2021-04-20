@@ -30,6 +30,9 @@
      * Authentification and Authorization
      * [User- and Permission-concepts (best-practice)](user-db-best-practice.md)
  
+  1. SELinux 
+     * [Welche Ports sind freigegeben? (MariaDb startet damit)](selinux-ports.md)
+ 
   1. Database - Objects  
      * [Create Database](create-database.md)
      * [Show all tables within db](show-tables.md) 
