@@ -49,7 +49,8 @@
   1. Training Data 
      * [Setup training data "contributions"](/indexes/setup-training-data-contributions.md)
      
-  1. Backup and Restore (Point-In-Time aka PIT) 
+  1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
+     * [binlog aktivieren und auslesen](binlog.md)
      * [Backup with mysqldump - best practices](backup-restore/mysqldump.md) 
      * [Flashback](/backup-restore/flashback.md) 
      * [mariabackup](backup-restore/mariabackup.md) 
