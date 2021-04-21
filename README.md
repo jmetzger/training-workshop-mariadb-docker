@@ -33,6 +33,7 @@
   1. SELinux 
      * [Welche Ports sind freigegeben? (MariaDb startet damit)](selinux-ports.md)
      * [Neues Datenverzeichnis SELinux bekanntmachen - semanage fcontext](selinux-fcontext.md) 
+     * [Probleme mit SELinux erkennen und debuggen](selinux-logs.md)
  
   1. Database - Objects  
      * [Create Database](/basics/create-database.md)
