@@ -84,12 +84,13 @@
      * [Reference: MaxScale-Proxy mit Monitoring](/replication/02-mariadbmon.md)
      * [Walkthrough:Automatic Failover Master Slave](/replication/03-automatic-failover-master-slave.md)
 
-  1. Tools 
+  1. Tools & Tricks
      * [Percona-toolkit-Installation](/tools/percona-toolkit.md) 
      * [pt-query-digist - analyze slow logs](/tools/pt-query-digest.md) 
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
      * [Ubuntu-with-Vagrant](/tools/ubuntu-with-vagrant.md)
-     * [mysql-client](mysql.md) 
+     * [mysql-client](mysql.md)
+     * [Schweizer Such-Taschenmesser grep -r](grep-r.md) 
   
   1. Extras 
      * [User Variables](user-variables.md) 
