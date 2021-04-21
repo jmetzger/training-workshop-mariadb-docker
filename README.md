@@ -27,6 +27,7 @@
      * [Get Rights of user](/security/get-rights-for-user.md)
      * [Secure with SSL server/client](/security/ssl.md) 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
+     * [Auth with unix_socket](create-user-unix-socket.md)
      * Authentification and Authorization
      * [User- and Permission-concepts (best-practice)](/security/user-db-best-practice.md)
  
