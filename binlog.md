@@ -16,6 +16,12 @@ log-bin
 # Server neu starten 
 systemctl restart mariadb 
 ```
+
+## Alte Logs automatisch löschen 
+
+  * https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#expire_logs_days
+
+
 ## Rowbasiertes Logging aktivieren
 
 ```
