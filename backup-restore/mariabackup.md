@@ -1,5 +1,11 @@
 # Mariabackup 
 
+## Installation von Repo mariab
+
+```
+yum install MariaDB-backup 
+```
+
 ## Walkthrough 
 
 ```
