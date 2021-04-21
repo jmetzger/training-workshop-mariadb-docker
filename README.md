@@ -32,6 +32,7 @@
  
   1. SELinux 
      * [Welche Ports sind freigegeben? (MariaDb startet damit)](selinux-ports.md)
+     * [Neues Datenverzeichnis SELinux bekanntmachen - semanage fcontext](selinux-fcontext.md) 
  
   1. Database - Objects  
      * [Create Database](/basics/create-database.md)
