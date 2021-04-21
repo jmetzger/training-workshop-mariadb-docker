@@ -53,6 +53,8 @@ systemctl stop mariadb
 mv /var/lib/mysql /var/lib/mysql.bkup 
 mariabackup --target-dir=/backups/20200120 --copy-back 
 chmod -R mysql:mysql /var/lib/mysql
+## important for selinux 
+restorecon -vr /var/lib/mysql 
 systemctl start mariadb 
 ```
 
