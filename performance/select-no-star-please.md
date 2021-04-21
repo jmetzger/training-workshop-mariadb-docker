@@ -2,7 +2,7 @@
 
 ## Why ? 
 
-  * You are adding .. to he server: 
+  * You are adding .. to the server: 
     * I/O
     * memory
     * CPU
