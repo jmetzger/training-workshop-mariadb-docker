@@ -91,17 +91,13 @@
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
      * [Ubuntu-with-Vagrant](/tools/ubuntu-with-vagrant.md)
      * [mysql-client](mysql.md)
-     * [Schweizer Such-Taschenmesser grep -r](grep-r.md) 
+     * [Schweizer Such-Taschenmesser grep -r](grep-r.md)
+     * [Set timezone in Centos 7/8](set-timezone-centos.md) 
   
   1. Extras 
      * [User Variables](user-variables.md) 
      * [Installation sakila-db](sakila.md)
-  
-  1. Documentation 
-     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
-     * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
-     * [Source-Code MariaDB](https://github.com/MariaDB/server)
-     
+ 
   1. Diagnosis and measurement of performance 
      * [Best practices to narrow down performance problems](performance/best-practice-analyze.md)
      
@@ -119,6 +115,9 @@
      * [Optimizer-Hints](performance/optimizer-hints.md) 
          
   1. Documentation / Literature 
+     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
+     * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
+     * [Source-Code MariaDB](https://github.com/MariaDB/server)
      * [Effective MySQL](https://www.amazon.com/Effective-MySQL-Optimizing-Statements-Oracle/dp/0071782796)
      * [Last Training](https://github.com/jmetzger/training-mysql-developers-basics)
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
