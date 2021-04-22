@@ -63,6 +63,7 @@
 
   1. Upgrade 
      * [MariaDB Upgrade 10.4 -> 10.5 (Centos)](mariadb-upgrade-10-04-10-05.md)
+     * [MariaDB Upgrade 5.5 -> 10.5](https://mariadb.com/kb/en/upgrading-between-major-mariadb-versions/)
 
   1. Performance 
      * [io-Last/CPU-Last](performance/last.md) 
