@@ -21,6 +21,13 @@ sudo yum install MariaDB-server
 yum list --installed | grep MariaDB # sind alle Versionen gleich ! Wichtig ! 
 sudo yum update ## Achtung: abweichend von Doku MariaDB 
 
+# Step 4.5 
+# Check if old config files were saved as .rpmsave after delete of package 10.4 
+cd /etc/my.cnf.d 
+ls -la
+# e.g. 
+mv server.cnf.rpmsave server.cnf
+
 # Step 5:
 systemctl start mariadb 
 systemctl enable mariadb
