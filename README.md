@@ -96,6 +96,7 @@
      * [mysql-client](mysql.md)
      * [Schweizer Such-Taschenmesser grep -r](grep-r.md)
      * [Set timezone in Centos 7/8](set-timezone-centos.md) 
+     * [User anlegen und passwort vergeben (Centos/Redhat)](useradd-passwd.md)
   
   1. Extras 
      * [User Variables](user-variables.md) 
