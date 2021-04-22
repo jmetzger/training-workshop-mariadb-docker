@@ -23,10 +23,8 @@ sudo yum update ## Achtung: abweichend von Doku MariaDB
 
 # Step 5:
 systemctl start mariadb 
-mysql_upgrade 
-
+mysql_upgrade # After that mysql_upgrade_info will be present in /var/lib/mysql with version-info 
 ```
-
 
 # Reference 
 
