@@ -1,6 +1,8 @@
 # Best-practice user/db 
 
 ```
+# user should have as little permissions as possible
+# so many as needed ;o) 
 MariaDB [mysql]> create database eventplanner;
 Query OK, 1 row affected (0.000 sec)
 
