@@ -130,7 +130,6 @@
    
   1. Questions and Answers 
      * [Questions and Answers](q-and-a.md)
-     * [migration-mysql-update-5.6->5.7](migration-mysql.md)
     
   1. MySQL Do-Nots
      * [mysql-do-nots](/performance/mysql-do-nots.md)
