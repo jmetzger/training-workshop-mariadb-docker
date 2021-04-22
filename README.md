@@ -30,6 +30,7 @@
      * [Auth with unix_socket](create-user-unix-socket.md)
      * Authentification and Authorization
      * [User- and Permission-concepts (best-practice)](/security/user-db-best-practice.md)
+     * [Setup external access]]external-access.md
  
   1. SELinux 
      * [Welche Ports sind freigegeben? (MariaDb startet damit)](selinux-ports.md)
