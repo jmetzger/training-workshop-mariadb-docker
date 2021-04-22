@@ -56,3 +56,16 @@ firewall-cmd --add-service=mysql --zone=public --permanent # writes to filesyste
 firewall-cmd --reload # rereads settings from filesystem 
 ```
 
+## Setup valid user 
+
+```
+# on server you want to connect to 
+mysql> create user extern@'192.168.56.%' identified by 'mysecretpass'
+mysql> grant all on sakila.* to extern@'192.168.56.%'
+```
+
+## Now test from external with mysql
+
+```
+mysql -uextern -p -h 192.168.56.104 
+mysql>show databases;
