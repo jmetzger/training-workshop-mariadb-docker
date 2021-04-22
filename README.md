@@ -72,7 +72,6 @@
      * [Partitions and Explain](partitions/partitions-explain.md) 
      * [3 Phases of DataSize](3-phases-of-data-size-and-performance-impact.md)
 
-
   1. Optimal use of indexes
    
      * Index-Types 
