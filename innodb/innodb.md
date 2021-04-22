@@ -1,5 +1,11 @@
 # InnoDB 
 
+## How big is the innodb buffer currently (setup) ?
+
+```
+
+```
+
 ## Innodb buffer pool
 
   * How much data fits into memory 
