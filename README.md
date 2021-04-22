@@ -97,7 +97,7 @@
      * [Percona-toolkit-Installation - Ubuntu](/tools/percona-toolkit.md) 
      * [Percona-toolkit-Installation - Centos](/tools/percona-toolkit-centos.md)
      * [pt-query-digest under Windows](pt-query-digest-windows.md)
-     * [pt-query-digist - analyze slow logs](/tools/pt-query-digest.md) 
+     * [pt-query-digest - analyze slow logs](/tools/pt-query-digest.md) 
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
      * [Ubuntu-with-Vagrant](/tools/ubuntu-with-vagrant.md)
      * [mysql-client](mysql.md)
