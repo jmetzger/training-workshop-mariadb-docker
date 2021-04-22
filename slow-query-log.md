@@ -1,5 +1,7 @@
 # Slow Query Log 
 
+## Walkthrough 
+
 ```
 # Step 1
 /etc/my.cnf.d/server.cnf 
@@ -17,6 +19,12 @@ mysql>SET long_query_time = 0.000001
 # and look into your slow-query-log 
 /var/lib/mysql/hostname-slow.log 
 
+```
+
+## Show queries that do not use indexes 
+
+```
+SET GLOBAL log_queries_not_using_indexes=ON;
 ```
 
 ## Reference 
