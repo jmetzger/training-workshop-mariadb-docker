@@ -14,6 +14,9 @@ mysqladmin ping -h 192.168.56.104
 echo $?
 -> 1 // i cannot reach mysql-server  -> port might close / firewall ? 
 
+# or use telnet
+telnet 192.168.56.104 3306
+
 ```
 
 ## Checks on MariaDB  (Theory) 
