@@ -61,6 +61,9 @@
      * [Ready-made-back-scripts](backup-restore/scripts.md) 
      * [Simple-Backup-Script](backup-restore/simple-backup.md)
 
+  1. Upgrade 
+     * [MariaDB Upgrade 10.4 -> 10.5 (Centos)](mariadb-upgrade-10-04-10-05.md)
+
   1. Performance 
      * [io-Last/CPU-Last](performance/last.md) 
      * [Views and performance](/performance/views.md)  
