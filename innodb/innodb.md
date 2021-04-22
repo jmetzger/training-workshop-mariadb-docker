@@ -3,7 +3,7 @@
 ## How big is the innodb buffer currently (setup) ?
 
 ```
-
+mysql>select @@innodb_buffer_pool_size 
 ```
 
 ## Innodb buffer pool
