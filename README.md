@@ -135,6 +135,7 @@
    
   1. Questions and Answers 
      * [Questions and Answers](q-and-a.md)
+     * [Best filesystem for MariaDB](https://mariadb.com/de/resources/blog/what-is-the-best-linux-filesystem-for-mariadb/)
     
   1. MySQL Do-Nots
      * [mysql-do-nots](/performance/mysql-do-nots.md)
