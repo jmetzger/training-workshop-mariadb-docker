@@ -18,6 +18,8 @@ sudo yum remove MariaDB-server
 
 # Step 4
 sudo yum install MariaDB-server 
+yum list --installed | grep MariaDB # sind alle Versionen gleich ! Wichtig ! 
+sudo yum update ## Achtung: abweichend von Doku MariaDB 
 
 # Step 5:
 systemctl start mariadb 
