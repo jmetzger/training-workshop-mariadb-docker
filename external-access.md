@@ -1,4 +1,4 @@
-# Externe Zugriff 
+# Externer Zugriff 
 
 ## Testing 
 
