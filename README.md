@@ -95,6 +95,7 @@
 
   1. Tools & Tricks
      * [Percona-toolkit-Installation](/tools/percona-toolkit.md) 
+     * [pt-query-digest under Windows](pt-query-digest-windows.md)
      * [pt-query-digist - analyze slow logs](/tools/pt-query-digest.md) 
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
      * [Ubuntu-with-Vagrant](/tools/ubuntu-with-vagrant.md)
