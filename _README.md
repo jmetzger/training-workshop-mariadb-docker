@@ -17,7 +17,14 @@
   1. Configuration
      * [Adjust configuration and restart](#adjust-configuration-and-restart)
      * [Set global server system variable](#set-global-server-system-variable)
-    
+
+  1. Administration 
+     * [Create fresh datadir (Centos/Redhat)](#create-fresh-datadir-centosredhat)
+   
+  1. Galera 
+     * [Installation and Configuration (Centos/Redhat 8)](#installation-and-configuration-centosredhat-8)
+     * [1. Node started nicht nach Crash, z.B. Stromausfall](#1.-node-started-nicht-nach-crash,-z.b.-stromausfall)
+   
   1. Information Schema / Status / Processes
      * [Show server/session status](#show-serversession-status)
      * [Kill long running process](#kill-long-running-process)
@@ -27,11 +34,15 @@
      * [Get Rights of user](#get-rights-of-user)
      * [Secure with SSL server/client](#secure-with-ssl-serverclient)
      * [Create User/Grant/Revoke - Management of users](#create-usergrantrevoke---management-of-users)
+     * [Auth with unix_socket](#auth-with-unix_socket)
      * Authentification and Authorization
      * [User- and Permission-concepts (best-practice)](#user--and-permission-concepts-best-practice)
+     * [Setup external access](#setup-external-access)
  
   1. SELinux 
      * [Welche Ports sind freigegeben? (MariaDb startet damit)](#welche-ports-sind-freigegeben-mariadb-startet-damit)
+     * [Neues Datenverzeichnis SELinux bekanntmachen - semanage fcontext](#neues-datenverzeichnis-selinux-bekanntmachen---semanage-fcontext)
+     * [Probleme mit SELinux erkennen und debuggen](#probleme-mit-selinux-erkennen-und-debuggen)
  
   1. Database - Objects  
      * [Create Database](#create-database)
@@ -49,7 +60,8 @@
   1. Training Data 
      * [Setup training data "contributions"](#setup-training-data-"contributions")
      
-  1. Backup and Restore (Point-In-Time aka PIT) 
+  1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
+     * [binlog aktivieren und auslesen](#binlog-aktivieren-und-auslesen)
      * [Backup with mysqldump - best practices](#backup-with-mysqldump---best-practices)
      * [Flashback](#flashback)
      * [mariabackup](#mariabackup)
@@ -57,12 +69,16 @@
      * [Ready-made-back-scripts](#ready-made-back-scripts)
      * [Simple-Backup-Script](#simple-backup-script)
 
+  1. Upgrade 
+     * [MariaDB Upgrade 10.4 -> 10.5 (Centos)](#mariadb-upgrade-10.4-->-10.5-centos)
+     * [MariaDB Upgrade 5.5 -> 10.5](https://mariadb.com/kb/en/upgrading-between-major-mariadb-versions/)
+
   1. Performance 
      * [io-Last/CPU-Last](#io-lastcpu-last)
      * [Views and performance](#views-and-performance)
      * [Partitions and Explain](#partitions-and-explain)
      * [3 Phases of DataSize](#3-phases-of-datasize)
-
+     * [Slow Query Log](#slow-query-log)
 
   1. Optimal use of indexes
    
@@ -84,22 +100,25 @@
      * [Reference: MaxScale-Proxy mit Monitoring](#reference:-maxscale-proxy-mit-monitoring)
      * [Walkthrough:Automatic Failover Master Slave](#walkthrough:automatic-failover-master-slave)
 
-  1. Tools 
-     * [Percona-toolkit-Installation](#percona-toolkit-installation)
-     * [pt-query-digist - analyze slow logs](#pt-query-digist---analyze-slow-logs)
+  1. Tools & Tricks
+     * [Percona-toolkit-Installation - Ubuntu](#percona-toolkit-installation---ubuntu)
+     * [Percona-toolkit-Installation - Centos](#percona-toolkit-installation---centos)
+     * [pt-query-digest under Windows](#pt-query-digest-under-windows)
+     * [pt-query-digest - analyze slow logs](#pt-query-digest---analyze-slow-logs)
      * [pt-online-schema-change howto](#pt-online-schema-change-howto)
      * [Ubuntu-with-Vagrant](#ubuntu-with-vagrant)
      * [mysql-client](#mysql-client)
+     * [Schweizer Such-Taschenmesser grep -r](#schweizer-such-taschenmesser-grep--r)
+     * [Set timezone in Centos 7/8](#set-timezone-in-centos-78)
+     * [Ist die Netzwerkkarte eingerichtet - nmtui](#ist-die-netzwerkkarte-eingerichtet---nmtui)
+     * [Set hostname on systemd-Systems](#set-hostname-on-systemd-systems)
+     * [User anlegen und passwort vergeben (Centos/Redhat)](#user-anlegen-und-passwort-vergeben-centosredhat)
+     * [Scripts for deploying galera-cluster to Ubuntu 20.04](https://github.com/jmetzger/ansible-galera-cluster-maxscale)
   
   1. Extras 
      * [User Variables](#user-variables)
      * [Installation sakila-db](#installation-sakila-db)
-  
-  1. Documentation 
-     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
-     * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
-     * [Source-Code MariaDB](https://github.com/MariaDB/server)
-     
+ 
   1. Diagnosis and measurement of performance 
      * [Best practices to narrow down performance problems](#best-practices-to-narrow-down-performance-problems)
      
@@ -117,6 +136,9 @@
      * [Optimizer-Hints](#optimizer-hints)
          
   1. Documentation / Literature 
+     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
+     * [MySQL - Peformance Blog](https://www.percona.com/blog/)
+     * [Source-Code MariaDB](https://github.com/MariaDB/server)
      * [Effective MySQL](https://www.amazon.com/Effective-MySQL-Optimizing-Statements-Oracle/dp/0071782796)
      * [Last Training](https://github.com/jmetzger/training-mysql-developers-basics)
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
@@ -125,7 +147,7 @@
    
   1. Questions and Answers 
      * [Questions and Answers](#questions-and-answers)
-     * [migration-mysql-update-5.6->5.7](#migration-mysql-update-5.6->5.7)
+     * [Best filesystem for MariaDB](https://mariadb.com/de/resources/blog/what-is-the-best-linux-filesystem-for-mariadb/)
     
   1. MySQL Do-Nots
      * [mysql-do-nots](#mysql-do-nots)
@@ -469,6 +491,145 @@ MariaDB [information_schema]> select @@automatic_sp_privileges; select @@global.
 
 <div class="page-break"></div>
 
+## Administration 
+
+### Create fresh datadir (Centos/Redhat)
+
+
+### Walkthrough 
+
+```
+## Schritt 1: Prepare 
+systemctl stop mariadb 
+cd /var/lib 
+## eventually delete old back dir
+rm -fR /var/lib/mysql.bkup 
+## 
+mv mysql mysql.bkup 
+
+## Schritt 2: Fresh 
+mysql_install_db --user=mysql
+chown mysql:mysql mysql
+chmod g+rx,o+rx mysql 
+restorecon -rv /var/lib/mysql 
+
+## Schritt 3: Start 
+systemctl start mariadb
+```
+
+<div class="page-break"></div>
+
+## Galera 
+
+### Installation and Configuration (Centos/Redhat 8)
+
+
+### Setting up 1st - node
+
+```
+## Schritt 1: Create config 
+
+/etc/my.cnf.d/z_galera.cnf 
+[mysqld]
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+## Set to 1 sec instead of per transaction
+## for better performance // Attention: You might loose data on power
+innodb_flush_log_at_trx_commit=0
+## Galera Provider Configuration
+wsrep_on=ON
+## centos7 (x86_64)
+wsrep_provider=/usr/lib64/galera-4/libgalera_smm.so
+## Galera Cluster Configuration
+wsrep_cluster_name="test_cluster"
+wsrep_cluster_address="gcomm://192.168.56.103,192.168.56.104,192.168.56.105"
+wsrep_node_address=192.168.56.103
+## Galera Synchronization Configuration
+wsrep_sst_method=rsync
+```
+
+### Stop the server and bootstrap cluster 
+
+```
+## setup first node in cluster 
+systemctl stop mariadb 
+galera_new_cluster # statt systemctl start mariadb 
+```
+
+### Check if cluster is running 
+
+```
+mysql> show status like 'wsrep%'\G
+*************************** 38. row ***************************
+Variable_name: wsrep_local_state_comment
+        Value: Synced
+*************************** 56. row ***************************
+Variable_name: wsrep_cluster_size
+        Value: 1
+*************************** 57. row ***************************
+Variable_name: wsrep_cluster_state_uuid
+        Value: 562e5455-a40f-11eb-b8c9-1f32a94e106e
+*************************** 58. row ***************************
+Variable_name: wsrep_cluster_status
+        Value: Primary
+*************************** 59. row ***************************
+Variable_name: wsrep_connected
+        Value: ON
+
+```
+
+#### Setup firwealld for galera 
+
+```
+firewall-cmd --add-port=3306/tcp --permanent
+firewall-cmd --add-port=4567/tcp --permanent
+firewall-cmd --add-port=4568/tcp --permanent
+firewall-cmd --add-port=4444/tcp --permanent
+firewall-cmd --reload 
+
+firewall-cmd --add-port=3306/tcp --permanent; firewall-cmd --add-port=4567/tcp --permanent; firewall-cmd --add-port=4568/tcp --permanent; firewall-cmd --add-port=4444/tcp --permanent; firewall-cmd --reload 
+
+
+```
+
+<div class="page-break"></div>
+
+### 1. Node started nicht nach Crash, z.B. Stromausfall
+
+
+### Warum startet nicht ? 
+
+```
+## node ist in einem nicht-geordneten Zustand.
+## und hat Angst ;o), dass die anderen Nodes u.U. weiter sind 
+## Ziel sollte sein, die letzte Node als 1. zu starten mit -> galera_new_cluster 
+```
+
+### Wie beheben ? 
+
+```
+## Nach Informationen im Status gucken 
+systemctl status mariadb 
+
+## Nach Informationen in den Logs schauen 
+journalctl -u mariadb 
+## Speziell kann ich rausfiltern
+journalctl -u mariadb | grep -i error
+
+## In der Regel steht safe_to_bootstrap auf 0 
+ä Fixend 
+/var/lib/grastate.dat 
+safe_to_bootstrap = 1 # setzen 
+
+## Immer nur ausführen, wenn es nur eine Node 1 !! git 
+galera-new-cluster
+
+```
+
+<div class="page-break"></div>
+
 ## Information Schema / Status / Processes
 
 ### Show server/session status
@@ -762,10 +923,31 @@ revoke select on training.* from training@localhost
 
 <div class="page-break"></div>
 
+### Auth with unix_socket
+
+
+```
+mysql>create user training@localhost identified via unix_socket
+useradd training
+passwd training
+
+## testing
+su - training
+## mysql 
+## shouuld not work without password 
+## Be sure, that use has access to socket 
+cd /var/lib/mysql 
+ls -la mysql.socket 
+```
+
+<div class="page-break"></div>
+
 ### User- and Permission-concepts (best-practice)
 
 
 ```
+## user should have as little permissions as possible
+## so many as needed ;o) 
 MariaDB [mysql]> create database eventplanner;
 Query OK, 1 row affected (0.000 sec)
 
@@ -774,6 +956,82 @@ Query OK, 0 rows affected (0.001 sec)
 
 MariaDB [mysql]> grant all on eventplanner.* to eventplanner@localhost;
 Query OK, 0 rows affected (0.003 sec)
+```
+
+<div class="page-break"></div>
+
+### Setup external access
+
+
+### Testing 
+
+```
+## Where .104 is the server you want to connect to 
+## Variante 1 
+mysqladmin ping -h 192.168.56.104
+echo $? 
+-> 0 // it is possible to reach mysql - server 
+
+## Variante 2
+mysqladmin ping -h 192.168.56.104
+echo $?
+-> 1 // i cannot reach mysql-server  -> port might close / firewall ? 
+
+## or use telnet
+telnet 192.168.56.104 3306
+
+```
+
+### Checks on MariaDB  (Theory) 
+
+  * Is MariaDB - Server running ? 
+  * Is 3306 port open (exposed to the outside)
+  * Is firewall open for port 3306  
+  * Is there a valid user, who connect) 
+
+### Checks on MariaDB (Practical) 
+
+```
+## Step 1: Running 
+systemctl status mariadb 
+## Step 2: Port open ?
+lsof -i # does it listen to all interfaces. -> * 
+        # or an externel interface 
+## Step 3: Firewall open -> see next block 
+## Step 4: User who can connet ? 
+```
+
+### Checks on Firewall. 
+
+```
+## Is firwall running and enabled 
+systemctl status firewalld 
+firewall-cmd --state 
+
+## Is interface setup for usage of firewalld 
+firewall-cmd --get-active-zones 
+
+## Is service "mysql" in zones 
+firewall-cmd --list-all-zones | less # is it within public - zone -> mysql
+
+## To enable it, if not set 
+firewall-cmd --add-service=mysql --zone=public --permanent # writes to filesystem config 
+firewall-cmd --reload # rereads settings from filesystem 
+```
+
+### Setup valid user 
+
+```
+## on server you want to connect to 
+mysql> create user extern@'192.168.56.%' identified by 'mysecretpass'
+mysql> grant all on sakila.* to extern@'192.168.56.%'
+```
+
+### Now test from external with mysql
+
+```
+mysql -uextern -p -h 192.168.56.104 
+mysql>show databases;
 ```
 
 <div class="page-break"></div>
@@ -788,6 +1046,50 @@ Query OK, 0 rows affected (0.003 sec)
 ```
 semanage port -l | grep mysql 
 ```
+
+<div class="page-break"></div>
+
+### Neues Datenverzeichnis SELinux bekanntmachen - semanage fcontext
+
+
+```
+mkdir /data
+chown mysql:mysql /data
+semanage fcontext -a -t mysqld_db_t "/data(/.*)?"
+restorecon -vr /data
+## type _t should mysqld_db_t 
+ls -laZ
+```
+
+<div class="page-break"></div>
+
+### Probleme mit SELinux erkennen und debuggen
+
+
+``` 
+## Wenn mariadb nicht startet, dann zunächst Loganalyse
+systemctl status mariadb 
+## Gibt es ERROR - Einträge ? 
+## Gibt es Permission / Access Denied - Einträge 
+## Wenn ansonsten alle Rechte stimmen, weisst das Probleme mit SELinux 
+journalctl -u mariadb | less 
+
+
+## Logs von selinux laufen über den Audit-Daemon 
+/var/log/audit/audit.log 
+## Dies können mit sealert analysiert werden
+## Wichtig: Geduld haben, die Analyse dauert einen Moment 
+## auch nach 100% noch abwarten 
+sealert -a /var/log/audit/audit.log 
+
+## Allheilmittel ist meistens 
+## Setzt den richtigen Context, den SELinux braucht, 
+## damit mariadb starten kann 
+restorecon -rv /var/lib/mysql 
+
+```
+
+
 
 <div class="page-break"></div>
 
@@ -913,6 +1215,12 @@ SELECT l.*, t.*
 ### Important InnoDB - configuration - options to optimized performance
 
 
+### How big is the innodb buffer currently (setup) ?
+
+```
+mysql>select @@innodb_buffer_pool_size 
+```
+
 ### Innodb buffer pool
 
   * How much data fits into memory 
@@ -983,7 +1291,7 @@ innodb_flush_neighbors=0
 ### innodb_log_file_size 
 
 ```
-## Should holw 60-120 min of data flow 
+## Should hold 60-120 min of data flow 
 ## Calculate like so:
 https://www.percona.com/blog/2008/11/21/how-to-calculate-a-good-innodb-log-file-size/
 
@@ -1038,7 +1346,62 @@ cd mysql_example
 
 <div class="page-break"></div>
 
-## Backup and Restore (Point-In-Time aka PIT) 
+## Binlog, Backup and Restore (Point-In-Time aka PIT) 
+
+### binlog aktivieren und auslesen
+
+
+### Binlog - Wann ? 
+
+  * PIT (Point-in-Time) - Recovery
+  * Master/Slave - Replication 
+  * MariaDB Galera Cluster (meckert, wenn nicht aktiviert -> GUT !)
+
+### Binlog aktivieren (Centos)
+
+```
+## /etc/my.cnf.d/server.cnf 
+[mysqld]
+log-bin 
+
+## Server neu starten 
+systemctl restart mariadb 
+```
+
+### Alte Logs automatisch löschen 
+
+  * https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#expire_logs_days
+
+
+### Rowbasiertes Logging aktivieren
+
+```
+## Generell empfehlenswert da sicherer 
+## /etc/my.cnf.d/server.cnf 
+[mysqld]
+log-bin 
+binlog-format=ROW 
+
+## Server neu starten 
+systemctl restart mariadb 
+```
+
+### binlog auslesen 
+
+```
+cd /var/lib/mysql
+## Zeigt auch mit Kommentar die SQL-Statements an die bei ROW-basierten binlog ausgeführt werden
+mysqlbinlog -vv rechnername1-bin.000001
+```
+
+### Wie finde ich raus, welches binlog aktiv ist ? 
+
+```
+## mysql -client starten
+mysql> show master status;
+```
+
+<div class="page-break"></div>
 
 ### Backup with mysqldump - best practices
 
@@ -1122,7 +1485,13 @@ mysql mynewdb < sakila-all.sql
 ### mariabackup
 
 
-### Walkthrough 
+### Installation von Repo mariab
+
+```
+yum install MariaDB-backup 
+```
+
+### Walkthrough (Ubuntu/Debian)
 
 ```
 ## user eintrag in /root/.my.cnf
@@ -1142,8 +1511,41 @@ systemctl stop mariadb
 mv /var/lib/mysql /var/lib/mysql.bkup 
 mariabackup --target-dir=/backups/20200120 --copy-back 
 chmod -R mysql:mysql /var/lib/mysql
+chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
 systemctl start mariadb 
 ```
+
+### Walkthrough (Redhat/Centos)
+
+```
+## user eintrag in /root/.my.cnf
+[mariabackup]
+user=root 
+## pass is not needed here, because we have the user root with unix_socket - auth 
+## or generic 
+## /etc/my.cnf.d/mariabackup.cnf
+[mariabackup]
+user=root
+
+mkdir /backups 
+## target-dir needs to be empty or not present 
+mariabackup --target-dir=/backups/20210120 --backup 
+## apply ib_logfile0 to tablespaces 
+## after that ib_logfile0 ->  0 bytes 
+mariabackup --target-dir=/backups/20210120 --prepare 
+
+### Recover 
+systemctl stop mariadb 
+mv /var/lib/mysql /var/lib/mysql.bkup 
+mariabackup --target-dir=/backups/20200120 --copy-back 
+chmod -R mysql:mysql /var/lib/mysql
+chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
+### important for selinux 
+restorecon -vr /var/lib/mysql 
+systemctl start mariadb 
+```
+
+
 
 ### Ref. 
 https://mariadb.com/kb/en/full-backup-and-restore-with-mariabackup/
@@ -1185,6 +1587,55 @@ done
 ```
 
 <div class="page-break"></div>
+
+## Upgrade 
+
+### MariaDB Upgrade 10.4 -> 10.5 (Centos)
+
+
+```
+## Step 0;
+## Sicherung anlegen (mysqldump / mariabackup) 
+
+## Step 1:
+## Change version in 
+## or where you have your repo definition
+## Change 10.4 -> 10.5 
+/etc/yum.repos./MariaDB.repo 
+
+## Step 2:
+systemctl stop mariadb 
+
+## Step 3
+sudo yum remove MariaDB-server
+
+## Step 4
+sudo yum install MariaDB-server 
+yum list --installed | grep MariaDB # sind alle Versionen gleich ! Wichtig ! 
+sudo yum update ## Achtung: abweichend von Doku MariaDB 
+
+## Step 4.5 
+## Check if old config files were saved as .rpmsave after delete of package 10.4 
+cd /etc/my.cnf.d 
+ls -la
+## e.g. 
+mv server.cnf.rpmsave server.cnf
+
+## Step 5:
+systemctl start mariadb 
+systemctl enable mariadb
+mysql_upgrade # After that mysql_upgrade_info will be present in /var/lib/mysql with version-info 
+```
+
+## Reference 
+
+  * https://mariadb.com/kb/en/upgrading-from-mariadb-104-to-mariadb-105/
+
+<div class="page-break"></div>
+
+### MariaDB Upgrade 5.5 -> 10.5
+
+  * https://mariadb.com/kb/en/upgrading-between-major-mariadb-versions/
 
 ## Performance 
 
@@ -1353,6 +1804,43 @@ Step 2: Lookup data, but a lot lookups needed
 
 ```
 
+
+
+<div class="page-break"></div>
+
+### Slow Query Log
+
+
+### Walkthrough 
+
+```
+## Step 1
+/etc/my.cnf.d/server.cnf 
+[mysqld]
+slow_query_log 
+
+## Step 2
+mysql>SET GLOBAL slow_query_log = 1 
+mysql>SET slow_query_log = 1 
+mysql>SET GLOBAL long_query_time = 0.000001 
+mysql>SET long_query_time = 0.000001
+
+## Step 3
+## run some time / data
+## and look into your slow-query-log 
+/var/lib/mysql/hostname-slow.log 
+
+```
+
+### Show queries that do not use indexes 
+
+```
+SET GLOBAL log_queries_not_using_indexes=ON;
+```
+
+### Reference 
+
+  * https://mariadb.com/kb/en/slow-query-log-overview/
 
 
 <div class="page-break"></div>
@@ -2193,9 +2681,9 @@ https://mariadb.com/kb/en/mariadb-maxscale-25-automatic-failover-with-mariadb-mo
 
 <div class="page-break"></div>
 
-## Tools 
+## Tools & Tricks
 
-### Percona-toolkit-Installation
+### Percona-toolkit-Installation - Ubuntu
 
 
 ### Walkthrough 
@@ -2215,7 +2703,37 @@ apt install -y percona-toolkit;
 
 <div class="page-break"></div>
 
-### pt-query-digist - analyze slow logs
+### Percona-toolkit-Installation - Centos
+
+
+### Walkthrough 
+
+```
+## Howto 
+## https://www.percona.com/doc/percona-toolkit/LATEST/installation.html
+
+## Step 1: repo installieren mit rpm -paket 
+yum install -y https://repo.percona.com/yum/percona-release-latest.noarch.rpm; yum install -y percona-toolkit
+```
+
+<div class="page-break"></div>
+
+### pt-query-digest under Windows
+
+
+### Attention about download 
+
+```
+url is wrong in Reference document, us:
+https://www.percona.com/get/pt-query-digest
+```
+### Reference 
+
+  * http://www.jonathanlevin.co.uk/2012/01/query-digest-on-windows.html
+
+<div class="page-break"></div>
+
+### pt-query-digest - analyze slow logs
 
 
 ### Requires
@@ -2347,6 +2865,65 @@ mysql> pager
 
 <div class="page-break"></div>
 
+### Schweizer Such-Taschenmesser grep -r
+
+
+```
+grep -r "PermitRootLogin" /etc
+```
+
+<div class="page-break"></div>
+
+### Set timezone in Centos 7/8
+
+
+```
+## as root 
+timedatectl list-timezones | grep 'Europe/Berlin'
+timedatectl set-timezone 'Europe/Berlin'
+timedatectl
+```
+
+<div class="page-break"></div>
+
+### Ist die Netzwerkkarte eingerichtet - nmtui
+
+
+```
+## Grafische Oberfläche auf der Kommandozeile 
+nmtui 
+```
+
+<div class="page-break"></div>
+
+### Set hostname on systemd-Systems
+
+
+```
+## you have to be root 
+hostnamectl set-hostname mariadb1.training.local 
+## so that you will see it in your current prompt 
+su -
+hostnamectl 
+```
+
+<div class="page-break"></div>
+
+### User anlegen und passwort vergeben (Centos/Redhat)
+
+
+```
+## als root ausführen 
+useradd training
+passwd training
+```
+
+<div class="page-break"></div>
+
+### Scripts for deploying galera-cluster to Ubuntu 20.04
+
+  * https://github.com/jmetzger/ansible-galera-cluster-maxscale
+
 ## Extras 
 
 ### User Variables
@@ -2385,20 +2962,6 @@ mysql < sakila-data.sql
 ```
 
 <div class="page-break"></div>
-
-## Documentation 
-
-### Server System Variables
-
-  * https://mariadb.com/kb/en/server-system-variables/#bind_address
-
-### MySQL - Performance - PDF
-
-  * http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf
-
-### Source-Code MariaDB
-
-  * https://github.com/MariaDB/server
 
 ## Diagnosis and measurement of performance 
 
@@ -2446,7 +3009,7 @@ Explain Select....
 
 ### Why ? 
 
-  * You are adding .. to he server: 
+  * You are adding .. to the server: 
     * I/O
     * memory
     * CPU
@@ -2603,6 +3166,18 @@ total_memory_allocated: 0 bytes
 
 ## Documentation / Literature 
 
+### Server System Variables
+
+  * https://mariadb.com/kb/en/server-system-variables/#bind_address
+
+### MySQL - Peformance Blog
+
+  * https://www.percona.com/blog/
+
+### Source-Code MariaDB
+
+  * https://github.com/MariaDB/server
+
 ### Effective MySQL
 
   * https://www.amazon.com/Effective-MySQL-Optimizing-Statements-Oracle/dp/0071782796
@@ -2723,47 +3298,9 @@ No, there is no testing framework with MySQL
 
 <div class="page-break"></div>
 
-### migration-mysql-update-5.6->5.7
+### Best filesystem for MariaDB
 
-
-
-```
-=========== 
-
-1. Sicherung. 
-xtrabackup 
-Mysqldump 
-16 GB 
-————
-
-1. 
-
-Neue Location -> 5.6 
-<-  Xtrbackup  
-Server runterfahren
-Update 5.7 
-Fahrt den Server wieder hoch
-
-
-2.  Source-Host (Old Host) -> mysqldump 
-Neuen -> Installation von MySQL 5.7 
-Test-einspielen. 
-< mysqldump 
-
-4-5 Stunden. 
-
-—> Konfiguration von mysql -> was wollt ihr übernehmen. 
-
-3. Replications - Slave auf neuem System -> 5.7 
-Hängt in den Master.
-Sicheren Transport 
-—> ssh -tunnel .
--> Firewall-Regeln. 
-—> ssl -absicherung 
-
-```
-
-<div class="page-break"></div>
+  * https://mariadb.com/de/resources/blog/what-is-the-best-linux-filesystem-for-mariadb/
 
 ## MySQL Do-Nots
 
