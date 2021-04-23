@@ -22,7 +22,7 @@
      * [Create fresh datadir (Centos/Redhat)](create-fresh-datadir-centos.md)
    
   1. Galera 
-     * [Installation and Configuration (Centos/Redhat 8)](galera-setup.md)
+     * [Installation and Configuration (Centos/Redhat 8)](setup-galera.md)
      * [1. Node started nicht nach Crash, z.B. Stromausfall](galera-recover-node1.md)  
    
   1. Information Schema / Status / Processes
