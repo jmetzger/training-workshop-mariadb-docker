@@ -69,3 +69,4 @@ mysql> grant all on sakila.* to extern@'192.168.56.%'
 ```
 mysql -uextern -p -h 192.168.56.104 
 mysql>show databases;
+```
