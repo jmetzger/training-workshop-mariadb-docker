@@ -17,6 +17,9 @@
   1. Configuration
      * [Adjust configuration and restart](config-and-restart.md) 
      * [Set global server system variable](set-global-variable.md)
+
+  1. Administration 
+     * [Create fresh datadir](create-fresh-datadir.md)
     
   1. Information Schema / Status / Processes
      * [Show server/session status](show-server-status.md)
