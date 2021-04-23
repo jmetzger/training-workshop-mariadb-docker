@@ -58,9 +58,13 @@ Variable_name: wsrep_connected
 ### Setup firwealld for galera 
 
 ```
-firewall-cmd --zone=public --add-port=3306/tcp --permanent
-firewall-cmd --zone=public --add-port=4567/tcp --permanent
-firewall-cmd --zone=public --add-port=4568/tcp --permanent
-firewall-cmd --zone=public --add-port=4444/tcp --permanent
+firewall-cmd --add-port=3306/tcp --permanent
+firewall-cmd --add-port=4567/tcp --permanent
+firewall-cmd --add-port=4568/tcp --permanent
+firewall-cmd --add-port=4444/tcp --permanent
 firewall-cmd --reload 
+
+firewall-cmd --add-port=3306/tcp --permanent; firewall-cmd --add-port=4567/tcp --permanent; firewall-cmd --add-port=4568/tcp --permanent; firewall-cmd --add-port=4444/tcp --permanent; firewall-cmd --reload 
+
+
 ```
