@@ -1,4 +1,4 @@
-# Create fresh datadir 
+# Create fresh datadir (Centos)
 
 ## Walkthrough 
 
