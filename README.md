@@ -106,6 +106,7 @@
      * [mysql-client](mysql.md)
      * [Schweizer Such-Taschenmesser grep -r](grep-r.md)
      * [Set timezone in Centos 7/8](set-timezone-centos.md) 
+     * [Ist die Netzwerkkarte eingerichtet - nmtui](nmtui.md)
      * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
      * [User anlegen und passwort vergeben (Centos/Redhat)](useradd-passwd.md)
   
