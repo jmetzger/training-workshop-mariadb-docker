@@ -1,6 +1,18 @@
-# Installation Centos 
+# Installation Centos / Rocky Linux 
 
-## Setup Repo and Install 
+## Install from Distribution 
+
+
+```
+dnf search mariadb
+# find version 
+dnf info mariadb-server 
+dnf install -y mariadb-server 
+```
+
+## Install from MariaDB Foundation (Repo) 
+
+### Setup Repo and Install 
 
 ```
 Here is your custom MariaDB YUM repository entry for CentOS. Copy and paste it into a file under /etc/yum.repos.d/ (we suggest naming the file MariaDB.repo or something similar).
