@@ -11,6 +11,10 @@ How your data is stored
 
   * Performance, features and other characteristics you want
 
+## Where ? 
+
+  * Theoretically you can use a different engine for every table 
+  * But: For performance optimization and future, it is better to concentrate on one 
 
 ## What do they do ?
 
@@ -33,11 +37,11 @@ How your data is stored
 
 ## Which are the most important one ?
 
+  * InnoDB (currently default engine) 
   * MyISAM/Aria
-  * InnoDB
   * Memory
   * CSV
   * Blackhole (/dev/null)
   * Archive
   * Partition
-  * Federated/FederatedX
+  * (Federated/FederatedX)
