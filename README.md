@@ -19,8 +19,10 @@
      * [Adjust configuration and restart](config-and-restart.md) 
      * [Set global server system variable](set-global-variable.md)
 
-  1. Administration 
+  1. Administration / Troubleshooting
      * [Create fresh datadir (Centos/Redhat)](create-fresh-datadir-centos.md)
+     * [Debug not starting service](troubleshooting/debug-service.md)
+   
    
   1. Galera 
      * [Installation and Configuration (Centos/Redhat 8)](setup-galera.md)
