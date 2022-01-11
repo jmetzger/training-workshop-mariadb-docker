@@ -2,6 +2,7 @@
 ## Agenda 
 
   1. Architecture of MariaDB 
+     * [Architecture Server](/basics/mariadb-architecture.md)
      * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
      * [Query Cache Usage and Performance](/performance/query-cache.md)
      * [Optimizer-Basics](optimizer-basics.md) 
