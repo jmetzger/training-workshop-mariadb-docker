@@ -7,6 +7,9 @@
 systemctl status mariadb
 systemctl stop mariadb 
 systemctl start mariadb 
+
+# 
+systemctl restart mariadb
 ```
 
 ## enable 
@@ -14,4 +17,11 @@ systemctl start mariadb
 ```
 # enable to be started after reboot 
 systemctl enable mariadb 
+```
+
+## how is service configured / systemd-wise 
+
+```
+systemctl cat mariadb 
+
 ```
