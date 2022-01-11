@@ -60,6 +60,7 @@
   
   1. Training Data 
      * [Setup training data "contributions"](/indexes/setup-training-data-contributions.md)
+     * [Setup sakila test db](sakila.md)
      
   1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
      * [binlog aktivieren und auslesen](binlog.md)
