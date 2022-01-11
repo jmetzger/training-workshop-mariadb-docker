@@ -19,9 +19,12 @@ mysqladmin extended status
 ## with mysql -> show status 
 
 ```
+# Status within session (status - counters)
 mysql> show status;
+# Status global (since last reboot/start of mariadb server) 
 mysql> show global status;
-mysql> # setzt session status zurück 
+mysql> -- reset session status 
 mysql> flush status; 
-mysql> show status;
+# Show session status 
+mysql> show session status;
 ```
