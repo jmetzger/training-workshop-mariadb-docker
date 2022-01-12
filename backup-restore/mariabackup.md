@@ -6,6 +6,13 @@
 yum install MariaDB-backup 
 ```
 
+## Installation von Distri (Centos/Rocky/RHEL)
+
+```
+# Rocky 8 
+dnf install mariadb-backup 
+```
+
 ## Walkthrough (Ubuntu/Debian)
 
 ```
