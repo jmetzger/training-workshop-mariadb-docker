@@ -14,15 +14,15 @@ mysql>insert into actor (first_name,last_name) values ('johanne','Johannson');
 # Optional: Step 3: Looking into binary to see this data 
 cd /var/lib/mysql 
 # last binlog 
-mysqlbinlog --no-defaults -vv mysqldbin.000005
+mysqlbinlog -vv mariadb-bin.000005
 
-# Step 3: Some how a guy deletes data 
+# Step 4: Some how a guy deletes data 
 mysql>use sakila; delete from actor where actor_id > 200;
 # now only 200 datasets 
 mysql>use sakila; select * from actor;
 
 ```
-
+  
 ## Fixing the problem 
 
 ```
@@ -31,8 +31,8 @@ mysql>use sakila; select * from actor;
 
 cd /var/lib/mysql
 # Find the position where the problem occured 
-# and create a recovery.sql - file (before apply full backup)
-mysqlbinlog --no-defaults -vv --stop-position=857 mysqld-bin.000005 > /usr/src/recover.sql
+# and create a recover.sql - file (before apply full backup)
+mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 > /usr/src/recover.sql
 
 # Step 1: Apply full backup 
 cd /usr/src/
