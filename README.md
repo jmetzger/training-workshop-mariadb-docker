@@ -53,6 +53,7 @@
      * [Show structure of table](show-create-table-describe.md)
      * [Show all tables within db](show-tables.md) 
      * [Triggers](triggers.md) 
+     * [Data Types](https://mariadb.com/kb/en/data-types/)
      
   1. Locking 
      * [Identify Deadlocks in innodb](locks/deadlocks.md)
