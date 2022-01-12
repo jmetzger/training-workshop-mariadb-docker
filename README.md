@@ -34,6 +34,7 @@
      * [Kill (kickout user) and stop server](kill-shutdown.md) 
  
   1. Security and User Rights 
+     * [Debug and Setup External Connection](/security/debug-external-conn.md) 
      * [Get Rights of user](/security/get-rights-for-user.md)
      * [Secure with SSL server/client](/security/ssl.md) 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
