@@ -27,6 +27,13 @@ mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines
 mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --delete-master-logs > /usr/src/all-databases.sql;
 ```
 
+## Flush binary logs from mysql 
+
+```
+mysql -e "PURGE BINARY LOGS BEFORE '2013-04-22 09:55:22'";
+
+```
+
 ## Version with zipping 
 
 ```
