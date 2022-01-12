@@ -1,4 +1,17 @@
-# Deadlocks 
+# Debug Locks / Deadlocks 
+
+## Create a locking 
+
+```
+
+-- session 1
+START TRANSACTION;
+UPDATE t SET id = 15 WHERE id = 10;
+
+-- session 2
+DELETE FROM t WHERE id = 10;
+```
+
 
 ## Example 
 
