@@ -1,4 +1,4 @@
-# ssl - mariadb (only server certificate) 
+# ssl - mariadb (only server certificate) - Centos/Redhat/Rocky
 
 ## Create CA and Server-Key 
 
@@ -6,18 +6,18 @@
 ```
 
 # On Server - create ca and certificates 
-sudo mkdir -p /etc/mysql/ssl
-sudo cd /etc/mysql/ssl
+sudo mkdir -p /etc/my.cnf.d/ssl
+sudo cd /etc/my.cnf.d/ssl
 
 # create ca.  
 sudo openssl genrsa 4096 > ca-key.pem
 
 # create ca-certificate 
-# Common Name: MariaDB Admin 
+# Common Name: MariaDB CA 
 sudo openssl req -new -x509 -nodes -days 365000 -key ca-key.pem -out ca-cert.pem
 
 # create server-cert 
-# Common Name: MariaDB Server
+# Common Name: server1.training.local 
 # Password: --- leave empty ----
 sudo openssl req -newkey rsa:2048 -days 365000 -nodes -keyout server-key.pem -out server-req.pem
 
@@ -51,7 +51,7 @@ ssl-key=/etc/mysql/ssl/server-key.pem
 tls_version = TLSv1.2,TLSv1.3
 
 # Set ownership 
-chown -vR mysql:mysql /etc/mysql/ssl/
+chown -vR mysql:mysql /etc/my.cnf.d/ssl/
 
 ```
 
