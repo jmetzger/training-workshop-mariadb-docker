@@ -141,12 +141,84 @@ ERROR 2026 (HY000): SSL connection error: Validation of SSL server certificate f
 
 ```
 
-## Variant 2: 2-way 
+## Variant 3: 2-way - Security (Encryption) - validated on server and client 
+
+### Client - Zertifikate auf Server erstellen 
+
+  * Wir verwenden die gleiche CA wie beim Server
+
+```
+# auf dem Server 
+cd /etc/my.cnf.d/ssl
+# Bitte Common-Name: MariaDB Client 
+openssl req -newkey rsa:2048 -days 365 -nodes -keyout client-key.pem -out client-req.pem
+
+# process RSA - Key 
+# Eventually also works without - what does it do ? 
+# openssl rsa -in client-key.pem -out client-key.pem
+
+# sign certficate with CA 
+openssl x509 -req -in client-req.pem -days 365 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem
 
 ```
 
+### Client - Zertifikate validieren 
 
 ```
+openssl verify -CAfile ca-cert.pem client-cert.pem
+```
+
+### Zertifikate für Client zusammenpacken
+
+```
+mkdir cl-certs; cp -a client* cl-certs; cp -a ca-cert.pem cl-certs ; tar cvfz cl-certs.tar.gz cl-certs 
+```
+
+
+### Zertifikate auf Client transferieren 
+
+```
+scp cl-certs.tar.gz kurs@192.168.56.104:/tmp 
+```
+
+
+
+### Zertifikate einrichten 
+
+```
+# on client1 
+# cleanup old config 
+rm /etc/my.cnf.d/ssl/ca-cert.pem 
+
+mv /tmp/cl-certs.tar.gz /etc/my.cnf.d/ssl
+cd /etc/my.cnf.d; tar xzvf cl-certs.tar.gz 
+
+cd /etc/my.cnf.d/ssl 
+ls -la 
+
+cd /etc/my.cnf.d 
+vi mysql-clients.cnf 
+[mysql]
+ssl-ca=/etc/my.cnf.d/ssl/cl-certs/ca-cert.pem
+ssl-cert=/etc/my.cnf.d/ssl/cl-certs/client-cert.pem
+ssl-key=/etc/my.cnf.d/ssl/cl-certs/client-key.pem
+
+```
+
+### Zertifikate testen 
+
+```
+# on server1 verify: X509 for user 
+select user,ssl_type from mysql.user where user='ext'
+
+# connect from client1 
+# Sollte die Verbindung nicht klappen stimmt auf dem 
+# Client etwas mit der Einrichtung nicht
+mysql -uext -p -h192.168.56.103
+mysql> status 
+
+```
+
 
 ## Ref 
 
