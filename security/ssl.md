@@ -193,15 +193,11 @@ rm /etc/my.cnf.d/ssl/ca-cert.pem
 mv /tmp/cl-certs.tar.gz /etc/my.cnf.d/ssl
 cd /etc/my.cnf.d; tar xzvf cl-certs.tar.gz 
 
-cd /etc/my.cnf.d/ssl 
-ls -la 
-
-cd /etc/my.cnf.d 
 vi mysql-clients.cnf 
 [mysql]
-ssl-ca=/etc/my.cnf.d/ssl/cl-certs/ca-cert.pem
-ssl-cert=/etc/my.cnf.d/ssl/cl-certs/client-cert.pem
-ssl-key=/etc/my.cnf.d/ssl/cl-certs/client-key.pem
+ssl-ca=/etc/my.cnf.d/cl-certs/ca-cert.pem
+ssl-cert=/etc/my.cnf.d/cl-certs/client-cert.pem
+ssl-key=/etc/my.cnf.d/cl-certs/client-key.pem
 
 ```
 
