@@ -1,4 +1,4 @@
-# ssl - mariadb (only server certificate) - Centos/Redhat/Rocky
+# ssl - mariadb (only server certificate) - Centos/Redhat/Rocky - Distribution Version
 
 ## Variant 1: Setup 1-way ssl encryption 
 
@@ -104,7 +104,6 @@ scp ca-cert.pem kurs@192.168.56.104:/tmp
 # on clien1 
 cd /etc/my.cnf.d 
 mkdir ssl 
-chown mysql:mysql ssl 
 cd ssl
 mv /tmp/ca-cert.pem . 
 ```
@@ -112,7 +111,7 @@ mv /tmp/ca-cert.pem .
 ### Configure client1 - client -config  
 
 ```
-sudo vi /etc/my.cnf.d/50-mysql-clients.cnf
+sudo vi /etc/my.cnf.d/mysql-clients.cnf
 
 Append/edit in [mysql] section:
 
@@ -127,6 +126,18 @@ ssl-ca=/etc/my.cnf.d/ssl/ca-cert.pem
 # only works if you have no self-signed certificate
 ssl-verify-server-cert
 ssl
+
+# domain-name in hosts setzen 
+# because in dns
+vi /etc/hosts 
+192.168.56.103 server1.training.local 
+
+# now you to connect with hostname
+# otherwice no check against certificate can be done 
+mysql -uext -p -h server1.training.local 
+
+# if it does not work, you get 
+ERROR 2026 (HY000): SSL connection error: Validation of SSL server certificate failed
 
 ```
 
