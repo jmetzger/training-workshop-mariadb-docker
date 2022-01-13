@@ -56,6 +56,7 @@
      * [Data Types](https://mariadb.com/kb/en/data-types/)
      
   1. Locking 
+     * [Implicit Locks](locks/innodb-implicit-locks.md)
      * [Identify Deadlocks in innodb](locks/deadlocks.md)
     
   1. InnoDB - Storage Engine 
