@@ -1,6 +1,6 @@
 # Index and functions 
 
-## No index can be used on an index:
+## No function can be used on an index:
 
 ```
 explain select * from actor where upper(last_name) like 'A%';
@@ -32,10 +32,3 @@ explain select * from actor where last_name_upper like 'A%';
 1 row in set, 1 warning (0.00 sec)
 
 ```
-
-
-
-
-## Preview MysQL 8 
-
-  * MySQL 8 support functional indexes 
