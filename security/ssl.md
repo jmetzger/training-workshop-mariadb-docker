@@ -1,7 +1,8 @@
 # ssl - mariadb (only server certificate) - Centos/Redhat/Rocky
 
-## Create CA and Server-Key 
+## Variant 1: Setup 1-way ssl encryption 
 
+### Create CA and Server-Key 
 
 ```
 
@@ -29,9 +30,7 @@ sudo openssl x509 -req -in server-req.pem -days 365000 -CA ca-cert.pem -CAkey ca
 
 ```
 
-
-
-## Verify certificates 
+### Verify certificates 
 
 ```
 openssl verify -CAfile ca-cert.pem server-cert.pem 
@@ -39,7 +38,7 @@ openssl verify -CAfile ca-cert.pem server-cert.pem
 
 ```
 
-## Configure Server 
+### Configure Server 
 ```
 # create file 
 # /etc/my.cnf.d/z_ssl.cnf 
@@ -62,6 +61,32 @@ systemctl restart mariadb
 journalctl -u mariadb 
 
 ```
+
+## Test connection on client 
+
+```
+# only if we use option --ssl we will connect with ssl 
+mysql --ssl -uxyz -p -h <ip-of-server>
+mysql>status
+SSL:                    Cipher in use is TLS_AES_256_GCM_SHA384
+
+```
+
+## Force to use ssl 
+
+
+```
+# on server 
+# now client can only connect, when using ssl 
+mysql> grant USAGE on *.* to remote@10.10.9.144 require ssl;
+```
+
+
+
+
+
+## Variant 2: 1-way ssl-encryption but checking server certificate 
+
 
 ### Setup on clients 
 
@@ -93,23 +118,6 @@ ssl-verify-server-cert
 
 ```
 
-## Test connection on client 
-
-```
-mysql --ssl -uxyz -p -h <ip-of-server>
-mysql>status
-SSL:                    Cipher in use is TLS_AES_256_GCM_SHA384
-
-```
-
-## Force to use ssl 
-
-
-```
-# on server 
-# now client can only connect, when using ssl 
-mysql> grant USAGE on *.* to remote@10.10.9.144 require ssl;
-```
 
 ## On client to enable ssl by default for root 
 ```
