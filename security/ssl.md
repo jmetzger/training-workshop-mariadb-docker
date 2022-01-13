@@ -1,4 +1,4 @@
-# ssl - mariadb (only server certificate) - Centos/Redhat/Rocky - Distribution Version
+# ssl - mariadb - Centos/Redhat/Rocky - Distribution Version
 
 ## Variant 1: Setup 1-way ssl encryption 
 
@@ -138,6 +138,13 @@ mysql -uext -p -h server1.training.local
 
 # if it does not work, you get 
 ERROR 2026 (HY000): SSL connection error: Validation of SSL server certificate failed
+
+```
+
+## Variant 2: 2-way 
+
+```
+
 
 ```
 
