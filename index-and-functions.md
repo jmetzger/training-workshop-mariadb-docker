@@ -30,11 +30,7 @@ MariaDB [sakila]> explain select * from actor where last_name_upper like 'A%';  
 +------+-------------+-------+-------+---------------+-----------+---------+----              --+------+-------------+
 1 row in set (0.001 sec)
 ```
-
-### Reference 
-
-  * https://mariadb.com/kb/en/generated-columns/
-
+  
 ## Now we try to search the very same 
 
 ```
@@ -47,3 +43,8 @@ explain select * from actor where last_name_upper like 'A%';
 1 row in set, 1 warning (0.00 sec)
 
 ```
+
+## Reference 
+
+  * https://mariadb.com/kb/en/generated-columns/
+  * https://mariadb.com/kb/en/slow-query-log-overview/
