@@ -143,9 +143,8 @@ ERROR 2026 (HY000): SSL connection error: Validation of SSL server certificate f
 
 ## Variant 3: 2-way - Security (Encryption) - validated on server and client 
 
-### Client - Zertifikate auf Server erstellen 
-
-  * Wir verwenden die gleiche CA wie beim Server
+### Client - Create certificate on server
+  * we are using the same ca as on the server
 
 ```
 # on server1
@@ -201,7 +200,7 @@ ssl-key=/etc/my.cnf.d/cl-certs/client-key.pem
 
 ```
 
-### Zertifikate testen 
+### Test the certificate
 
 ```
 # on server1 verify: X509 for user 
