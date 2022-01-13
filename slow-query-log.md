@@ -4,9 +4,9 @@
 
 ```
 # Step 1
-/etc/my.cnf.d/server.cnf 
+/etc/my.cnf.d/mariadb-server.cnf 
 [mysqld]
-slow_query_log 
+slow-query-log 
 
 # Step 2
 mysql>SET GLOBAL slow_query_log = 1 
