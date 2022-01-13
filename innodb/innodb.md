@@ -3,7 +3,8 @@
 ## How big is the innodb buffer currently (setup) ?
 
 ```
-mysql>select @@innodb_buffer_pool_size 
+mysql>select @@innodb_buffer_pool_size; 
+mysql>show variables like '%buffer%';
 ```
 
 ## Innodb buffer pool
@@ -47,6 +48,11 @@ systemctl restart mysql
 mysql
 mysql>show variables like 'innodb%buffer%';
 ```
+## problems, when dynamically increasing buffer 
+
+  * https://www.percona.com/blog/2018/06/19/chunk-change-innodb-buffer-pool-resizing/
+
+
 
 ## innodb_flush_method 
 
