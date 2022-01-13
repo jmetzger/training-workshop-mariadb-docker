@@ -87,25 +87,37 @@ mysql> grant USAGE on *.* to remote@10.10.9.144 require ssl;
 
 ## Variant 2: 1-way ssl-encryption but checking server certificate 
 
-
-### Setup on clients 
-
-```
-# from 
-# copy /etc/mysql/ssl/ca-cert.pem 
-# to client
-cd /etc/mysql
-tar cvfz ssl.tar.gz ssl
-scp ssl.tar.gz 11trainingdo@ip:/tmp 
-```
+### Prerequisites 
 
 ```
-sudo vi /etc/mysql/mariadb.conf.d/50-mysql-clients.cnf
+server1: 192.168.56.103 
+client1: 192.168.56.104
+```
+
+### Copy ca-cert to client 
+
+```
+# on server1 
+cd /etc/my.cnf.d/ssl
+scp ca-cert.pem kurs@192.168.56.104:/tmp 
+
+# on clien1 
+cd /etc/my.cnf.d 
+mkdir ssl 
+chown mysql:mysql ssl 
+cd ssl
+mv /tmp/ca-cert.pem . 
+```
+
+### Configure client1 - client -config  
+
+```
+sudo vi /etc/my.cnf.d/50-mysql-clients.cnf
 
 Append/edit in [mysql] section:
 
 ## MySQL Client Configuration ##
-ssl-ca=/etc/mysql/ssl/ca-cert.pem
+ssl-ca=/etc/my.cnf.d/ssl/ca-cert.pem
 
 ##  Force TLS version for client too
 #tls_version = TLSv1.2,TLSv1.3
@@ -114,24 +126,12 @@ ssl-ca=/etc/mysql/ssl/ca-cert.pem
 
 # only works if you have no self-signed certificate
 ssl-verify-server-cert
-
+ssl
 
 ```
-
-
-## On client to enable ssl by default for root 
-```
-vi /root/.my.cnf 
-[mysql]
-ssl 
-
-# now mysql will always use ssl 
-mysql -uxyz -p -h10.10.9.110 
-```
-
 
 ## Ref 
 
   * https://www.cyberciti.biz/faq/how-to-setup-mariadb-ssl-and-secure-connections-from-clients/
   
-  ```
+
