@@ -11,14 +11,29 @@ explain select * from actor where upper(last_name) like 'A%';
 +----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
 ```
 
-## Workaround with virtual columns (possible since mysql 5.7) 
+## Workaround with generated columns 
 
 ```
 # 1. Create Virtual Column with upper 
-alter table sakila add idx_last_name_upper varchar(45) GENERATED ALWAYS AS upper(last_name);
-# 2. Create an index on that column 
-create index idx_last_name_upper on actor (last_name_upper);
+MariaDB [sakila]> alter table actor add last_name_upper varchar(45) AS (upper(la              st_name)) VIRTUAL;
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [sakila]> create index idx_upper on actor (last_name_upper);
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [sakila]> explain select * from actor where last_name_upper like 'A%';                +------+-------------+-------+-------+---------------+-----------+---------+----              --+------+-------------+
+| id   | select_type | table | type  | possible_keys | key       | key_len | ref                | rows | Extra       |
++------+-------------+-------+-------+---------------+-----------+---------+----              --+------+-------------+
+|    1 | SIMPLE      | actor | range | idx_upper     | idx_upper | 183     | NUL              L |    7 | Using where |
++------+-------------+-------+-------+---------------+-----------+---------+----              --+------+-------------+
+1 row in set (0.001 sec)
 ```
+
+### Reference 
+
+  * https://mariadb.com/kb/en/generated-columns/
 
 ## Now we try to search the very same 
 
