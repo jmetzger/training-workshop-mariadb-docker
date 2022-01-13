@@ -148,7 +148,7 @@ ERROR 2026 (HY000): SSL connection error: Validation of SSL server certificate f
   * Wir verwenden die gleiche CA wie beim Server
 
 ```
-# auf dem Server 
+# on server1
 cd /etc/my.cnf.d/ssl
 # Bitte Common-Name: MariaDB Client 
 openssl req -newkey rsa:2048 -days 365 -nodes -keyout client-key.pem -out client-req.pem
