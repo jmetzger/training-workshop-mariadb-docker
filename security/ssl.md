@@ -62,7 +62,7 @@ journalctl -u mariadb
 
 ```
 
-## Test connection on client 
+### Test connection on client 
 
 ```
 # only if we use option --ssl we will connect with ssl 
@@ -72,7 +72,7 @@ SSL:                    Cipher in use is TLS_AES_256_GCM_SHA384
 
 ```
 
-## Force to use ssl 
+### Force to use ssl 
 
 
 ```
