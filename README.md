@@ -93,7 +93,7 @@
      * Index-Types 
      * [Describe and indexes](/indexes/describe-table.md)
      * [Find out indexes](indexes/findout-indexes.md) 
-     * [Index and Functions (Cool new feature in MySQL 5.7)](index-and-functions.md) 
+     * [Index and Functions](index-and-functions.md) 
      * [Index and Likes](/indexes/like-index-not-index.md)   
      * [profiling-get-time-for-execution-of.query](/indexes/profiling.md) 
      * [Find out cardinality without index](/indexes/cardinality.md)
