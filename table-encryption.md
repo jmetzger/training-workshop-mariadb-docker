@@ -11,6 +11,9 @@ openssl enc -aes-256-cbc -md sha1 -pass file:/etc/mysql/encryption/keyfile.key -
 
 rm -f /etc/mysql/encryption/keyfile;
 
+chown -R mysql:mysql /etc/mysql;
+chmod -R 500 /etc/mysql;
+
 
 ```
 
