@@ -48,6 +48,10 @@ module_hotfixes=1
 gpgkey=https://mirror.kumi.systems/mariadb/yum/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 
+# MariaDB - Server installieren 
+dnf install -y MariaDB-server 
+
+
 
 # server - config von master rüberspielen 
 
