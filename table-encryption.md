@@ -19,7 +19,7 @@ chmod -R 500 /etc/mysql;
 ## Step 2: Verify data before encryption 
 
 ```
-cd /var/lib7mysql/mysql
+cd /var/lib/mysql/mysql
 strings gtid_slave_pos.ibd 
 
 ```
