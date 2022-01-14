@@ -20,8 +20,7 @@ Install new 10.4 from Mariadb.org
 # 2. dnf remove mariadb-* 
 # 3. Doublecheck if components left: apt list --installed | grep mariadb
 # 4. Setup repo for mariadb
-# 5. apt update 
-# 6. apt install mariadb-server 
+# 5. dnf install MariaDB-server 
 
 # 7. systemctl enable --now mariadb # enable for next reboot and start immediately 
 # necessary for redhat 
