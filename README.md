@@ -105,7 +105,7 @@
 
   1. Replication 
      * [Slave einrichten - gtid (mit mariabackup)](/replication/01-master-slave-gtid.md)
-     * [Slave einrichten - master_pos](/replication/01a-setup-slave-old-style.md)
+     * [Slave einrichten - Centos - old style (master_pos)](/replication/01-replication-centos-old-style.md)
      * [MaxScale installieren](/replication/02.5-maxscale-installation.md)
      * [Reference: MaxScale-Proxy mit Monitoring](/replication/02-mariadbmon.md)
      * [Walkthrough:Automatic Failover Master Slave](/replication/03-automatic-failover-master-slave.md)
