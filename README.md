@@ -54,6 +54,7 @@
      * [Show structure of table](show-create-table-describe.md)
      * [Show all tables within db](show-tables.md) 
      * [Triggers](triggers.md) 
+     * [Funtions](function.md)
      * [Events](events.md)
      * [Data Types](https://mariadb.com/kb/en/data-types/)
      
