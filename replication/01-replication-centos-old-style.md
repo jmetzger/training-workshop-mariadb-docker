@@ -56,8 +56,8 @@ dnf install -y MariaDB-server
 # server - config von master rüberspielen 
 # auf server 
 cd /etc
-tar cvf my.cnf.d.tar.gz my.cnf.d 
-scp my.cnf.d.tar.gz kurs@<ip-slave>:/tmp
+tar cvfz my.cnf.d.tar.gz my.cnf.d 
+scp my.cnf.d.tar.gz kurs@192.168.56.104:/tmp
 
 # auf slave
 cd /etc
