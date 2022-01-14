@@ -120,6 +120,17 @@ CHANGE MASTER TO
   MASTER_LOG_FILE='master1-bin.000002',
   MASTER_LOG_POS=389,
   MASTER_CONNECT_RETRY=10;
+
+mysql < /root/master.sql 
+
+```
+
+## slave starten 
+
+```
+mysql>slave start 
+mysql>show slave status \G
+
 ```
 
 ## Ref: 
