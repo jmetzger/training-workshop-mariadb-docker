@@ -16,11 +16,20 @@ chmod -R 500 /etc/mysql;
 
 ```
 
-## Step 2: Setup configuration 
+## Step 2: Verify data before encryption 
+
+```
+cd /var/lib7mysql/mysql
+strings gtid_slave_pos.ibd 
+
+```
+
+## Step 3: Setup configuration 
 
 ```
 # vi /etc/my.cnf.d/z_encryption.cnf 
 
+[mysqld]
 plugin_load_add = file_key_management
 file_key_management_filename = /etc/mysql/encryption/keyfile.enc
 file_key_management_filekey = FILE:/etc/mysql/encryption/keyfile.key
@@ -39,6 +48,39 @@ innodb_encryption_threads = 4
 innodb_encryption_rotation_iops = 2000
 
 
+```
+
+## Step 4: Restart server 
+
+```
+systemctl restart mariadb 
+```
+
+## Step 5: Verify encryption
+
+```
+cd /var/lib/mysql/mysql
+strings gtid_slave_pos;
+
+use information_schema;
+select * from innodb_tablespaces_encryption;
+SELECT CASE WHEN INSTR(NAME, '/') = 0 
+                   THEN '01-SYSTEM TABLESPACES'
+                   ELSE CONCAT('02-', SUBSTR(NAME, 1, INSTR(NAME, '/')-1)) END 
+                     AS "Schema Name",
+         SUM(CASE WHEN ENCRYPTION_SCHEME > 0 THEN 1 ELSE 0 END) "Tables Encrypted",
+         SUM(CASE WHEN ENCRYPTION_SCHEME = 0 THEN 1 ELSE 0 END) "Tables Not Encrypted"
+FROM information_schema.INNODB_TABLESPACES_ENCRYPTION
+GROUP BY CASE WHEN INSTR(NAME, '/') = 0 
+                   THEN '01-SYSTEM TABLESPACES'
+                   ELSE CONCAT('02-', SUBSTR(NAME, 1, INSTR(NAME, '/')-1)) END
+ORDER BY 1;
+```
+
+## Step 6: disable encryption runtime 
+
+```
+SET GLOBAL innodb_encrypt_tables = OFF;
 ```
 
 
