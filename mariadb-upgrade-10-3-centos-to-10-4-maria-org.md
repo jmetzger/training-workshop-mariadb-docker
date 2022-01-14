@@ -1,4 +1,4 @@
-# Upgrade 10.3 to 10.4 (Ubuntu 20.04) 
+# Upgrade 10.3 to 10.4 (Centos/Redhat/Rocky) 
 
 ## Prerequisites
 
