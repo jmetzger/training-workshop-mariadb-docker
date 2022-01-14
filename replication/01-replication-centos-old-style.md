@@ -59,13 +59,43 @@ cd /etc
 tar cvfz my.cnf.d.tar.gz my.cnf.d 
 scp my.cnf.d.tar.gz kurs@192.168.56.104:/tmp
 
-# auf slave
+# auf slave ausrollen 
 cd /etc
 mv my.cnf.d my.cnf.d.bkup
 mv /tmp/my.cnf.d.tar.gz . 
 tar cvfz my.cnf.d.tar.gz 
 
+# config anpassen 
+# /etc/my.cnf.d/server.cnf 
+# pr: /etc/my.cnf.d/mariadb-server.cnf
+[mysqld]
+
+
+innodb-buffer-pool-size=3G
+innodb-flush-method=O_DIRECT
+
+# Enable slow-query-log
+slow-query-log
+
+server_id=2
+
+# only necessary, if you want the slave to
+# become master later on
+log-bin=mariadb-bin
+binlog-format=row
+log-slave-updates=1
+log-basename=slave1
+
 ```
+
+# backup auf master ausspielen und auf slave kopieren
+
+```
+mysqldump --all-databases --single-transaction --events --routines --master-data=2 --flush-logs --delete-master-logs > /usr/src/master-dump.sql
+```
+
+
+
 
 # server starten 
 
