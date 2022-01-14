@@ -17,7 +17,7 @@ Install new 10.4 from Mariadb.org
 
 ```
 # 1. systemctl stop mariadb 
-# 2. apt remove mariadb-* 
+# 2. dnf remove mariadb-* 
 # 3. Doublecheck if components left: apt list --installed | grep mariadb
 # 4. Setup repo for mariadb
 # 5. apt update 
@@ -26,7 +26,11 @@ Install new 10.4 from Mariadb.org
 # 7. systemctl enable --now mariadb # enable for next reboot and start immediately 
 # necessary for redhat 
 
-# 8. Doublecheck if mysql_upgrade was done
+# 8. Perform mysql_upgrade 
+# On centos/redhat mysql_upgrade need to be done
+mysql_upgrade 
+
+# 9. Check if it was succesfull 
 cat /var/lib/mysql_upgrade_info 
 
 ```
@@ -45,3 +49,4 @@ cat /var/lib/mysql_upgrade_info
 ## Documentation 
 
   * https://mariadb.com/kb/en/upgrading-from-mariadb-103-to-mariadb-104/
+  * https://mariadb.com/kb/en/mysql_upgrade/
