@@ -11,8 +11,8 @@ server_id=1
 log-basename=master1
 binlog-format=row
 
-systemctl restart mariadb
-
+systemctl stop mariadb
+systemctl start mariadb 
 ```
 
 ## Setup replication user on master 
@@ -86,20 +86,35 @@ binlog-format=row
 log-slave-updates=1
 log-basename=slave1
 
+# server restarten
+systemctl stop mariadb 
+systemctl start mariadb 
+
 ```
 
 # backup auf master ausspielen und auf slave kopieren
 
 ```
 mysqldump --all-databases --single-transaction --events --routines --master-data=2 --flush-logs --delete-master-logs > /usr/src/master-dump.sql
+
+scp /usr/src/master-dump.sql kurs@192.168.56.104:/tmp 
+
+```
+
+# auf slave backup einspielen 
+
+```
+# vi /root/.my.cnf 
+[client]
+password=mysupersecret 
+
+mv /tmp/master-dump.sql /usr/src 
+mysql < master-dump.sql 
+
 ```
 
 
 
-
-# server starten 
-
-```
 
 
 ## Ref: 
