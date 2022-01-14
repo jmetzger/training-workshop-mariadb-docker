@@ -136,3 +136,10 @@ mysql>show slave status \G
 ## Ref: 
 
   * https://mariadb.com/kb/en/setting-up-replication/
+
+## Skip-Counter 
+
+```
+SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1;
+START SLAVE;
+```
