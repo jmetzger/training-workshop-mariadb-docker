@@ -55,6 +55,7 @@
      * [Show all tables within db](show-tables.md) 
      * [Triggers](triggers.md) 
      * [Functions](function.md)
+     * [Stored Procedure](stored-procedure.md)
      * [Events](events.md)
      * [Data Types](https://mariadb.com/kb/en/data-types/)
      
