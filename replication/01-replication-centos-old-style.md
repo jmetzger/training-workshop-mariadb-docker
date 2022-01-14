@@ -92,7 +92,7 @@ systemctl start mariadb
 
 ```
 
-# backup auf master ausspielen und auf slave kopieren
+## backup auf master ausspielen und auf slave kopieren
 
 ```
 mysqldump --all-databases --single-transaction --events --routines --master-data=2 --flush-logs --delete-master-logs > /usr/src/master-dump.sql
@@ -101,7 +101,7 @@ scp /usr/src/master-dump.sql kurs@192.168.56.104:/tmp
 
 ```
 
-# auf slave backup einspielen 
+## auf slave backup einspielen einspielen und konfigurieren
 
 ```
 # vi /root/.my.cnf 
@@ -111,11 +111,16 @@ password=mysupersecret
 mv /tmp/master-dump.sql /usr/src 
 mysql < master-dump.sql 
 
+# vi /root/master.sql 
+CHANGE MASTER TO
+  MASTER_HOST='192.168.56.103',
+  MASTER_USER='replication_user',
+  MASTER_PASSWORD='bigs3cret',
+  MASTER_PORT=3306,
+  MASTER_LOG_FILE='master1-bin.000002',
+  MASTER_LOG_POS=389,
+  MASTER_CONNECT_RETRY=10;
 ```
-
-
-
-
 
 ## Ref: 
 
