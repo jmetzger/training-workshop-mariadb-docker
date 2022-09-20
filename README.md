@@ -7,23 +7,23 @@
      * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
      * [Storage Engines](/basics/storage-engines.md) 
 
+  1. Installation 
+     * [Installation Centos/RockyLinux](installation-centos.md) 
+     * [Start/Status/Stop/Enable von MariaDB](start-status-stop.md)
+     * [Does mariadb listen to the outside world](/installation/listening-where.md)
+
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
 
 ## Backlog 
 
-  1. Architecture of MariaDB 
-     * [Architecture Server](/basics/mariadb-architecture.md)
-     * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
+  1. Architecture of MariaDB
      * [Query Cache Usage and Performance](/performance/query-cache.md)
      * [Optimizer-Basics](optimizer-basics.md) 
  
-
   1. Installation 
-     * [Installation Centos/RockyLinux](installation-centos.md) 
      * [Installation SLES15](https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5) 
      * [Installation (Ubuntu)](installation-ubuntu.md)
-     * [Start/Status/Stop/Enable von MariaDB](start-status-stop.md)
      * [Does mariadb listen to the outside world](/installation/listening-where.md)
      
   1. Configuration
@@ -32,8 +32,7 @@
 
   1. Administration / Troubleshooting
      * [Create fresh datadir (Centos/Redhat)](create-fresh-datadir-centos.md)
-     * [Debug not starting service](troubleshooting/debug-service.md)
-   
+     * [Debug not starting service](troubleshooting/debug-service.md) 
    
   1. Galera 
      * [Installation and Configuration (Centos/Redhat 8)](setup-galera.md)
