@@ -27,7 +27,7 @@ grant all on *.* to training@localhost
 grant all on mydb.* to training@localhost 
 ```
 
-## Revoke global or dg right from a suer 
+## Revoke global or revoke right from a user 
 
 ```
 revoke select on *.* from training@localhost 
