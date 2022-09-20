@@ -1,12 +1,23 @@
 # MariaDB Komplettkurs 
+
 ## Agenda 
+
+  1. Architektur MariaDB
+     * [Architecture Server](/basics/mariadb-architecture.md)
+     * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
+     * [Storage Engines](/basics/storage-engines.md) 
+
+  1. Dokumentation 
+
+
+## Backlog 
 
   1. Architecture of MariaDB 
      * [Architecture Server](/basics/mariadb-architecture.md)
      * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
      * [Query Cache Usage and Performance](/performance/query-cache.md)
      * [Optimizer-Basics](optimizer-basics.md) 
-     * [Storage Engines](/basics/storage-engines.md) 
+ 
 
   1. Installation 
      * [Installation Centos/RockyLinux](installation-centos.md) 
