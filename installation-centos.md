@@ -18,27 +18,34 @@ dnf install -y mariadb-server
   * https://mariadb.org/download/?t=mariadb&p=mariadb&r=10.9.3&os=windows&cpu=x86_64&pkg=msi&m=hs-esslingen
 
 
-### Setup Repo and Install 
+### Setup Repo MariaDB - Server 10.6
 
 ```
-Here is your custom MariaDB YUM repository entry for CentOS. Copy and paste it into a file under /etc/yum.repos.d/ (we suggest naming the file MariaDB.repo or something similar).
+# Setup repo 
+# nano /etc/yum.repos.d/MariaDB.repo
+```
 
-# MariaDB 10.4 CentOS repository list - created 2021-04-20 08:58 UTC
-# http://downloads.mariadb.org/mariadb/repositories/
+```
+# MariaDB 10.6 CentOS repository list - created 2022-09-20 09:46 UTC
+# https://mariadb.org/download/
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.4/centos8-amd64
+baseurl = https://mirror1.hs-esslingen.de/pub/Mirrors/mariadb/yum/10.6/centos8-amd64
 module_hotfixes=1
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgkey=https://mirror1.hs-esslingen.de/pub/Mirrors/mariadb/yum/RPM-GPG-KEY-MariaDB
 gpgcheck=1
-
-The configuration item module_hotfixes=1 is a workaround for what we have been told is a dnf bug. See MDEV-20673 for more details.
-
-After the file is in place, install and start MariaDB with:
-
-sudo dnf install MariaDB-server
-sudo systemctl start mariadb
 ```
+
+```
+# Install
+sudo dnf install -y install MariaDB-server
+sudo systemctl start mysql # always works - systemd - alias 
+sudo systemctl status mysql # Findout real service - name
+# like Windows-Autostart
+sudo systemctl enable mariadb  
+sudo systemctl status mariadb 
+```
+
 
 ## Secure installation 
 
