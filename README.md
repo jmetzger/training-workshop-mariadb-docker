@@ -12,8 +12,14 @@
      * [Start/Status/Stop/Enable von MariaDB](start-status-stop.md)
      * [Does mariadb listen to the outside world](/installation/listening-where.md)
 
+  1. Security and User Rights 
+     * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
+
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
+
+
+
 
 ## Backlog 
 
@@ -47,7 +53,6 @@
      * [Debug and Setup External Connection](/security/debug-external-conn.md) 
      * [Get Rights of user](/security/get-rights-for-user.md)
      * [Secure with SSL server/client](/security/ssl.md) 
-     * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
      * [Auth with unix_socket](create-user-unix-socket.md)
      * Authentification and Authorization
      * [User- and Permission-concepts (best-practice)](/security/user-db-best-practice.md)
