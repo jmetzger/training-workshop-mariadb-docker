@@ -10,7 +10,13 @@ dnf info mariadb-server
 dnf install -y mariadb-server 
 ```
 
+
 ## Install from MariaDB Foundation (Repo) 
+
+### Find Repo Settings 
+
+  * https://mariadb.org/download/?t=mariadb&p=mariadb&r=10.9.3&os=windows&cpu=x86_64&pkg=msi&m=hs-esslingen
+
 
 ### Setup Repo and Install 
 
