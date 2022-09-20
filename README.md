@@ -157,6 +157,7 @@
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
      * [MariaDB Galera Cluster](http://schulung.t3isp.de/documents/pdfs/mariadb/mariadb-galera-cluster.pdf)
      * [MySQL Galera Cluster](https://galeracluster.com/downloads/)   
+     * [Releases List - Long Time / Stable](https://mariadb.com/kb/en/mariadb-server-release-dates/)
    
   1. Questions and Answers 
      * [Questions and Answers](q-and-a.md)
