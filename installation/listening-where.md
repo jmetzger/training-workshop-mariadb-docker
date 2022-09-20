@@ -9,6 +9,6 @@ lsof -i | grep mariadb
 
 netstat -tupel 
 # or 
-nestat -an 
+netstat -an 
 
 ```
