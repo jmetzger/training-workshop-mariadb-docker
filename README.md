@@ -25,9 +25,7 @@
 
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
-
-
-
+     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
 
 ## Backlog 
 
@@ -170,7 +168,7 @@
      * [Optimizer-Hints](performance/optimizer-hints.md) 
          
   1. Documentation / Literature 
-     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
+   
      * [MySQL - Peformance Blog](https://www.percona.com/blog/)
      * [Source-Code MariaDB](https://github.com/MariaDB/server)
      * [Effective MySQL](https://www.amazon.com/Effective-MySQL-Optimizing-Statements-Oracle/dp/0071782796)
