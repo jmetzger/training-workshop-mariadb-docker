@@ -19,6 +19,7 @@
 
   1. Security and User Rights 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
+     * [Change password of user](passwd-change-user.md)
 
   1. Tipps & Tricks 
      * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
