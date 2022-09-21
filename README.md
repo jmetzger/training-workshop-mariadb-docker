@@ -21,6 +21,10 @@
      * [InnoDB - Storage Engine - Structure](/innodb/innodb-structure.md) 
      * [Important InnoDB - configuration - options to optimized performance](/innodb/innodb.md) 
 
+  1. Training Data 
+     * [Setup training data "contributions"](/indexes/setup-training-data-contributions.md)
+     * [Setup sakila test db](sakila.md)
+
   1. Security and User Rights 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
      * [Change password of user](passwd-change-user.md)
@@ -92,9 +96,7 @@
     
 
   
-  1. Training Data 
-     * [Setup training data "contributions"](/indexes/setup-training-data-contributions.md)
-     * [Setup sakila test db](sakila.md)
+ 
      
   1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
      * [binlog aktivieren und auslesen](binlog.md)
