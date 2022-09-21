@@ -12,8 +12,16 @@
      * [Start/Status/Stop/Enable von MariaDB](start-status-stop.md)
      * [Does mariadb listen to the outside world](/installation/listening-where.md)
 
+  1. Database Objects 
+     * [Create Database](/basics/create-database.md)
+     * [Show structure of table](show-create-table-describe.md)
+     * [Show all tables within db](show-tables.md) 
+
   1. Security and User Rights 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
+
+  1. Tipps & Tricks 
+     * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
 
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
@@ -65,9 +73,7 @@
      * [Probleme mit SELinux erkennen und debuggen](selinux-logs.md)
  
   1. Database - Objects  
-     * [Create Database](/basics/create-database.md)
-     * [Show structure of table](show-create-table-describe.md)
-     * [Show all tables within db](show-tables.md) 
+   
      * [Triggers](triggers.md) 
      * [Functions](function.md)
      * [Stored Procedure](stored-procedure.md)
@@ -139,7 +145,7 @@
      * [Schweizer Such-Taschenmesser grep -r](grep-r.md)
      * [Set timezone in Centos 7/8](set-timezone-centos.md) 
      * [Ist die Netzwerkkarte eingerichtet - nmtui](nmtui.md)
-     * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
+ 
      * [User anlegen und passwort vergeben (Centos/Redhat)](useradd-passwd.md)
      * [Scripts for deploying galera-cluster to Ubuntu 20.04](https://github.com/jmetzger/ansible-galera-cluster-maxscale)
   
