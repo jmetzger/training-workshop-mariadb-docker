@@ -39,6 +39,8 @@ cd /usr/src/
 mysql < all-databases.sql 
 
 ```
+
+```
 -- im mysql-client durch eingeben des Befehls 'mysql'
 -- should be 200 or 202
 use sakila; select * from actor;
