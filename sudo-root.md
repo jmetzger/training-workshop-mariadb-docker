@@ -3,5 +3,11 @@
 ```
 # einloggen als normaler Benutzer z.B. benutzer: kurs (wenn ich unter kurs eingeloggt bin) 
 sudo su -
-# eingeben des Passworts des Benutzers
+# Eingeben des Passworts des Benutzers
+
+## oder sudo -i (interaktiv) 
+sudo -i 
+# Eingeben des Passworts des normalen Benutzers
+
 ```
+
