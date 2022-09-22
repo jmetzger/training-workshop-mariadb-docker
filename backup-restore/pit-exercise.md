@@ -49,6 +49,7 @@ use sakila; select * from actor;
 ```
 # auf der Kommandozeile 
 mysql < recover.sql 
+```
 
 ```
 -- im mysql client 
