@@ -104,7 +104,7 @@ skip-name-resolve
   * https://dev.mysql.com/doc/refman/5.7/en/innodb-buffer-pool-resize.html
   
 
-## Privilegs for show engine innodb status 
+## Privileges for show engine innodb status 
 
 ```
  show engine innodb status \G
