@@ -38,6 +38,7 @@
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
      * [Killing connection](https://mariadb.com/kb/en/kill/)
+     * [MariaDB - One Script Installation](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/)
 
 ## Backlog 
 
