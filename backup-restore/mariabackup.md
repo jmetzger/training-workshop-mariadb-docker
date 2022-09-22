@@ -1,9 +1,9 @@
 # Mariabackup 
 
-## Installation von Repo mariab
+## Installation von Repo mariadb (von mariadb.org)
 
 ```
-yum install MariaDB-backup 
+dnf install MariaDB-backup 
 ```
 
 ## Installation von Distri (Centos/Rocky/RHEL)
