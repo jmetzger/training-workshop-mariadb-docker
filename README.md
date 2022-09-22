@@ -43,6 +43,7 @@
   1. Tipps & Tricks 
      * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
      * [Frisches Datenverzeichnis anlegen](create-fresh-datadir-centos.md)
+     * [In den Root-Benutzer wechseln](sudo-root.md)
      
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
