@@ -39,6 +39,7 @@
    
   1. Peformance  
      * [Slow Query Log](slow-query-log.md)
+     * [Percona-toolkit-Installation - Centos](/tools/percona-toolkit-centos.md)
 
   1. Tipps & Tricks 
      * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
@@ -147,7 +148,6 @@
 
   1. Tools & Tricks
      * [Percona-toolkit-Installation - Ubuntu](/tools/percona-toolkit.md) 
-     * [Percona-toolkit-Installation - Centos](/tools/percona-toolkit-centos.md)
      * [pt-query-digest under Windows](pt-query-digest-windows.md)
      * [pt-query-digest - analyze slow logs](/tools/pt-query-digest.md) 
      * [pt-online-schema-change howto](/tools/pt-online-schema-change.md)
