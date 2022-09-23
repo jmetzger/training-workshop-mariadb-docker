@@ -52,6 +52,7 @@
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
      * [Killing connection](https://mariadb.com/kb/en/kill/)
      * [MariaDB - One Script Installation](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/)
+     * [MariaDB - Information Schema Tables](https://mariadb.com/kb/en/information-schema-tables/)
 
 ## Backlog 
 
