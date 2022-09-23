@@ -37,9 +37,12 @@
      * [Flashback](/backup-restore/flashback.md) 
      * [mariabackup](backup-restore/mariabackup.md) 
    
-  1. Peformance  
+  1. Performance  
      * [Slow Query Log](slow-query-log.md)
      * [Percona-toolkit-Installation - Centos](/tools/percona-toolkit-centos.md)
+
+  1. Monitoring 
+     * [What to monitor?](/monitoring/monitoring.md) 
 
   1. Tipps & Tricks 
      * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
@@ -136,9 +139,6 @@
      * [Index and Likes](/indexes/like-index-not-index.md)   
      * [profiling-get-time-for-execution-of.query](/indexes/profiling.md) 
      * [Find out cardinality without index](/indexes/cardinality.md)
-
-  1. Monitoring 
-     * [What to monitor?](/monitoring/monitoring.md) 
 
   1. Replication 
      * [Slave einrichten - gtid (mit mariabackup)](/replication/01-master-slave-gtid.md)
