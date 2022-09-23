@@ -37,7 +37,7 @@ chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
 systemctl start mariadb 
 ```
 
-## Walkthrough (Redhat/Centos)
+## Walkthrough (Redhat/Centos/Rocky Linux)
 
 ```
 # user eintrag in /root/.my.cnf
@@ -62,6 +62,8 @@ mv /var/lib/mysql /var/lib/mysql.bkup
 mariabackup --target-dir=/backups/20200120 --copy-back 
 chmod -R mysql:mysql /var/lib/mysql
 chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
+systemctl start mariadb 
+
 ## important for selinux 
 restorecon -vr /var/lib/mysql 
 systemctl start mariadb 
