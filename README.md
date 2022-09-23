@@ -44,6 +44,9 @@
   1. Monitoring 
      * [What to monitor?](/monitoring/monitoring.md) 
 
+  1. Replication 
+     * [Slave einrichten - gtid (mit mariabackup)](/replication/01-master-slave-gtid.md)
+
   1. Tipps & Tricks 
      * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
      * [Frisches Datenverzeichnis anlegen](create-fresh-datadir-centos.md)
@@ -141,7 +144,7 @@
      * [Find out cardinality without index](/indexes/cardinality.md)
 
   1. Replication 
-     * [Slave einrichten - gtid (mit mariabackup)](/replication/01-master-slave-gtid.md)
+
      * [Slave einrichten - Centos - old style (master_pos)](/replication/01-replication-centos-old-style.md)
      * [MaxScale installieren](/replication/02.5-maxscale-installation.md)
      * [Reference: MaxScale-Proxy mit Monitoring](/replication/02-mariadbmon.md)
