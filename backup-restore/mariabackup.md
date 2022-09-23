@@ -37,7 +37,7 @@ chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
 systemctl start mariadb 
 ```
 
-## Walkthrough (Redhat/Centos/Rocky Linux)
+## Walkthrough (Redhat/Centos/Rocky Linux 8 mit mariadb for mariadb.org)
 
 ```
 # user eintrag in /root/.my.cnf
@@ -64,7 +64,8 @@ chown -R mysql:mysql /var/lib/mysql
 chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
 systemctl start mariadb 
 
-## important for selinux 
+## important for selinux if it does not work 
+## does not start
 restorecon -vr /var/lib/mysql 
 systemctl start mariadb 
 ```
