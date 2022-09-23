@@ -27,6 +27,12 @@ mysql>SET long_query_time = 0.000001
 SET GLOBAL log_queries_not_using_indexes=ON;
 ```
 
+## Geschwätzigkeit (Verbosity) erhöhen 
+
+```
+SET GLOBAL log_slow_verbosity=query_plan,explain
+```
+
 ## Reference 
 
   * https://mariadb.com/kb/en/slow-query-log-overview/
