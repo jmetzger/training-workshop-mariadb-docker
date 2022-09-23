@@ -30,7 +30,7 @@ SET GLOBAL log_queries_not_using_indexes=ON;
 ## Geschwätzigkeit (Verbosity) erhöhen 
 
 ```
-SET GLOBAL log_slow_verbosity=query_plan,explain
+SET GLOBAL log_slow_verbosity='query_plan,explain'
 ```
 
 ## Reference 
