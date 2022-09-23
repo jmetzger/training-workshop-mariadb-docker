@@ -56,7 +56,7 @@ mysqladmin status
 | Uptime	| Seconds since the server was started. We can use this to detect respawns.	 | When uptime is < 180. (seconds)  |
 | Threads_connected	| Number of clients currently connected. If none or too high, something is wrong.	| None |
 | Max_used_connections |	Max number of connections at a time since server started. (max_used_connections / max_connections) indicates if you could run out soon of connection slots.|	When connections usage is > 85%. |
-| Aborted_connects |	Number of failed connection attempts. When growing over a period of time either some credentials are wrong or we are being attacked.	| When aborted connects/min > 3. |
+| Aborted_connects |	Number of failed connection attempts. When growing over a period of time either some credentials are wrong or we are being attacked. show status like 'Aborted_connects'	| When aborted connects/min > 3. |
 
 ### InnoDB 
 
