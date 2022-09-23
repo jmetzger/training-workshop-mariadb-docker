@@ -53,6 +53,7 @@
      * [MariaDB - One Script Installation](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/)
      * [MariaDB - Information Schema Tables](https://mariadb.com/kb/en/information-schema-tables/)
      * [MariaDB - slow query log](https://mariadb.com/kb/en/slow-query-log-overview/)
+     * [MariaDB - sys - vor 10.6](https://github.com/FromDual/mariadb-sys)
 
 ## Backlog 
 
