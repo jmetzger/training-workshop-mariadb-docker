@@ -37,10 +37,8 @@
      * [Flashback](/backup-restore/flashback.md) 
      * [mariabackup](backup-restore/mariabackup.md) 
    
-  1. Backlog Backup 
-     * [Use xtrabackup for MariaDB 5.5](backup-restore/xtrabackup-for-mariadb-5-5.md)
-     * [Ready-made-back-scripts](backup-restore/scripts.md) 
-     * [Simple-Backup-Script](backup-restore/simple-backup.md)
+  1. Peformance  
+     * [Slow Query Log](slow-query-log.md)
 
   1. Tipps & Tricks 
      * [Set hostname on systemd-Systems](hostnamectl-set-hostname.md)
@@ -68,6 +66,11 @@
   1. Configuration
      * [Adjust configuration and restart](config-and-restart.md) 
      * [Set global server system variable](set-global-variable.md)
+
+  1. Backup 
+     * [Use xtrabackup for MariaDB 5.5](backup-restore/xtrabackup-for-mariadb-5-5.md)
+     * [Ready-made-back-scripts](backup-restore/scripts.md) 
+     * [Simple-Backup-Script](backup-restore/simple-backup.md)
 
   1. Administration / Troubleshooting
      * [Create fresh datadir (Centos/Redhat)](create-fresh-datadir-centos.md)
@@ -108,20 +111,6 @@
   1. Locking 
      * [Implicit Locks](locks/innodb-implicit-locks.md)
      * [Identify Deadlocks in innodb](locks/deadlocks.md)
-    
-
-  
- 
-     
-  1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
-     * [binlog aktivieren und auslesen](binlog.md)
-     * [Backup with mysqldump - best practices](backup-restore/mysqldump.md) 
-     * [PIT - Point in time Recovery - Exercise](backup-restore/pit-exercise.md)
-     * [Flashback](/backup-restore/flashback.md) 
-     * [mariabackup](backup-restore/mariabackup.md) 
-     * [Use xtrabackup for MariaDB 5.5](backup-restore/xtrabackup-for-mariadb-5-5.md)
-     * [Ready-made-back-scripts](backup-restore/scripts.md) 
-     * [Simple-Backup-Script](backup-restore/simple-backup.md)
 
   1. Upgrade 
      * [MariaDB Upgrade 10.3 (Centos) -> 10.4 (Mariadb.org)](mariadb-upgrade-10-3-centos-to-10-4-maria-org.md)
