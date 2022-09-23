@@ -51,6 +51,7 @@
      * [Killing connection](https://mariadb.com/kb/en/kill/)
      * [MariaDB - One Script Installation](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/)
      * [MariaDB - Information Schema Tables](https://mariadb.com/kb/en/information-schema-tables/)
+     * [MariaDB - slow query log](https://mariadb.com/kb/en/slow-query-log-overview/)
 
 ## Backlog 
 
