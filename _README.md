@@ -1,29 +1,94 @@
 # MariaDB Komplettkurs 
 
+
 ## Agenda
-  1. Architecture of MariaDB 
+  1. Architektur MariaDB
+     * [Architecture Server](#architecture-server)
      * [Architecture Server (Steps)](#architecture-server-steps)
-     * [Query Cache Usage and Performance](#query-cache-usage-and-performance)
-     * [Optimizer-Basics](#optimizer-basics)
      * [Storage Engines](#storage-engines)
 
   1. Installation 
-     * [Installation Centos](#installation-centos)
+     * [Installation Centos/RockyLinux](#installation-centosrockylinux)
+     * [Start/Status/Stop/Enable von MariaDB](#startstatusstopenable-von-mariadb)
+     * [Does mariadb listen to the outside world](#does-mariadb-listen-to-the-outside-world)
+
+  1. Database Objects 
+     * [Create Database](#create-database)
+     * [Show structure of table](#show-structure-of-table)
+     * [Show all tables within db](#show-all-tables-within-db)
+
+  1. InnoDB - Storage Engine 
+     * [InnoDB - Storage Engine - Structure](#innodb---storage-engine---structure)
+     * [Important InnoDB - configuration - options to optimized performance](#important-innodb---configuration---options-to-optimized-performance)
+
+  1. Training Data 
+     * [Setup training data "contributions"](#setup-training-data-"contributions")
+     * [Setup sakila test db](#setup-sakila-test-db)
+
+  1. Security and User Rights 
+     * [Create User/Grant/Revoke - Management of users](#create-usergrantrevoke---management-of-users)
+     * [Change password of user](#change-password-of-user)
+     * [Automatisches Einloggen ohne Passwort](#automatisches-einloggen-ohne-passwort)
+
+  1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
+     * [binlog aktivieren und auslesen](#binlog-aktivieren-und-auslesen)
+     * [Backup with mysqldump - best practices](#backup-with-mysqldump---best-practices)
+     * [PIT - Point in time Recovery - Exercise](#pit---point-in-time-recovery---exercise)
+     * [Flashback](#flashback)
+     * [mariabackup](#mariabackup)
+   
+  1. Performance  
+     * [Slow Query Log](#slow-query-log)
+     * [Percona-toolkit-Installation - Centos](#percona-toolkit-installation---centos)
+
+  1. Monitoring 
+     * [What to monitor?](#what-to-monitor)
+
+  1. Replication 
+     * [Slave einrichten - gtid (mit mariabackup)](#slave-einrichten---gtid-mit-mariabackup)
+     * [Binary Logs auf master bis slave-log-master-position ändern](#binary-logs-auf-master-bis-slave-log-master-position-ändern)
+
+  1. Tipps & Tricks 
+     * [Set hostname on systemd-Systems](#set-hostname-on-systemd-systems)
+     * [Frisches Datenverzeichnis anlegen](#frisches-datenverzeichnis-anlegen)
+     * [In den Root-Benutzer wechseln](#in-den-root-benutzer-wechseln)
+     
+  1. Dokumentation 
+     * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
+     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
+     * [Killing connection](https://mariadb.com/kb/en/kill/)
+     * [MariaDB - One Script Installation](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/)
+     * [MariaDB - Information Schema Tables](https://mariadb.com/kb/en/information-schema-tables/)
+     * [MariaDB - slow query log](https://mariadb.com/kb/en/slow-query-log-overview/)
+     * [MariaDB - sys - vor 10.6](https://github.com/FromDual/mariadb-sys)
+
+## Backlog 
+
+  1. Architecture of MariaDB
+     * [Query Cache Usage and Performance](#query-cache-usage-and-performance)
+     * [Optimizer-Basics](#optimizer-basics)
+ 
+  1. Installation 
      * [Installation SLES15](https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5)
      * [Installation (Ubuntu)](#installation-ubuntu)
-     * [Start/Status/Stop/Enable von MariaDB](#startstatusstopenable-von-mariadb)
      * [Does mariadb listen to the outside world](#does-mariadb-listen-to-the-outside-world)
      
   1. Configuration
      * [Adjust configuration and restart](#adjust-configuration-and-restart)
      * [Set global server system variable](#set-global-server-system-variable)
 
-  1. Administration 
+  1. Backup 
+     * [Use xtrabackup for MariaDB 5.5](#use-xtrabackup-for-mariadb-55)
+     * [Ready-made-back-scripts](#ready-made-back-scripts)
+     * [Simple-Backup-Script](#simple-backup-script)
+
+  1. Administration / Troubleshooting
      * [Create fresh datadir (Centos/Redhat)](#create-fresh-datadir-centosredhat)
+     * [Debug not starting service](#debug-not-starting-service)
    
   1. Galera 
      * [Installation and Configuration (Centos/Redhat 8)](#installation-and-configuration-centosredhat-8)
-     * [1. Node started nicht nach Crash, z.B. Stromausfall](#1.-node-started-nicht-nach-crash,-z.b.-stromausfall)
+     * [1. Node started nicht nach Crash, z.B. Stromausfall](#1-node-started-nicht-nach-crash-zb-stromausfall)
    
   1. Information Schema / Status / Processes
      * [Show server/session status](#show-serversession-status)
@@ -31,13 +96,14 @@
      * [Kill (kickout user) and stop server](#kill-kickout-user-and-stop-server)
  
   1. Security and User Rights 
+     * [Debug and Setup External Connection](#debug-and-setup-external-connection)
      * [Get Rights of user](#get-rights-of-user)
      * [Secure with SSL server/client](#secure-with-ssl-serverclient)
-     * [Create User/Grant/Revoke - Management of users](#create-usergrantrevoke---management-of-users)
      * [Auth with unix_socket](#auth-with-unix_socket)
      * Authentification and Authorization
      * [User- and Permission-concepts (best-practice)](#user--and-permission-concepts-best-practice)
      * [Setup external access](#setup-external-access)
+     * [Table encryption](#table-encryption)
  
   1. SELinux 
      * [Welche Ports sind freigegeben? (MariaDb startet damit)](#welche-ports-sind-freigegeben-mariadb-startet-damit)
@@ -45,32 +111,20 @@
      * [Probleme mit SELinux erkennen und debuggen](#probleme-mit-selinux-erkennen-und-debuggen)
  
   1. Database - Objects  
-     * [Create Database](#create-database)
-     * [Show structure of table](#show-structure-of-table)
-     * [Show all tables within db](#show-all-tables-within-db)
+   
      * [Triggers](#triggers)
+     * [Functions](#functions)
+     * [Stored Procedure](#stored-procedure)
+     * [Events](#events)
+     * [Data Types](https://mariadb.com/kb/en/data-types/)
      
   1. Locking 
+     * [Implicit Locks](#implicit-locks)
      * [Identify Deadlocks in innodb](#identify-deadlocks-in-innodb)
-    
-  1. InnoDB - Storage Engine 
-     * [InnoDB - Storage Engine - Structure](#innodb---storage-engine---structure)
-     * [Important InnoDB - configuration - options to optimized performance](#important-innodb---configuration---options-to-optimized-performance)
-  
-  1. Training Data 
-     * [Setup training data "contributions"](#setup-training-data-"contributions")
-     
-  1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
-     * [binlog aktivieren und auslesen](#binlog-aktivieren-und-auslesen)
-     * [Backup with mysqldump - best practices](#backup-with-mysqldump---best-practices)
-     * [Flashback](#flashback)
-     * [mariabackup](#mariabackup)
-     * [Use xtrabackup for MariaDB 5.5](#use-xtrabackup-for-mariadb-5.5)
-     * [Ready-made-back-scripts](#ready-made-back-scripts)
-     * [Simple-Backup-Script](#simple-backup-script)
 
   1. Upgrade 
-     * [MariaDB Upgrade 10.4 -> 10.5 (Centos)](#mariadb-upgrade-10.4-->-10.5-centos)
+     * [MariaDB Upgrade 10.3 (Centos) -> 10.4 (Mariadb.org)](#mariadb-upgrade-103-centos-->-104-mariadborg)
+     * [MariaDB Upgrade 10.4 -> 10.5 (Centos)](#mariadb-upgrade-104-->-105-centos)
      * [MariaDB Upgrade 5.5 -> 10.5](https://mariadb.com/kb/en/upgrading-between-major-mariadb-versions/)
 
   1. Performance 
@@ -85,24 +139,20 @@
      * Index-Types 
      * [Describe and indexes](#describe-and-indexes)
      * [Find out indexes](#find-out-indexes)
-     * [Index and Functions (Cool new feature in MySQL 5.7)](#index-and-functions-cool-new-feature-in-mysql-5.7)
+     * [Index and Functions](#index-and-functions)
      * [Index and Likes](#index-and-likes)
-     * [profiling-get-time-for-execution-of.query](#profiling-get-time-for-execution-of.query)
+     * [profiling-get-time-for-execution-of.query](#profiling-get-time-for-execution-ofquery)
      * [Find out cardinality without index](#find-out-cardinality-without-index)
 
-  1. Monitoring 
-     * [What to monitor?](#what-to-monitor)
-
   1. Replication 
-     * [Slave einrichten - gtid (mit mariabackup)](#slave-einrichten---gtid-mit-mariabackup)
-     * [Slave einrichten - master_pos](#slave-einrichten---master_pos)
+
+     * [Slave einrichten - Centos - old style (master_pos)](#slave-einrichten---centos---old-style-master_pos)
      * [MaxScale installieren](#maxscale-installieren)
      * [Reference: MaxScale-Proxy mit Monitoring](#reference:-maxscale-proxy-mit-monitoring)
      * [Walkthrough:Automatic Failover Master Slave](#walkthrough:automatic-failover-master-slave)
 
   1. Tools & Tricks
      * [Percona-toolkit-Installation - Ubuntu](#percona-toolkit-installation---ubuntu)
-     * [Percona-toolkit-Installation - Centos](#percona-toolkit-installation---centos)
      * [pt-query-digest under Windows](#pt-query-digest-under-windows)
      * [pt-query-digest - analyze slow logs](#pt-query-digest---analyze-slow-logs)
      * [pt-online-schema-change howto](#pt-online-schema-change-howto)
@@ -111,7 +161,7 @@
      * [Schweizer Such-Taschenmesser grep -r](#schweizer-such-taschenmesser-grep--r)
      * [Set timezone in Centos 7/8](#set-timezone-in-centos-78)
      * [Ist die Netzwerkkarte eingerichtet - nmtui](#ist-die-netzwerkkarte-eingerichtet---nmtui)
-     * [Set hostname on systemd-Systems](#set-hostname-on-systemd-systems)
+ 
      * [User anlegen und passwort vergeben (Centos/Redhat)](#user-anlegen-und-passwort-vergeben-centosredhat)
      * [Scripts for deploying galera-cluster to Ubuntu 20.04](https://github.com/jmetzger/ansible-galera-cluster-maxscale)
   
@@ -136,14 +186,15 @@
      * [Optimizer-Hints](#optimizer-hints)
          
   1. Documentation / Literature 
-     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
+   
      * [MySQL - Peformance Blog](https://www.percona.com/blog/)
      * [Source-Code MariaDB](https://github.com/MariaDB/server)
      * [Effective MySQL](https://www.amazon.com/Effective-MySQL-Optimizing-Statements-Oracle/dp/0071782796)
      * [Last Training](https://github.com/jmetzger/training-mysql-developers-basics)
-     * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
+
      * [MariaDB Galera Cluster](http://schulung.t3isp.de/documents/pdfs/mariadb/mariadb-galera-cluster.pdf)
      * [MySQL Galera Cluster](https://galeracluster.com/downloads/)
+     * [Releases List - Long Time / Stable](https://mariadb.com/kb/en/mariadb-server-release-dates/)
    
   1. Questions and Answers 
      * [Questions and Answers](#questions-and-answers)
@@ -154,127 +205,17 @@
 
 <div class="page-break"></div>
 
-## Architecture of MariaDB 
+## Architektur MariaDB
+
+### Architecture Server
+
+
+![MariaDB Server Architecture](/images/mysql-architecture.jpg)
 
 ### Architecture Server (Steps)
 
 
 ![MariaDB Server Architecture](/images/mysql-server-architecture.png)
-
-<div class="page-break"></div>
-
-### Query Cache Usage and Performance
-
-
-### Performance query cache 
-
-  * Always try to optimize innodb with disabled query cache first (innodb_buffer_pool) 
-  * If you use query_cache system can only use on CPU-Core. !! 
-  
-### How to enable query cache 
-
-```
-## have_query_cache means compiled in mysql 
-## query_cache_type off means not enable by config
--- query cache is diabled 
-mysql> show variables like '%query_cache%';
-+------------------------------+---------+
-| Variable_name                | Value   |
-+------------------------------+---------+
-| have_query_cache             | YES     |
-| query_cache_limit            | 1048576 |
-| query_cache_min_res_unit     | 4096    |
-| query_cache_size             | 1048576 |
-| query_cache_type             | OFF     |
-| query_cache_wlock_invalidate | OFF     |
-+------------------------------+---------+
-6 rows in set (0.01 sec)
-
-root@trn01:/etc/mysql/mysql.conf.d# tail mysqld.cnf
-[mysqld]
-pid-file        = /var/run/mysqld/mysqld.pid
-socket          = /var/run/mysqld/mysqld.sock
-datadir         = /var/lib/mysql
-log-error       = /var/log/mysql/error.log
-## By default we only accept connections from localhost
-bind-address    = 0.0.0.0
-## Disabling symbolic-links is recommended to prevent assorted security risks
-symbolic-links=0
-query-cache-type=1
-
-systemctl restart mysql 
-
-mysql> show variables like '%query_cache%';
-+------------------------------+---------+
-| Variable_name                | Value   |
-+------------------------------+---------+
-| have_query_cache             | YES     |
-| query_cache_limit            | 1048576 |
-| query_cache_min_res_unit     | 4096    |
-| query_cache_size             | 1048576 |
-| query_cache_type             | ON      |
-| query_cache_wlock_invalidate | OFF     |
-+------------------------------+---------+
-6 rows in set (0.01 sec)
-
-
-mysql> show status like '%Qcache%';
-+-------------------------+---------+
-| Variable_name           | Value   |
-+-------------------------+---------+
-| Qcache_free_blocks      | 1       |
-| Qcache_free_memory      | 1031832 |
-| Qcache_hits             | 0       |
-| Qcache_inserts          | 0       |
-| Qcache_lowmem_prunes    | 0       |
-| Qcache_not_cached       | 0       |
-| Qcache_queries_in_cache | 0       |
-| Qcache_total_blocks     | 1       |
-+-------------------------+---------+
-8 rows in set (0.00 sec)
-
-## status in session zurücksetzen. 
-mysql> flush status;
-Query OK, 0 rows affected (0.00 sec)
-
-```
-
-### Performance bottleneck - mutex 
-
-https://mariadb.com/de/resources/blog/flexible-mariadb-server-query-cache/
-
-```
-
-```
-
-### Something planned ?
-
-  * Nope ;o( Demand is new  
-  * You might be able to use Demand together with maxscale 
-  * Refer to: 
-  https://mariadb.com/de/resources/blog/flexible-mariadb-server-query-cache/
-  
-  
-  ```
-  A mutual exclusion object (mutex) is a programming object that allows multiple program threads to share a resource (such as a folder) but not simultaneously. Mutex is set to unlock when the data is no longer needed or when a routine is finished. Mutex creates a bottleneck effect. The blocking means only one query can look at the Query Cache at a time and other queries must wait. A query that must wait to look in the cache only to find it isn’t in the cache will be slowed instead of being accelerated.
-  ```
-
-<div class="page-break"></div>
-
-### Optimizer-Basics
-
-
-### General 
-
-  * All optimizer today are cost-based 
-
-### Cost-Based 
-
-```
-## How much costs are needed to get the information 
-```
-
-<div class="page-break"></div>
 
 ### Storage Engines
 
@@ -290,6 +231,10 @@ How your data is stored
 
   * Performance, features and other characteristics you want
 
+### Where ? 
+
+  * Theoretically you can use a different engine for every table 
+  * But: For performance optimization and future, it is better to concentrate on one 
 
 ### What do they do ?
 
@@ -312,43 +257,66 @@ How your data is stored
 
 ### Which are the most important one ?
 
+  * InnoDB (currently default engine) 
   * MyISAM/Aria
-  * InnoDB
   * Memory
   * CSV
   * Blackhole (/dev/null)
   * Archive
   * Partition
-  * Federated/FederatedX
-
-<div class="page-break"></div>
+  * (Federated/FederatedX)
 
 ## Installation 
 
-### Installation Centos
+### Installation Centos/RockyLinux
 
 
-### Setup Repo and Install 
+### Install from Distribution 
+
 
 ```
-Here is your custom MariaDB YUM repository entry for CentOS. Copy and paste it into a file under /etc/yum.repos.d/ (we suggest naming the file MariaDB.repo or something similar).
+dnf search mariadb
+## find version 
+dnf info mariadb-server 
+dnf install -y mariadb-server 
+```
 
-## MariaDB 10.4 CentOS repository list - created 2021-04-20 08:58 UTC
-## http://downloads.mariadb.org/mariadb/repositories/
+
+### Install from MariaDB Foundation (Repo) 
+
+#### Find Repo Settings 
+
+  * https://mariadb.org/download/?t=mariadb&p=mariadb&r=10.9.3&os=windows&cpu=x86_64&pkg=msi&m=hs-esslingen
+
+
+#### Setup Repo MariaDB - Server 10.6
+
+```
+## Setup repo 
+## nano /etc/yum.repos.d/MariaDB.repo
+```
+
+```
+## MariaDB 10.6 CentOS repository list - created 2022-09-20 09:46 UTC
+## https://mariadb.org/download/
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.4/centos8-amd64
+baseurl = https://mirror1.hs-esslingen.de/pub/Mirrors/mariadb/yum/10.6/centos8-amd64
 module_hotfixes=1
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgkey=https://mirror1.hs-esslingen.de/pub/Mirrors/mariadb/yum/RPM-GPG-KEY-MariaDB
 gpgcheck=1
-
-The configuration item module_hotfixes=1 is a workaround for what we have been told is a dnf bug. See MDEV-20673 for more details.
-
-After the file is in place, install and start MariaDB with:
-
-sudo dnf install MariaDB-server
-sudo systemctl start mariadb
 ```
+
+```
+## Install
+sudo dnf install -y install MariaDB-server
+sudo systemctl start mysql # always works - systemd - alias 
+sudo systemctl status mysql # Findout real service - name
+## like Windows-Autostart
+sudo systemctl enable mariadb  
+sudo systemctl status mariadb 
+```
+
 
 ### Secure installation 
 
@@ -357,39 +325,6 @@ mariadb-secure-installation
 ## OR: if not present before 10.4 
 mysql_secure_installation 
 ```
-
-<div class="page-break"></div>
-
-### Installation SLES15
-
-  * https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5
-
-### Installation (Ubuntu)
-
-
-### Setup repo and install
-
- * https://downloads.mariadb.org/mariadb/repositories/
-
-```
-### repo 
-sudo apt-get install software-properties-common
-sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-## does an apt update after setting repo - automatically 
-sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mirror.dogado.de/mariadb/repo/10.5/ubuntu focal main'
-sudo apt install mariadb-server 
-
-```
-
-### Secure installation 
-
-```
-mariadb-secure-installation 
-## OR: if not present before 10.4 
-mysql_secure_installation 
-```
-
-<div class="page-break"></div>
 
 ### Start/Status/Stop/Enable von MariaDB
 
@@ -401,6 +336,9 @@ mysql_secure_installation
 systemctl status mariadb
 systemctl stop mariadb 
 systemctl start mariadb 
+
+## 
+systemctl restart mariadb
 ```
 
 ### enable 
@@ -410,7 +348,12 @@ systemctl start mariadb
 systemctl enable mariadb 
 ```
 
-<div class="page-break"></div>
+### how is service configured / systemd-wise 
+
+```
+systemctl cat mariadb 
+
+```
 
 ### Does mariadb listen to the outside world
 
@@ -421,679 +364,14 @@ systemctl enable mariadb
 lsof -i | grep mariadb
 ## localhost means it does NOT listen to the outside now 
 ## mariadbd  5208           mysql   19u  IPv4  56942      0t0  TCP localhost:mysql (LISTEN)
-```
-
-<div class="page-break"></div>
-
-## Configuration
-
-### Adjust configuration and restart
-
-
-```
-## change config in /etc/mysql/50-server.cnf 
-## After that restart server - so that it takes your new config 
-systemctl restart mariadb 
-echo $? # Was call restart succesful -> 0 
-```
-
-<div class="page-break"></div>
-
-### Set global server system variable
-
-
-### Find out current value 
-
-```
-## show global variable 
-show global variables like '%automatic_sp%'
-## or // variable_name needs to be in captitals 
-use information_schema
-select * from global_variables where variable_name like '%AUTOMATIC_SP%';
-
-## If you know the exact name 
-select @@global.automatic_sp_privileges;
-select @@GLOBAL.automatic_sp_privileges;
-```
-
-### Set global Variable 
-
-```
-## will be set like so till next restart of mysql server 
-set global automatic_sp_privileges = 0 
-```
-
-### automatic_sp_privileges can only be set globally 
-
-```
-## Refer to: server system variable doku 
-
-## Has same value in global an session scope 
-MariaDB [information_schema]> select @@automatic_sp_privileges; select @@global.automatic_sp_privileges;
-+---------------------------+
-| @@automatic_sp_privileges |
-+---------------------------+
-|                         0 |
-+---------------------------+
-1 row in set (0.000 sec)
-
-+----------------------------------+
-| @@global.automatic_sp_privileges |
-+----------------------------------+
-|                                0 |
-+----------------------------------+
-1 row in set (0.000 sec)
-```
-
-### Reference:
-
-  * https://mariadb.com/kb/en/server-system-variables/#automatic_sp_privileges
-
-<div class="page-break"></div>
-
-## Administration 
-
-### Create fresh datadir (Centos/Redhat)
-
-
-### Walkthrough 
-
-```
-## Schritt 1: Prepare 
-systemctl stop mariadb 
-cd /var/lib 
-## eventually delete old back dir
-rm -fR /var/lib/mysql.bkup 
-## 
-mv mysql mysql.bkup 
-
-## Schritt 2: Fresh 
-mysql_install_db --user=mysql
-chown mysql:mysql mysql
-chmod g+rx,o+rx mysql 
-restorecon -rv /var/lib/mysql 
-
-## Schritt 3: Start 
-systemctl start mariadb
-```
-
-<div class="page-break"></div>
-
-## Galera 
-
-### Installation and Configuration (Centos/Redhat 8)
-
-
-### Setting up 1st - node
-
-```
-## Schritt 1: Create config 
-
-/etc/my.cnf.d/z_galera.cnf 
-[mysqld]
-binlog_format=ROW
-default-storage-engine=innodb
-innodb_autoinc_lock_mode=2
-bind-address=0.0.0.0
-## Set to 1 sec instead of per transaction
-## for better performance // Attention: You might loose data on power
-innodb_flush_log_at_trx_commit=0
-## Galera Provider Configuration
-wsrep_on=ON
-## centos7 (x86_64)
-wsrep_provider=/usr/lib64/galera-4/libgalera_smm.so
-## Galera Cluster Configuration
-wsrep_cluster_name="test_cluster"
-wsrep_cluster_address="gcomm://192.168.56.103,192.168.56.104,192.168.56.105"
-wsrep_node_address=192.168.56.103
-## Galera Synchronization Configuration
-wsrep_sst_method=rsync
-```
-
-### Stop the server and bootstrap cluster 
-
-```
-## setup first node in cluster 
-systemctl stop mariadb 
-galera_new_cluster # statt systemctl start mariadb 
-```
-
-### Check if cluster is running 
-
-```
-mysql> show status like 'wsrep%'\G
-*************************** 38. row ***************************
-Variable_name: wsrep_local_state_comment
-        Value: Synced
-*************************** 56. row ***************************
-Variable_name: wsrep_cluster_size
-        Value: 1
-*************************** 57. row ***************************
-Variable_name: wsrep_cluster_state_uuid
-        Value: 562e5455-a40f-11eb-b8c9-1f32a94e106e
-*************************** 58. row ***************************
-Variable_name: wsrep_cluster_status
-        Value: Primary
-*************************** 59. row ***************************
-Variable_name: wsrep_connected
-        Value: ON
-
-```
-
-#### Setup firwealld for galera 
-
-```
-firewall-cmd --add-port=3306/tcp --permanent
-firewall-cmd --add-port=4567/tcp --permanent
-firewall-cmd --add-port=4568/tcp --permanent
-firewall-cmd --add-port=4444/tcp --permanent
-firewall-cmd --reload 
-
-firewall-cmd --add-port=3306/tcp --permanent; firewall-cmd --add-port=4567/tcp --permanent; firewall-cmd --add-port=4568/tcp --permanent; firewall-cmd --add-port=4444/tcp --permanent; firewall-cmd --reload 
-
-
-```
-
-<div class="page-break"></div>
-
-### 1. Node started nicht nach Crash, z.B. Stromausfall
-
-
-### Warum startet nicht ? 
-
-```
-## node ist in einem nicht-geordneten Zustand.
-## und hat Angst ;o), dass die anderen Nodes u.U. weiter sind 
-## Ziel sollte sein, die letzte Node als 1. zu starten mit -> galera_new_cluster 
-```
-
-### Wie beheben ? 
-
-```
-## Nach Informationen im Status gucken 
-systemctl status mariadb 
-
-## Nach Informationen in den Logs schauen 
-journalctl -u mariadb 
-## Speziell kann ich rausfiltern
-journalctl -u mariadb | grep -i error
-
-## In der Regel steht safe_to_bootstrap auf 0 
-ä Fixend 
-/var/lib/grastate.dat 
-safe_to_bootstrap = 1 # setzen 
-
-## Immer nur ausführen, wenn es nur eine Node 1 !! git 
-galera-new-cluster
-
-```
-
-<div class="page-break"></div>
-
-## Information Schema / Status / Processes
-
-### Show server/session status
-
-
-### Through mysql
-
-```
-## in mysql interface (client)
-mysql
-status;
-```
-
-### With mysqladmin 
-
-```
-mysqladmin status
-## or if you want to know more 
-mysqladmin extended status 
-```
-
-### with mysql -> show status 
-
-```
-mysql> show status;
-mysql> show global status;
-mysql> # setzt session status zurück 
-mysql> flush status; 
-mysql> show status;
-```
-
-<div class="page-break"></div>
-
-### Kill long running process
-
-
-```
-## Session 1
-## sleep for 120 seconds 
-select sleep(120)
-
-## Session 2
-show processlist 
-## kill process you have identified for sleep(120) 
-MariaDB [(none)]> show processlist;
-+----+------+-----------+----------+---------+------+------------+-------------------+----------+
-| Id | User | Host      | db       | Command | Time | State      | Info              | Progress |
-+----+------+-----------+----------+---------+------+------------+-------------------+----------+
-| 36 | root | localhost | NULL     | Query   |    0 | starting   | show processlist  |    0.000 |
-| 37 | root | localhost | training | Query   |    4 | User sleep | select sleep(120) |    0.000 |
-+----+------+-----------+----------+---------+------+------------+-------------------+----------+
-2 rows in set (0.000 sec)
-## take 37 
-kill 37 
-
-## Session 1: query terminates 
-ERROR 2013 (HY000): Lost connection to MySQL server during query
-
-```
-
-<div class="page-break"></div>
-
-### Kill (kickout user) and stop server
-
-
-```
-MariaDB [mysql]> show processlist;
-+----+----------+-----------+----------+---------+------+----------+------------------+----------+
-| Id | User     | Host      | db       | Command | Time | State    | Info             | Progress |
-+----+----------+-----------+----------+---------+------+----------+------------------+----------+
-| 30 | root     | localhost | mysql    | Sleep   |   10 |          | NULL             |    0.000 |
-| 34 | root     | localhost | mysql    | Query   |    0 | starting | show processlist |    0.000 |
-| 43 | training | localhost | training | Sleep   |    5 |          | NULL             |    0.000 |
-+----+----------+-----------+----------+---------+------+----------+------------------+----------+
-3 rows in set (0.000 sec)
-
-MariaDB [mysql]> quit
-Bye
-root@its-lu20s04:~# mysql -e 'kill 43' && systemctl stop mariadb
-root@its-lu20s04:~#
-```
-
-<div class="page-break"></div>
-
-## Security and User Rights 
-
-### Get Rights of user
-
-
-### Root can show rights of a specific user 
-
-```
-## shows the right of the logged in user (you as a user)
-show grants; 
-
-## show grants for a specific user 
-## no need for ' (quotes) if there are not special chars withing 
-## e.g.
-show grants for training@localhost; 
-## if there are special chars, use quotes
-show grants for 'mariadb.sys'@localhost;
-
-## if you want to see rights of a user that has rights from everywhere
-show grants for training@'%';
-```
-
-### If you cannot remember the exact user (user@host) look it up
-
-```
-## within mysql client 
-use mysql 
-select * from user \G 
-```
-
-<div class="page-break"></div>
-
-### Secure with SSL server/client
-
-
-### Create CA and Server-Key 
-
-
-```
-
-## On Server - create ca and certificates 
-sudo mkdir -p /etc/mysql/ssl
-sudo cd /etc/mysql/ssl
-
-## create ca.  
-sudo openssl genrsa 4096 > ca-key.pem
-
-## create ca-certificate 
-## Common Name: MariaDB Admin 
-sudo openssl req -new -x509 -nodes -days 365000 -key ca-key.pem -out ca-cert.pem
-
-## create server-cert 
-## Common Name: MariaDB Server
-## Password: --- leave empty ----
-sudo openssl req -newkey rsa:2048 -days 365000 -nodes -keyout server-key.pem -out server-req.pem
-
-## Next process the rsa - key 
-sudo openssl rsa -in server-key.pem -out server-key.pem
-
-## Now sign the key 
-sudo openssl x509 -req -in server-req.pem -days 365000 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
-
-```
-
 
+netstat -tupel 
+## or 
+netstat -an 
 
-### Verify certificates 
-
-```
-openssl verify -CAfile ca-cert.pem server-cert.pem 
-
-
-```
-
-### Configure Server 
-```
-## create file 
-## /etc/my.cnf.d/z_ssl.cnf 
-[mysqld]
-ssl-ca=/etc/mysql/ssl/ca-cert.pem
-ssl-cert=/etc/mysql/ssl/server-cert.pem
-ssl-key=/etc/mysql/ssl/server-key.pem
-### Set up TLS version here. For example TLS version 1.2 and 1.3 ##
-tls_version = TLSv1.2,TLSv1.3
-
-## Set ownership 
-chown -vR mysql:mysql /etc/mysql/ssl/
-
-```
-
-#### Restart and check for errors 
-```
-systemctl restart mariadb
-journalctl -u mariadb 
-
-```
-
-#### Setup on clients 
-
-```
-## from 
-## copy /etc/mysql/ssl/ca-cert.pem 
-## to client
-cd /etc/mysql
-tar cvfz ssl.tar.gz ssl
-scp ssl.tar.gz 11trainingdo@ip:/tmp 
-```
-
-```
-sudo vi /etc/mysql/mariadb.conf.d/50-mysql-clients.cnf
-
-Append/edit in [mysql] section:
-
-### MySQL Client Configuration ##
-ssl-ca=/etc/mysql/ssl/ca-cert.pem
-
-###  Force TLS version for client too
-##tls_version = TLSv1.2,TLSv1.3
-#### This option is disabled by default ###
-#### ssl-verify-server-cert ###
-
-## only works if you have no self-signed certificate
-ssl-verify-server-cert
-
-
-```
-
-### Test connection on client 
-
-```
-mysql --ssl -uxyz -p -h <ip-of-server>
-mysql>status
-SSL:                    Cipher in use is TLS_AES_256_GCM_SHA384
-
-```
-
-### Force to use ssl 
-
-
-```
-## on server 
-## now client can only connect, when using ssl 
-mysql> grant USAGE on *.* to remote@10.10.9.144 require ssl;
-```
-
-### On client to enable ssl by default for root 
-```
-vi /root/.my.cnf 
-[mysql]
-ssl 
-
-## now mysql will always use ssl 
-mysql -uxyz -p -h10.10.9.110 
-```
-
-
-### Ref 
-
-  * https://www.cyberciti.biz/faq/how-to-setup-mariadb-ssl-and-secure-connections-from-clients/
-  
-  ```
-
-<div class="page-break"></div>
-
-### Create User/Grant/Revoke - Management of users
-
-
-### Create user 
-
-```
-create user training@localhost identified by 'deinpasswort';
-```
-
-### Drop user (=delete user) 
-
-```
-drop user training@localhost 
-```
-
-### Change User (e.g. change authentication) 
-
-```
-## change pass
-alter user training@localhost identified by 'newpassword';
-```
-
-### Set global or db rights for a user 
-
-```
-grant all on *.* to training@localhost
-## only a specific db 
-grant all on mydb.* to training@localhost 
-```
-
-### Revoke global or dg right from a suer 
-
-```
-revoke select on *.* from training@localhost 
-## only from a specific db 
-revoke select on training.* from training@localhost 
-```
-
-### Refs:
-
-  * https://mariadb.com/kb/en/grant/#the-grant-option-privilege
-  * https://mariadb.com/kb/en/revoke/
-
-<div class="page-break"></div>
-
-### Auth with unix_socket
-
-
-```
-mysql>create user training@localhost identified via unix_socket
-useradd training
-passwd training
-
-## testing
-su - training
-## mysql 
-## shouuld not work without password 
-## Be sure, that use has access to socket 
-cd /var/lib/mysql 
-ls -la mysql.socket 
-```
-
-<div class="page-break"></div>
-
-### User- and Permission-concepts (best-practice)
-
-
-```
-## user should have as little permissions as possible
-## so many as needed ;o) 
-MariaDB [mysql]> create database eventplanner;
-Query OK, 1 row affected (0.000 sec)
-
-MariaDB [mysql]> create user eventplanner@localhost identified by 'eventplanner';
-Query OK, 0 rows affected (0.001 sec)
-
-MariaDB [mysql]> grant all on eventplanner.* to eventplanner@localhost;
-Query OK, 0 rows affected (0.003 sec)
-```
-
-<div class="page-break"></div>
-
-### Setup external access
-
-
-### Testing 
-
-```
-## Where .104 is the server you want to connect to 
-## Variante 1 
-mysqladmin ping -h 192.168.56.104
-echo $? 
--> 0 // it is possible to reach mysql - server 
-
-## Variante 2
-mysqladmin ping -h 192.168.56.104
-echo $?
--> 1 // i cannot reach mysql-server  -> port might close / firewall ? 
-
-## or use telnet
-telnet 192.168.56.104 3306
-
-```
-
-### Checks on MariaDB  (Theory) 
-
-  * Is MariaDB - Server running ? 
-  * Is 3306 port open (exposed to the outside)
-  * Is firewall open for port 3306  
-  * Is there a valid user, who connect) 
-
-### Checks on MariaDB (Practical) 
-
-```
-## Step 1: Running 
-systemctl status mariadb 
-## Step 2: Port open ?
-lsof -i # does it listen to all interfaces. -> * 
-        # or an externel interface 
-## Step 3: Firewall open -> see next block 
-## Step 4: User who can connet ? 
-```
-
-### Checks on Firewall. 
-
-```
-## Is firwall running and enabled 
-systemctl status firewalld 
-firewall-cmd --state 
-
-## Is interface setup for usage of firewalld 
-firewall-cmd --get-active-zones 
-
-## Is service "mysql" in zones 
-firewall-cmd --list-all-zones | less # is it within public - zone -> mysql
-
-## To enable it, if not set 
-firewall-cmd --add-service=mysql --zone=public --permanent # writes to filesystem config 
-firewall-cmd --reload # rereads settings from filesystem 
-```
-
-### Setup valid user 
-
-```
-## on server you want to connect to 
-mysql> create user extern@'192.168.56.%' identified by 'mysecretpass'
-mysql> grant all on sakila.* to extern@'192.168.56.%'
-```
-
-### Now test from external with mysql
-
-```
-mysql -uextern -p -h 192.168.56.104 
-mysql>show databases;
-```
-
-<div class="page-break"></div>
-
-## SELinux 
-
-### Welche Ports sind freigegeben? (MariaDb startet damit)
-
-
-### Welche Ports 
-
-```
-semanage port -l | grep mysql 
 ```
-
-<div class="page-break"></div>
-
-### Neues Datenverzeichnis SELinux bekanntmachen - semanage fcontext
-
-
-```
-mkdir /data
-chown mysql:mysql /data
-semanage fcontext -a -t mysqld_db_t "/data(/.*)?"
-restorecon -vr /data
-## type _t should mysqld_db_t 
-ls -laZ
-```
-
-<div class="page-break"></div>
-
-### Probleme mit SELinux erkennen und debuggen
-
-
-``` 
-## Wenn mariadb nicht startet, dann zunächst Loganalyse
-systemctl status mariadb 
-## Gibt es ERROR - Einträge ? 
-## Gibt es Permission / Access Denied - Einträge 
-## Wenn ansonsten alle Rechte stimmen, weisst das Probleme mit SELinux 
-journalctl -u mariadb | less 
-
-
-## Logs von selinux laufen über den Audit-Daemon 
-/var/log/audit/audit.log 
-## Dies können mit sealert analysiert werden
-## Wichtig: Geduld haben, die Analyse dauert einen Moment 
-## auch nach 100% noch abwarten 
-sealert -a /var/log/audit/audit.log 
-
-## Allheilmittel ist meistens 
-## Setzt den richtigen Context, den SELinux braucht, 
-## damit mariadb starten kann 
-restorecon -rv /var/lib/mysql 
-
-```
-
-
-
-<div class="page-break"></div>
 
-## Database - Objects  
+## Database Objects 
 
 ### Create Database
 
@@ -1102,8 +380,6 @@ restorecon -rv /var/lib/mysql
 create schema training
 create database training
 ```
-
-<div class="page-break"></div>
 
 ### Show structure of table
 
@@ -1121,8 +397,6 @@ show create table user
 use mysql;
 describe user;
 ```
-
-<div class="page-break"></div>
 
 ### Show all tables within db
 
@@ -1168,41 +442,6 @@ MariaDB [training]> show create table mitarbeiter;
 
 ```
 
-<div class="page-break"></div>
-
-### Triggers
-
-
-
-### Ref with walkthrough 
-
-  * https://mariadb.com/kb/en/trigger-overview/
-
-<div class="page-break"></div>
-
-## Locking 
-
-### Identify Deadlocks in innodb
-
-
-### Example 
-
-```
-##
-SELECT l.*, t.*
-    FROM information_schema.INNODB_LOCKS l
-    JOIN information_schema.INNODB_TRX t
-        ON l.lock_trx_id = t.trx_id
-    WHERE trx_state = 'LOCK WAIT' \G
-
-```
-
-### Refs 
-
-  * https://mariadb.com/kb/en/information-schema-innodb_locks-table/
-
-<div class="page-break"></div>
-
 ## InnoDB - Storage Engine 
 
 ### InnoDB - Storage Engine - Structure
@@ -1210,15 +449,14 @@ SELECT l.*, t.*
 
 ![InnoDB Structure](/images/InnoDB-Structure.jpg)
 
-<div class="page-break"></div>
-
 ### Important InnoDB - configuration - options to optimized performance
 
 
 ### How big is the innodb buffer currently (setup) ?
 
 ```
-mysql>select @@innodb_buffer_pool_size 
+mysql>select @@innodb_buffer_pool_size; 
+mysql>show variables like '%buffer%';
 ```
 
 ### Innodb buffer pool
@@ -1262,6 +500,11 @@ systemctl restart mysql
 mysql
 mysql>show variables like 'innodb%buffer%';
 ```
+### problems, when dynamically increasing buffer 
+
+  * https://www.percona.com/blog/2018/06/19/chunk-change-innodb-buffer-pool-resizing/
+
+
 
 ### innodb_flush_method 
 
@@ -1313,15 +556,13 @@ skip-name-resolve
   * https://dev.mysql.com/doc/refman/5.7/en/innodb-buffer-pool-resize.html
   
 
-### Privilegs for show engine innodb status 
+### Privileges for show engine innodb status 
 
 ```
  show engine innodb status \G
 ERROR 1227 (42000): Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
 
 ```
-
-<div class="page-break"></div>
 
 ## Training Data 
 
@@ -1344,7 +585,87 @@ cd mysql_example
 ./setup.sh 
 ```
 
-<div class="page-break"></div>
+### Setup sakila test db
+
+
+```
+cd /usr/src
+wget https://downloads.mysql.com/docs/sakila-db.tar.gz
+tar xzvf sakila-db.tar.gz
+
+cd sakila-db 
+mysql < sakila-schema.sql 
+mysql < sakila-data.sql 
+
+```
+
+## Security and User Rights 
+
+### Create User/Grant/Revoke - Management of users
+
+
+### Create user 
+
+```
+create user training@localhost identified by 'deinpasswort';
+```
+
+### Drop user (=delete user) 
+
+```
+drop user training@localhost 
+```
+
+### Change User (e.g. change authentication) 
+
+```
+## change pass
+alter user training@localhost identified by 'newpassword';
+```
+
+### Set global or db rights for a user 
+
+```
+grant all on *.* to training@localhost
+## only a specific db 
+grant all on mydb.* to training@localhost 
+```
+
+### Revoke global or revoke right from a user 
+
+```
+revoke select on *.* from training@localhost 
+## only from a specific db 
+revoke select on training.* from training@localhost 
+```
+
+### Refs:
+
+  * https://mariadb.com/kb/en/grant/#the-grant-option-privilege
+  * https://mariadb.com/kb/en/revoke/
+
+### Change password of user
+
+
+```
+## you must be root or privileged to changed passwords
+alter user training@localhost identified by 'password';
+```
+
+### Automatisches Einloggen ohne Passwort
+
+
+```
+cat /home/kurs/.my.cnf
+[mysql]
+user=training
+password=password
+```
+
+```
+## einloggen als training
+mysql 
+```
 
 ## Binlog, Backup and Restore (Point-In-Time aka PIT) 
 
@@ -1401,8 +722,6 @@ mysqlbinlog -vv rechnername1-bin.000001
 mysql> show master status;
 ```
 
-<div class="page-break"></div>
-
 ### Backup with mysqldump - best practices
 
 
@@ -1422,7 +741,7 @@ mysqldump --all-databases --single-transaction --routines --events > /usr/src/al
 
 ## on local systems using socket, there are no huge benefits concerning --compress
 ## when you dump over the network use it for sure 
-mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --compress > /usr/src/all-databases.sql;
+mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs  > /usr/src/all-databases.sql;
 ```
 
 ### With PIT_Recovery you can use --delete-master-logs 
@@ -1430,7 +749,14 @@ mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines
   * All logs before flushing will be deleted 
   
 ```
-mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --compress --delete-master-logs > /usr/src/all-databases.sql;
+mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --delete-master-logs > /usr/src/all-databases.sql;
+```
+
+### Flush binary logs from mysql 
+
+```
+mysql -e "PURGE BINARY LOGS BEFORE '2013-04-22 09:55:22'";
+
 ```
 
 ### Version with zipping 
@@ -1469,7 +795,65 @@ echo "create database mynewdb" | mysql
 mysql mynewdb < sakila-all.sql 
 ```
 
-<div class="page-break"></div>
+### PIT - Point in time Recovery - Exercise
+
+
+### Problem coming up  
+
+```
+## Step 1 : Create full backup (assuming 24:00 o'clock) 
+mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --delete-master-logs > /usr/src/all-databases.sql;
+
+## Step 2: Working on data 
+mysql>use sakila; 
+mysql>insert into actor (first_name,last_name) values ('john','The Rock');
+mysql>insert into actor (first_name,last_name) values ('johanne','Johannson');
+
+## Optional: Step 3: Looking into binary to see this data 
+cd /var/lib/mysql 
+## last binlog 
+mysqlbinlog -vv mariadb-bin.000005
+
+## Step 4: Some how a guy deletes data 
+mysql>use sakila; delete from actor where actor_id > 200;
+## now only 200 datasets 
+mysql>use sakila; select * from actor;
+
+```
+  
+### Fixing the problem 
+
+```
+## find out the last binlog 
+## Simple take the last binlog 
+
+cd /var/lib/mysql
+## Find the position where the problem occured 
+## and create a recover.sql - file (before apply full backup)
+mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 > /usr/src/recover.sql
+
+## Step 1: Apply full backup 
+cd /usr/src/
+mysql < all-databases.sql 
+
+```
+
+```
+-- im mysql-client durch eingeben des Befehls 'mysql'
+-- should be 200 or 202
+use sakila; select * from actor;
+```
+
+```
+## auf der Kommandozeile 
+mysql < recover.sql 
+```
+
+```
+-- im mysql client 
+-- now it should have all actors before deletion 
+use sakila; select * from actor;
+```
 
 ### Flashback
 
@@ -1480,15 +864,20 @@ mysql mynewdb < sakila-all.sql
 
   * https://mariadb.com/kb/en/flashback/
 
-<div class="page-break"></div>
-
 ### mariabackup
 
 
-### Installation von Repo mariab
+### Installation von Repo mariadb (von mariadb.org)
 
 ```
-yum install MariaDB-backup 
+dnf install MariaDB-backup 
+```
+
+### Installation von Distri (Centos/Rocky/RHEL)
+
+```
+## Rocky 8 
+dnf install mariadb-backup 
 ```
 
 ### Walkthrough (Ubuntu/Debian)
@@ -1510,12 +899,12 @@ mariabackup --target-dir=/backups/20210120 --prepare
 systemctl stop mariadb 
 mv /var/lib/mysql /var/lib/mysql.bkup 
 mariabackup --target-dir=/backups/20200120 --copy-back 
-chmod -R mysql:mysql /var/lib/mysql
+chown -R mysql:mysql /var/lib/mysql
 chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
 systemctl start mariadb 
 ```
 
-### Walkthrough (Redhat/Centos)
+### Walkthrough (Redhat/Centos/Rocky Linux 8 mit mariadb for mariadb.org)
 
 ```
 ## user eintrag in /root/.my.cnf
@@ -1538,9 +927,12 @@ mariabackup --target-dir=/backups/20210120 --prepare
 systemctl stop mariadb 
 mv /var/lib/mysql /var/lib/mysql.bkup 
 mariabackup --target-dir=/backups/20200120 --copy-back 
-chmod -R mysql:mysql /var/lib/mysql
+chown -R mysql:mysql /var/lib/mysql
 chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
-### important for selinux 
+systemctl start mariadb 
+
+### important for selinux if it does not work 
+### does not start
 restorecon -vr /var/lib/mysql 
 systemctl start mariadb 
 ```
@@ -1550,263 +942,7 @@ systemctl start mariadb
 ### Ref. 
 https://mariadb.com/kb/en/full-backup-and-restore-with-mariabackup/
 
-<div class="page-break"></div>
-
-### Use xtrabackup for MariaDB 5.5
-
-
-### For mariadb 5.5 you can use xtrabackup instead of mariabackup 
-
-  * https://www.percona.com/doc/percona-xtrabackup/2.4/index.html
-  
-  
-
-<div class="page-break"></div>
-
-### Ready-made-back-scripts
-
-
-  * https://gist.github.com/skarllot/2576266
-
-<div class="page-break"></div>
-
-### Simple-Backup-Script
-
-
-### Backup Script 
-
-```
-cat backup-test.sh
-##!/bin/bash
-
-DATABASES=$(echo "select schema_name from information_schema.schemata where schema_name != 'performance_schema' and schema_name != 'information_schema';" | mysql)
-for i in $DATABASES
-do
-  mysqldump $i > /usr/src/dump_$i.sql
-done
-```
-
-<div class="page-break"></div>
-
-## Upgrade 
-
-### MariaDB Upgrade 10.4 -> 10.5 (Centos)
-
-
-```
-## Step 0;
-## Sicherung anlegen (mysqldump / mariabackup) 
-
-## Step 1:
-## Change version in 
-## or where you have your repo definition
-## Change 10.4 -> 10.5 
-/etc/yum.repos./MariaDB.repo 
-
-## Step 2:
-systemctl stop mariadb 
-
-## Step 3
-sudo yum remove MariaDB-server
-
-## Step 4
-sudo yum install MariaDB-server 
-yum list --installed | grep MariaDB # sind alle Versionen gleich ! Wichtig ! 
-sudo yum update ## Achtung: abweichend von Doku MariaDB 
-
-## Step 4.5 
-## Check if old config files were saved as .rpmsave after delete of package 10.4 
-cd /etc/my.cnf.d 
-ls -la
-## e.g. 
-mv server.cnf.rpmsave server.cnf
-
-## Step 5:
-systemctl start mariadb 
-systemctl enable mariadb
-mysql_upgrade # After that mysql_upgrade_info will be present in /var/lib/mysql with version-info 
-```
-
-## Reference 
-
-  * https://mariadb.com/kb/en/upgrading-from-mariadb-104-to-mariadb-105/
-
-<div class="page-break"></div>
-
-### MariaDB Upgrade 5.5 -> 10.5
-
-  * https://mariadb.com/kb/en/upgrading-between-major-mariadb-versions/
-
-## Performance 
-
-### io-Last/CPU-Last
-
-
-### IO-gebundene - Last (Input/Output) 
-
-```
-Gegeben wenn:
-- Hoher waiting wert in top (wa-wert in CPU-Liste) 
-- + Hohelast   1,5, 15 min     1,2   1.5  2 (Load) -> top 
-```
-
-### CPU-Gebundene - Last 
-
-```
-Gegeben wenn: 
-- NUR: Hohe Last -> Wert in top -> 2 1.5 0.5 (Load) 
-- Waiting-wert: 0 
-
-```
-
-<div class="page-break"></div>
-
-### Views and performance
-
-
-### General  
-
-```
-SHOW CREATE VIEW
-```
-
-### Views and Algorithms
-
-   * Views can use 3 algorithms:
-     * merge 
-     * simple rewrites (translates the query)  
-   * temptable 
-     * Creates a temptable to retrieve information
-     * In this case no indexes can be used 
-   * Shows up explain with derived
-   * undefined 
-     * MySQL chooses, if to use merge or temptable 
-     * prefers merge over temptable if possible 
-
-### Example 
-
-```
-+----+-------------+------------+------+---------------+------+---------+------+------+-------+
-| id | select_type | table      | type | possible_keys | key  | key_len | ref  | rows | Extra |
-+----+-------------+------------+------+---------------+------+---------+------+------+-------+
-|  1 | PRIMARY     | <derived2> | ALL  | NULL          | NULL | NULL    | NULL |   33 | NULL  |
-|  2 | DERIVED     | task       | ALL  | NULL          | NULL | NULL    | NULL |   33 | NULL  |
-+----+-------------+------------+------+---------------+------+---------+------+------+-------+
-```
-      
-
-### Handling (best practice)
-
-   * You can define the algorithm when creating the view 
-   * If you define merge and mysql cannot handle it
-     * you will get a warning 
-
-
-### Example of handling 
-
-```
-mysql> CREATE ALGORITHM=MERGE VIEW priority_counts AS SELECT priority_id, COUNT(1) AS quanity FROM task GROUP BY priority_id;
-Query OK, 0 rows affected, 1 warning (0.12 sec)
-
-mysql> SHOW WARNINGS;
-+---------+------+-------------------------------------------------------------------------------+
-| Level   | Code | Message                                                                       |
-+---------+------+-------------------------------------------------------------------------------+
-| Warning | 1354 | View merge algorithm can't be used here for now (assumed undefined algorithm) |
-+---------+------+-------------------------------------------------------------------------------+
-1 row in set (0.08 sec)
-```
-   
-### Reference
-
-   * Ref: https://dba.stackexchange.com/questions/54481/determining-what-algorithm-mysql-view-is-using
- 
-
-<div class="page-break"></div>
-
-### Partitions and Explain
-
-
-### Walkthrough 
-
-```
--- EXPLAIN PARTITIONS
-
-DROP TABLE IF EXISTS audit_log;
-CREATE TABLE audit_log (
-  yr    YEAR NOT NULL,
-  msg   VARCHAR(100) NOT NULL)
-ENGINE=InnoDB
-PARTITION BY RANGE (yr) (
-  PARTITION p0 VALUES LESS THAN (2010),
-  PARTITION p1 VALUES LESS THAN (2011),
-  PARTITION p2 VALUES LESS THAN (2012),
-  PARTITION p3 VALUES LESS THAN MAXVALUE);
-INSERT INTO audit_log(yr,msg) VALUES (2005,'2005'),(2006,'2006'),(2011,'2011'),(2020,'2020');
-EXPLAIN PARTITIONS SELECT * from audit_log WHERE yr in (2011,2012)\G
-```
-
-### Partitions sliced by hash of field 
-
-```
-CREATE TABLE employees (
-    id INT NOT NULL,
-    fname VARCHAR(30),
-    lname VARCHAR(30),
-    hired DATE NOT NULL DEFAULT '1970-01-01',
-    separated DATE NOT NULL DEFAULT '9999-12-31',
-    job_code INT,
-    store_id INT
-)
-PARTITION BY HASH(store_id)
-PARTITIONS 4;
-```
-
-<div class="page-break"></div>
-
-### 3 Phases of DataSize
-
-
-### Phase 1: Table content is small (only some rows) 
-
-```
-## table scan is quicker than index search 
-## e.g. 10 entries 
-
-## so eventually index is not needed 
-
-```
-
-### Phase 2: Index is good !! 
-
-```
-## performance gain by using index
-## Step 1: Obtaining id's from index (primary key id) 
-## Step 2: Retrieving data 
-```
-
-### Phase 3: Index is not improve performance / or would makes performance worse
-
-```
-Step 1: lookup in index:
-1
-70
-1040
-2100
-35000
--> there is a lot of space (other rows) in between.
-
-Step 2: Lookup data, but a lot lookups needed 
-
-
--> random reads
--> So mysql might be better off to do a table scan. 
-
-```
-
-
-
-<div class="page-break"></div>
+## Performance  
 
 ### Slow Query Log
 
@@ -1815,9 +951,9 @@ Step 2: Lookup data, but a lot lookups needed
 
 ```
 ## Step 1
-/etc/my.cnf.d/server.cnf 
+/etc/my.cnf.d/mariadb-server.cnf 
 [mysqld]
-slow_query_log 
+slow-query-log 
 
 ## Step 2
 mysql>SET GLOBAL slow_query_log = 1 
@@ -1838,290 +974,29 @@ mysql>SET long_query_time = 0.000001
 SET GLOBAL log_queries_not_using_indexes=ON;
 ```
 
+### Geschwätzigkeit (Verbosity) erhöhen 
+
+```
+SET GLOBAL log_slow_verbosity='query_plan,explain'
+```
+
 ### Reference 
 
   * https://mariadb.com/kb/en/slow-query-log-overview/
 
 
-<div class="page-break"></div>
-
-## Optimal use of indexes
-
-### Describe and indexes
+### Percona-toolkit-Installation - Centos
 
 
 ### Walkthrough 
 
-#### Step 1:
-
 ```
-## Database  and Table with primary key
-create database descindex;
-use descindex; 
-create table people (id int unsigned auto_increment, first_name varchar(25), last_name varchar(25), primary key (id), passcode mediumint unsigned);
-## add an index 
-## This will always !! translate into an alter statement. 
-create index idx_last_name_first_name on people (last_name,first_name) 
-## 
-create unique index idx_passcode on people (passcode)   
+## Howto 
+## https://www.percona.com/doc/percona-toolkit/LATEST/installation.html
 
-desc people;
-+------------+-----------------------+------+-----+---------+----------------+
-| Field      | Type                  | Null | Key | Default | Extra          |
-+------------+-----------------------+------+-----+---------+----------------+
-| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
-| first_name | varchar(25)           | YES  |     | NULL    |                |
-| last_name  | varchar(25)           | YES  |     | NULL    |                |
-| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
-+------------+-----------------------+------+-----+---------+----------------+
-4 rows in set (0.01 sec)
+## Step 1: repo installieren mit rpm -paket 
+dnf install -y https://repo.percona.com/yum/percona-release-latest.noarch.rpm; dnf install -y percona-toolkit
 ```
-
-#### Step 2: 
-
-```
-## Add simple combined index on first_name, last_name 
-create index idx_first_name_last_name on people (first_name, last_name);
-Query OK, 0 rows affected (0.05 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-desc people;
-
--- show the column where the combined index starts (MUL = Multi) 
-
-+------------+-----------------------+------+-----+---------+----------------+
-| Field      | Type                  | Null | Key | Default | Extra          |
-+------------+-----------------------+------+-----+---------+----------------+
-| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
-| first_name | varchar(25)           | YES  | MUL | NULL    |                |
-| last_name  | varchar(25)           | YES  |     | NULL    |                |
-| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
-+------------+-----------------------+------+-----+---------+----------------+
-4 rows in set (0.01 sec)
-
-
-```
-
-#### Step 3:
-
-```
-## Add a unique index on passcode 
-create index idx_passcode on people (passcode) 
-mysql> desc people;
-
--- Line with UNI shows this indexes. 
-+------------+-----------------------+------+-----+---------+----------------+
-| Field      | Type                  | Null | Key | Default | Extra          |
-+------------+-----------------------+------+-----+---------+----------------+
-| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
-| first_name | varchar(25)           | YES  | MUL | NULL    |                |
-| last_name  | varchar(25)           | YES  |     | NULL    |                |
-| passcode   | mediumint(8) unsigned | YES  | UNI | NULL    |                |
-+------------+-----------------------+------+-----+---------+----------------+
-4 rows in set (0.01 sec)
-```
-
-
-#### Step 4: 
-
-```
-## Get to know all your indexes on a table 
-show indexes for people 
-mysql> show index from people;
-+--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| Table  | Non_unique | Key_name                 | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
-+--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| people |          0 | PRIMARY                  |            1 | id          | A         |           0 |     NULL | NULL   |      | BTREE      |         |               |
-| people |          0 | idx_passcode             |            1 | passcode    | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
-| people |          1 | idx_first_name_last_name |            1 | first_name  | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
-| people |          1 | idx_first_name_last_name |            2 | last_name   | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
-+--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-4 rows in set (0.01 sec)
-```
-
-<div class="page-break"></div>
-
-### Find out indexes
-
-
-### Show index from table 
-
-```
-create database showindex; 
-use showindex;
-CREATE TABLE `people` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(25) DEFAULT NULL,
-  `last_name` varchar(25) DEFAULT NULL,
-  `passcode` mediumint(8) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_passcode` (`passcode`),
-  KEY `idx_first_name_last_name` (`first_name`,`last_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
-show index from people 
-```
-
-#### Show create table 
-
-```
-show create table peple 
-```
-
-#### show index from 
-
-```
-show index from contributions 
-```
-
-<div class="page-break"></div>
-
-### Index and Functions (Cool new feature in MySQL 5.7)
-
-
-### No index can be used on an index:
-
-```
-explain select * from actor where upper(last_name) like 'A%';
-+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
-| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | actor | NULL       | ALL  | NULL          | NULL | NULL    | NULL |  200 |   100.00 | Using where |
-+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
-```
-
-### Workaround with virtual columns (possible since mysql 5.7) 
-
-```
-## 1. Create Virtual Column with upper 
-alter table sakila add idx_last_name_upper varchar(45) GENERATED ALWAYS AS upper(last_name);
-## 2. Create an index on that column 
-create index idx_last_name_upper on actor (last_name_upper);
-```
-
-### Now we try to search the very same 
-
-```
-explain select * from actor where last_name_upper like 'A%';
-+----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
-| id | select_type | table | partitions | type  | possible_keys       | key                 | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | actor | NULL       | range | idx_last_name_upper | idx_last_name_upper | 183     | NULL |    7 |   100.00 | Using where |
-+----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
-1 row in set, 1 warning (0.00 sec)
-
-```
-
-
-
-
-### Preview MysQL 8 
-
-  * MySQL 8 support functional indexes 
-
-<div class="page-break"></div>
-
-### Index and Likes
-
-
-### 1. like 'Will%' - Index works 
-
-explain select last_name from donors where last_name like 'Will%';
-
-### 2. like '%iams' - Index does not work 
-
-```
--- because like starts with a wildcard 
-explain select last_name from donors where last_name like '%iams';
-```
-
-### 3. How to fix 3, if you are using this often ? 
-
-```
-## Walkthrough 
-## Step 1: modify table 
-alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name));
-create index idx_last_name_reversed on donors (last_name_reversed);
-
-## besser - Variante 2 - untested 
-alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name)), add index idx_last_name_reversed on donors (last_name_reversed);
-
-## Step 2: update table - this take a while 
-update donors set last_name_reversed = reversed(last_name)
-## Step 3: work with it 
-select last_name,last_name_reversed from donor where last_name_reversed like reverse('%iams');  
-```
-
-```
-## Version 2 with pt-online-schema-change 
-
-```
-
-<div class="page-break"></div>
-
-### profiling-get-time-for-execution-of.query
-
- 
-   * Get better values, how long queries take
-
-### Example 
-
-```
-set profiling = 1 
-## Step 2 - Execute query 
-select last_name as gross from donors where last_name like lower('WILLI%')  
-
-## Step 3 - Show profiles 
-show profiles;
-+----------+------------+-----------------------------------------------------------------------------------+
-| Query_ID | Duration   | Query                                                                             |
-+----------+------------+-----------------------------------------------------------------------------------+
-|        1 | 0.01993525 | select last_name as gross from donors where last_name like lower('WILLI%')        |
-4 rows in set, 1 warning (0.00 sec) 
-
-## Step 4 - Show profile for a specific query 
-mysql> show profile for query 1;
-+----------------------+----------+
-| Status               | Duration |
-+----------------------+----------+
-| starting             | 0.000062 |
-| checking permissions | 0.000006 |
-| Opening tables       | 0.000021 |
-| init                 | 0.000017 |
-| System lock          | 0.000007 |
-| optimizing           | 0.000007 |
-| statistics           | 0.000083 |
-| preparing            | 0.000012 |
-| executing            | 0.000004 |
-| Sending data         | 0.022251 |
-| end                  | 0.000005 |
-| query end            | 0.000008 |
-| closing tables       | 0.000007 |
-| freeing items        | 0.001792 |
-| cleaning up          | 0.000016 |
-+----------------------+----------+
-15 rows in set, 1 warning (0.00 sec)
-```
-
-<div class="page-break"></div>
-
-### Find out cardinality without index
-
-
-### Find out cardinality without creating index 
-```
-select count(distinct donor_id) from contributions;
-```
-
-```
-select count(distinct(vendor_city)) from contributions;
-+------------------------------+
-| count(distinct(vendor_city)) |
-+------------------------------+
-|                         1772 |
-+------------------------------+
-1 row in set (4.97 sec)
-```
-
-<div class="page-break"></div>
 
 ## Monitoring 
 
@@ -2139,7 +1014,7 @@ select count(distinct(vendor_city)) from contributions;
 #### Erreichbarkeit 
 
   * Server per ping erreichen (mysqladmin ping -h ziel-ip) 
-  * Einlogbar ? (myadmin ping -h ziel-ip -u control_user 
+  * Einlogbar ? (myadmin ping -h ziel-ip -u control_user)
  
 #### Platte aka IO-Subsystem (iostats)
 
@@ -2184,7 +1059,7 @@ mysqladmin status
 | Uptime	| Seconds since the server was started. We can use this to detect respawns.	 | When uptime is < 180. (seconds)  |
 | Threads_connected	| Number of clients currently connected. If none or too high, something is wrong.	| None |
 | Max_used_connections |	Max number of connections at a time since server started. (max_used_connections / max_connections) indicates if you could run out soon of connection slots.|	When connections usage is > 85%. |
-| Aborted_connects |	Number of failed connection attempts. When growing over a period of time either some credentials are wrong or we are being attacked.	| When aborted connects/min > 3. |
+| Aborted_connects |	Number of failed connection attempts. When growing over a period of time either some credentials are wrong or we are being attacked. show status like 'Aborted_connects'	| When aborted connects/min > 3. |
 
 #### InnoDB 
 
@@ -2208,18 +1083,11 @@ mysqladmin status
 journalctl -u mariadb | grep -i Error
 ```
 
-
-#### Ref 
-
-  * https://blog.serverdensity.com/how-to-monitor-mysql/
-
 #### Monitoring with pmm (Percona Management Monitoring) 
 
 https://pmmdemo.percona.com
 
 [Documentation](https://www.percona.com/doc/percona-monitoring-and-management/2.x/details/commands/pmm-admin.html)
-
-<div class="page-break"></div>
 
 ## Replication 
 
@@ -2350,133 +1218,2385 @@ Slave_SQL_Running: Yes
 
 https://mariadb.com/kb/en/setting-up-a-replication-slave-with-mariabackup/
 
-<div class="page-break"></div>
+### Binary Logs auf master bis slave-log-master-position ändern
 
-### Slave einrichten - master_pos
-
-
-### Step 1: mysqldump on master 
-```
-mkdir -p /backups/mysqldumpdir 
-## in version 5.5. there is not --git so use it without --gtid
-mysqldump --all-databases --single-transaction --master-data=2 --routines --events --compress > /backups/mysqldumpdir/master-databases.sql;
 
 ```
+## Schritt 1: slave abfragen 
+mysql -u ext -p -h 192.168.56.103 --pager="grep -E 'Master_Log_File:'" -e "show slave status \G" 
+## Beispiel Ausgabe
+mariadb-bin.000003
 
-### Step 2: Transfer to new slave (from master) 
-
-```
-## root@master:
-rsync -e ssh -avP /backups/mysqldumpdir/master-databases.sql kurs@10.10.9.144:/home/kurs/
-```
-### Step 3 (Optional): Be sure that slave is really fresh (no data yet) 
-
-```
-## if old not wanted data is present, e.g. other databases, start with fresh-installation by so:
-## as root
-cd /var/lib 
-mv mysql mysql.bkup 
-mariadb-install-db --user=mysql 
+## Schritt 2: logs bis dahin löschen auf master
+mysql -e "purge logs to 'mariadb-bin.000003'"
 ```
 
-### Step 4: Setup replication user on master 
+## Tipps & Tricks 
+
+### Set hostname on systemd-Systems
+
 
 ```
-## as root@master 
-##mysql>
-CREATE USER repl@'10.10.9.%' IDENTIFIED BY 'password';
-GRANT REPLICATION SLAVE ON *.*  TO 'repl'@'10
+## you have to be root 
+hostnamectl set-hostname mariadb1.training.local 
+## so that you will see it in your current prompt 
+su -
+hostnamectl 
 ```
 
-### Step 4a (Optional): Test repl user (connect) from slave 
+### Frisches Datenverzeichnis anlegen
 
-```
-## as root@slave 
-## you be able to connect to 
-mysql -urepl -p -h10.10.9.110
-## test if grants are o.k. 
-show grants 
-```
-
-### Step 5a: Set server-id on master -> 1 
-
-```
-[mysqld]
-server-id=1
-
-systemctl restart mariadb 
-### 
-```
-
-### Step 5b: Set server-id on slave -> 2 + same config as server 1
-
-```
-[mysqld]
-server-id              = 2
-## activate master bin log, if this slave might be a master later 
-log_bin                = /var/log/mysql/mysql-bin.log
-
-systemctl restart mariadb 
-### auf dem master config mit rsync rüberschrieben 
-### root@master 
-rsync -e ssh -avP /etc/mysql/mariadb.conf.d/z_uniruhr.cnf kurs@10.10.9.144:/home/kurs/
-### root@slave 
-mv /home/kurs/z_uniruhr.cnf /etc/mysql/mariadb.conf.d/
-chown root:root /etc/mysql/mariadb.conf.d 
-systemctl restart mariadb 
-
-```
-
-### Step 6: Restore Data on slave 
-
-```
-## root@slave 
-cd /home/kurs 
-mysql < master-databases.sql 
-```
-
-### Step 7: master.txt for change command 
-
-```
-## root@slave
-## /root/master.txt 
-## get information from master-databases.sql dump 
-CHANGE MASTER TO 
-   MASTER_HOST="10.10.9.110", 
-   MASTER_PORT=3310, 
-   MASTER_USER="repl",  
-   MASTER_PASSWORD="password", 
-   MASTER_LOG_FILE='mysqld-bin.000001',
-   MASTER_LOG_POS=568;
-## Version 1
-mysql < master.txt 
-## or: copy paste into mysql> 
-
-## in mysql -> show slave status 
-mysql>show slave status 
-## Looking for
-Slave_IO_Running: Yes
-Slave_SQL_Running: Yes
-
-```
-
-### Step 8: not working on 5.5. 
-
-```
-Switch to using gtid later on:
-
-show slave status; # look for using_gtid 
-stop slave;
-CHANGE MASTER TO MASTER_USE_GTID = slave_pos;
-show slave status; # look for using_gtid 
-start slave; 
-```
 
 ### Walkthrough 
 
-https://mariadb.com/kb/en/setting-up-a-replication-slave-with-mariabackup/
+```
+## Schritt 1: Prepare 
+systemctl stop mariadb 
+cd /var/lib 
+## eventually delete old back dir
+rm -fR /var/lib/mysql.bkup 
+## 
+mv mysql mysql.bkup 
 
-<div class="page-break"></div>
+## Schritt 2: Fresh 
+mysql_install_db --user=mysql
+chown mysql:mysql mysql
+chmod g+rx,o+rx mysql 
+restorecon -rv /var/lib/mysql 
+
+## Schritt 3: Start 
+systemctl start mariadb
+```
+
+### In den Root-Benutzer wechseln
+
+
+```
+## einloggen als normaler Benutzer z.B. benutzer: kurs (wenn ich unter kurs eingeloggt bin) 
+sudo su -
+## Eingeben des Passworts des Benutzers
+
+### oder sudo -i (interaktiv) 
+sudo -i 
+## Eingeben des Passworts des normalen Benutzers
+
+```
+
+
+## Dokumentation 
+
+### MySQL - Performance - PDF
+
+  * http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf
+
+### Server System Variables
+
+  * https://mariadb.com/kb/en/server-system-variables/#bind_address
+
+### Killing connection
+
+  * https://mariadb.com/kb/en/kill/
+
+### MariaDB - One Script Installation
+
+  * https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/
+
+### MariaDB - Information Schema Tables
+
+  * https://mariadb.com/kb/en/information-schema-tables/
+
+### MariaDB - slow query log
+
+  * https://mariadb.com/kb/en/slow-query-log-overview/
+
+### MariaDB - sys - vor 10.6
+
+  * https://github.com/FromDual/mariadb-sys
+
+## Architecture of MariaDB
+
+### Query Cache Usage and Performance
+
+
+### Performance query cache 
+
+  * Always try to optimize innodb with disabled query cache first (innodb_buffer_pool) 
+  * If you use query_cache system can only use on CPU-Core. !! 
+  
+### How to enable query cache 
+
+```
+## have_query_cache means compiled in mysql 
+## query_cache_type off means not enable by config
+-- query cache is diabled 
+mysql> show variables like '%query_cache%';
++------------------------------+---------+
+| Variable_name                | Value   |
++------------------------------+---------+
+| have_query_cache             | YES     |
+| query_cache_limit            | 1048576 |
+| query_cache_min_res_unit     | 4096    |
+| query_cache_size             | 1048576 |
+| query_cache_type             | OFF     |
+| query_cache_wlock_invalidate | OFF     |
++------------------------------+---------+
+6 rows in set (0.01 sec)
+
+root@trn01:/etc/mysql/mysql.conf.d# tail mysqld.cnf
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+log-error       = /var/log/mysql/error.log
+## By default we only accept connections from localhost
+bind-address    = 0.0.0.0
+## Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+query-cache-type=1
+
+systemctl restart mysql 
+
+mysql> show variables like '%query_cache%';
++------------------------------+---------+
+| Variable_name                | Value   |
++------------------------------+---------+
+| have_query_cache             | YES     |
+| query_cache_limit            | 1048576 |
+| query_cache_min_res_unit     | 4096    |
+| query_cache_size             | 1048576 |
+| query_cache_type             | ON      |
+| query_cache_wlock_invalidate | OFF     |
++------------------------------+---------+
+6 rows in set (0.01 sec)
+
+
+mysql> show status like '%Qcache%';
++-------------------------+---------+
+| Variable_name           | Value   |
++-------------------------+---------+
+| Qcache_free_blocks      | 1       |
+| Qcache_free_memory      | 1031832 |
+| Qcache_hits             | 0       |
+| Qcache_inserts          | 0       |
+| Qcache_lowmem_prunes    | 0       |
+| Qcache_not_cached       | 0       |
+| Qcache_queries_in_cache | 0       |
+| Qcache_total_blocks     | 1       |
++-------------------------+---------+
+8 rows in set (0.00 sec)
+
+## status in session zurücksetzen. 
+mysql> flush status;
+Query OK, 0 rows affected (0.00 sec)
+
+```
+
+### Performance bottleneck - mutex 
+
+https://mariadb.com/de/resources/blog/flexible-mariadb-server-query-cache/
+
+```
+
+```
+
+### Something planned ?
+
+  * Nope ;o( Demand is new  
+  * You might be able to use Demand together with maxscale 
+  * Refer to: 
+  https://mariadb.com/de/resources/blog/flexible-mariadb-server-query-cache/
+  
+  
+  ```
+  A mutual exclusion object (mutex) is a programming object that allows multiple program threads to share a resource (such as a folder) but not simultaneously. Mutex is set to unlock when the data is no longer needed or when a routine is finished. Mutex creates a bottleneck effect. The blocking means only one query can look at the Query Cache at a time and other queries must wait. A query that must wait to look in the cache only to find it isn’t in the cache will be slowed instead of being accelerated.
+  ```
+
+### Optimizer-Basics
+
+
+### General 
+
+  * All optimizer today are cost-based 
+
+### Cost-Based 
+
+```
+## How much costs are needed to get the information 
+```
+
+## Installation 
+
+### Installation SLES15
+
+  * https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5
+
+### Installation (Ubuntu)
+
+
+### Setup repo and install
+
+ * https://downloads.mariadb.org/mariadb/repositories/
+
+```
+### repo 
+sudo apt-get install software-properties-common
+sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+## does an apt update after setting repo - automatically 
+sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mirror.dogado.de/mariadb/repo/10.5/ubuntu focal main'
+sudo apt install mariadb-server 
+
+```
+
+### Secure installation 
+
+```
+mariadb-secure-installation 
+## OR: if not present before 10.4 
+mysql_secure_installation 
+```
+
+### Does mariadb listen to the outside world
+
+
+### How to check ? 
+
+```
+lsof -i | grep mariadb
+## localhost means it does NOT listen to the outside now 
+## mariadbd  5208           mysql   19u  IPv4  56942      0t0  TCP localhost:mysql (LISTEN)
+
+netstat -tupel 
+## or 
+netstat -an 
+
+```
+
+## Configuration
+
+### Adjust configuration and restart
+
+
+```
+## change config in /etc/mysql/50-server.cnf 
+## After that restart server - so that it takes your new config 
+systemctl restart mariadb 
+echo $? # Was call restart succesful -> 0 
+```
+
+### Set global server system variable
+
+
+### Find out current value 
+
+```
+## show global variable 
+show global variables like '%automatic_sp%'
+## or // variable_name needs to be in captitals 
+use information_schema
+select * from global_variables where variable_name like '%AUTOMATIC_SP%';
+
+## If you know the exact name 
+select @@global.automatic_sp_privileges;
+select @@GLOBAL.automatic_sp_privileges;
+```
+
+### Set global Variable 
+
+```
+## will be set like so till next restart of mysql server 
+set global automatic_sp_privileges = 0 
+```
+
+### automatic_sp_privileges can only be set globally 
+
+```
+## Refer to: server system variable doku 
+
+## Has same value in global an session scope 
+MariaDB [information_schema]> select @@automatic_sp_privileges; select @@global.automatic_sp_privileges;
++---------------------------+
+| @@automatic_sp_privileges |
++---------------------------+
+|                         0 |
++---------------------------+
+1 row in set (0.000 sec)
+
++----------------------------------+
+| @@global.automatic_sp_privileges |
++----------------------------------+
+|                                0 |
++----------------------------------+
+1 row in set (0.000 sec)
+```
+
+### Reference:
+
+  * https://mariadb.com/kb/en/server-system-variables/#automatic_sp_privileges
+
+## Backup 
+
+### Use xtrabackup for MariaDB 5.5
+
+
+### For mariadb 5.5 you can use xtrabackup instead of mariabackup 
+
+  * https://www.percona.com/doc/percona-xtrabackup/2.4/index.html
+  
+  
+
+### Ready-made-back-scripts
+
+
+  * https://gist.github.com/skarllot/2576266
+
+### Simple-Backup-Script
+
+
+### Backup Script 
+
+```
+cat backup-test.sh
+##!/bin/bash
+
+DATABASES=$(echo "select schema_name from information_schema.schemata where schema_name != 'performance_schema' and schema_name != 'information_schema';" | mysql)
+for i in $DATABASES
+do
+  mysqldump $i > /usr/src/dump_$i.sql
+done
+```
+
+## Administration / Troubleshooting
+
+### Create fresh datadir (Centos/Redhat)
+
+
+### Walkthrough 
+
+```
+## Schritt 1: Prepare 
+systemctl stop mariadb 
+cd /var/lib 
+## eventually delete old back dir
+rm -fR /var/lib/mysql.bkup 
+## 
+mv mysql mysql.bkup 
+
+## Schritt 2: Fresh 
+mysql_install_db --user=mysql
+chown mysql:mysql mysql
+chmod g+rx,o+rx mysql 
+restorecon -rv /var/lib/mysql 
+
+## Schritt 3: Start 
+systemctl start mariadb
+```
+
+### Debug not starting service
+
+
+### Walkthrough 
+
+```
+## Service is not restarting - error giving
+systemctl restart mariadb.service 
+
+## Step 1 : status -> what do the logs tell (last 10 lines) 
+systemctl status mariadb.service 
+
+## no findings -> step 2:
+journalctl -xe
+
+## no findings -> step 3:
+journalctl -u mariadb.service 
+## or journalctl -u mariadb 
+
+## no findings -> step 4:
+## search specific log for service 
+## and eventually need to increase the log level
+## e.g. with mariadb (find through internet research)
+less /var/log/mysql/error.log 
+
+## Nicht fündig -> Schritt 5
+## Allgemeines Log
+## Debian/Ubuntu 
+/var/log/syslog
+## REdhat/Centos 
+/var/log/messages 
+```
+
+### Find errors in logs quickly
+
+```
+cd /var/log/mysql 
+## -i = case insensitive // egal ob gross- oder kleingeschrieben
+cat error.log | grep -i error
+```
+
+### Find configuration - option in config  - files 
+
+```
+grep -r datadir /etc 
+
+```
+
+## Galera 
+
+### Installation and Configuration (Centos/Redhat 8)
+
+
+### Setting up 1st - node
+
+```
+## Schritt 1: Create config 
+
+/etc/my.cnf.d/z_galera.cnf 
+[mysqld]
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+## Set to 1 sec instead of per transaction
+## for better performance // Attention: You might loose data on power
+innodb_flush_log_at_trx_commit=0
+## Galera Provider Configuration
+wsrep_on=ON
+## centos7 (x86_64)
+wsrep_provider=/usr/lib64/galera-4/libgalera_smm.so
+## Galera Cluster Configuration
+wsrep_cluster_name="test_cluster"
+wsrep_cluster_address="gcomm://192.168.56.103,192.168.56.104,192.168.56.105"
+wsrep_node_address=192.168.56.103
+## Galera Synchronization Configuration
+wsrep_sst_method=rsync
+```
+
+### Stop the server and bootstrap cluster 
+
+```
+## setup first node in cluster 
+systemctl stop mariadb 
+galera_new_cluster # statt systemctl start mariadb 
+```
+
+### Check if cluster is running 
+
+```
+mysql> show status like 'wsrep%'\G
+*************************** 38. row ***************************
+Variable_name: wsrep_local_state_comment
+        Value: Synced
+*************************** 56. row ***************************
+Variable_name: wsrep_cluster_size
+        Value: 1
+*************************** 57. row ***************************
+Variable_name: wsrep_cluster_state_uuid
+        Value: 562e5455-a40f-11eb-b8c9-1f32a94e106e
+*************************** 58. row ***************************
+Variable_name: wsrep_cluster_status
+        Value: Primary
+*************************** 59. row ***************************
+Variable_name: wsrep_connected
+        Value: ON
+
+```
+
+#### Setup firwealld for galera 
+
+```
+firewall-cmd --add-port=3306/tcp --permanent
+firewall-cmd --add-port=4567/tcp --permanent
+firewall-cmd --add-port=4568/tcp --permanent
+firewall-cmd --add-port=4444/tcp --permanent
+firewall-cmd --reload 
+
+firewall-cmd --add-port=3306/tcp --permanent; firewall-cmd --add-port=4567/tcp --permanent; firewall-cmd --add-port=4568/tcp --permanent; firewall-cmd --add-port=4444/tcp --permanent; firewall-cmd --reload 
+
+
+```
+
+### 1. Node started nicht nach Crash, z.B. Stromausfall
+
+
+### Warum startet nicht ? 
+
+```
+## node ist in einem nicht-geordneten Zustand.
+## und hat Angst ;o), dass die anderen Nodes u.U. weiter sind 
+## Ziel sollte sein, die letzte Node als 1. zu starten mit -> galera_new_cluster 
+```
+
+### Wie beheben ? 
+
+```
+## Nach Informationen im Status gucken 
+systemctl status mariadb 
+
+## Nach Informationen in den Logs schauen 
+journalctl -u mariadb 
+## Speziell kann ich rausfiltern
+journalctl -u mariadb | grep -i error
+
+## In der Regel steht safe_to_bootstrap auf 0 
+ä Fixend 
+/var/lib/grastate.dat 
+safe_to_bootstrap = 1 # setzen 
+
+## Immer nur ausführen, wenn es nur eine Node 1 !! git 
+galera-new-cluster
+
+```
+
+## Information Schema / Status / Processes
+
+### Show server/session status
+
+
+### Through mysql
+
+```
+## in mysql interface (client)
+mysql
+status;
+```
+
+### With mysqladmin 
+
+```
+mysqladmin status
+## or if you want to know more 
+mysqladmin extended status 
+```
+
+### with mysql -> show status 
+
+```
+## Status within session (status - counters)
+mysql> show status;
+## Status global (since last reboot/start of mariadb server) 
+mysql> show global status;
+mysql> -- reset session status 
+mysql> flush status; 
+## Show session status 
+mysql> show session status;
+```
+
+### Kill long running process
+
+
+```
+## Session 1
+## sleep for 120 seconds 
+select sleep(120)
+
+## Session 2
+show processlist 
+## kill process you have identified for sleep(120) 
+MariaDB [(none)]> show processlist;
++----+------+-----------+----------+---------+------+------------+-------------------+----------+
+| Id | User | Host      | db       | Command | Time | State      | Info              | Progress |
++----+------+-----------+----------+---------+------+------------+-------------------+----------+
+| 36 | root | localhost | NULL     | Query   |    0 | starting   | show processlist  |    0.000 |
+| 37 | root | localhost | training | Query   |    4 | User sleep | select sleep(120) |    0.000 |
++----+------+-----------+----------+---------+------+------------+-------------------+----------+
+2 rows in set (0.000 sec)
+## take 37 
+kill 37 
+
+## Session 1: query terminates 
+ERROR 2013 (HY000): Lost connection to MySQL server during query
+
+```
+
+### Kill (kickout user) and stop server
+
+
+```
+MariaDB [mysql]> show processlist;
++----+----------+-----------+----------+---------+------+----------+------------------+----------+
+| Id | User     | Host      | db       | Command | Time | State    | Info             | Progress |
++----+----------+-----------+----------+---------+------+----------+------------------+----------+
+| 30 | root     | localhost | mysql    | Sleep   |   10 |          | NULL             |    0.000 |
+| 34 | root     | localhost | mysql    | Query   |    0 | starting | show processlist |    0.000 |
+| 43 | training | localhost | training | Sleep   |    5 |          | NULL             |    0.000 |
++----+----------+-----------+----------+---------+------+----------+------------------+----------+
+3 rows in set (0.000 sec)
+
+MariaDB [mysql]> quit
+Bye
+root@its-lu20s04:~# mysql -e 'kill 43' && systemctl stop mariadb
+root@its-lu20s04:~#
+```
+
+## Security and User Rights 
+
+### Debug and Setup External Connection
+
+
+### Prerequisites 
+
+```
+client1: 192.168.56.104 
+server1: 192.168.56.103
+```
+
+### Step 1: Be sure server is communicating to the outside
+
+```
+lsof -i 
+## should be
+*:mysql 
+```
+
+### Step 2: Test connection from client 
+
+```
+mysqladmin ping -h 192.168.56.103
+## on succesful connection also without authentication
+echo $?
+0 # 0 was success also without proper authentication 
+
+## Bad news, if 
+echo $? 
+1 
+## Could not connect at all
+
+```
+
+### Step 2a: No connection possible  ? check Firewall .... 
+
+```
+## Server 1 
+systemctl status firewalld 
+firewall-cmd --state 
+firewall-cmd --list-all # do we see mysql as a service
+
+## no ? 
+firewall-cmd --get-services 
+firewall-cmd --add-service=mysql # only in runtime
+firewall-cmd --runtime-to-permanent # config - works after reboot 
+
+### Recheck with Step 2 
+
+```
+
+### Step 3: Setup user without grants - Server1
+
+```
+## Server 1 
+mysql> create user ext@192.168.56.104 identified by 'topsecretpassword';
+## Doing this twice triggers an weird error 
+
+```
+
+### Step 3a: test connection from client - Client 1
+
+```
+mysql -uext -p -h 192.168.56.103 
+## on success 
+mysql>show grants 
+## should only be usage 
+mysql>show schemas 
+
+```
+
+#### Step 3b: Add priviliges (testing giving all) - Server1
+
+```
+## *.* = all databases and all tables 
+mysql> GRANT ALL ON *.* TO ext@192.168.56.104
+```
+
+#### Step 3c: See, if we have grants - Client 1
+
+```
+mysql>show grants 
+## grants will be shown but do not work yet 
+## we need to reconnect 
+mysql>quit 
+mysql -uext -p -h 192.168.56.103 
+mysql> -- now it works 
+
+```
+
+### Get Rights of user
+
+
+### Root can show rights of a specific user 
+
+```
+## shows the right of the logged in user (you as a user)
+show grants; 
+
+## show grants for a specific user 
+## no need for ' (quotes) if there are not special chars withing 
+## e.g.
+show grants for training@localhost; 
+## if there are special chars, use quotes
+show grants for 'mariadb.sys'@localhost;
+
+## if you want to see rights of a user that has rights from everywhere
+show grants for training@'%';
+```
+
+### If you cannot remember the exact user (user@host) look it up
+
+```
+## within mysql client 
+use mysql 
+select * from user \G 
+```
+
+### Secure with SSL server/client
+
+
+### Variant 1: Setup 1-way ssl encryption 
+
+#### Create CA and Server-Key 
+
+```
+
+## On Server - create ca and certificates 
+sudo mkdir -p /etc/my.cnf.d/ssl
+sudo cd /etc/my.cnf.d/ssl
+
+## create ca.  
+sudo openssl genrsa 4096 > ca-key.pem
+
+## create ca-certificate 
+## Common Name: MariaDB CA 
+sudo openssl req -new -x509 -nodes -days 365000 -key ca-key.pem -out ca-cert.pem
+
+## create server-cert 
+## Common Name: server1.training.local 
+## Password: --- leave empty ----
+sudo openssl req -newkey rsa:2048 -days 365000 -nodes -keyout server-key.pem -out server-req.pem
+
+## Next process the rsa - key 
+sudo openssl rsa -in server-key.pem -out server-key.pem
+
+## Now sign the key 
+sudo openssl x509 -req -in server-req.pem -days 365000 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
+
+```
+
+#### Verify certificates 
+
+```
+openssl verify -CAfile ca-cert.pem server-cert.pem 
+
+
+```
+
+#### Configure Server 
+```
+## create file 
+## /etc/my.cnf.d/z_ssl.cnf 
+[mysqld]
+ssl-ca=/etc/my.cnf.d/ssl/ca-cert.pem
+ssl-cert=/etc/my.cnf.d/ssl/server-cert.pem
+ssl-key=/etc/my.cnf.d/ssl/server-key.pem
+### Set up TLS version here. For example TLS version 1.2 and 1.3 ##
+## Starts from mariadb 10.4.6 not possible before. !!!! 
+tls_version = TLSv1.2,TLSv1.3
+
+## Set ownership 
+chown -vR mysql:mysql /etc/my.cnf.d/ssl/
+
+```
+
+#### Restart and check for errors 
+```
+systemctl restart mariadb
+journalctl -u mariadb 
+
+```
+
+#### Test connection on client 
+
+```
+## only if we use option --ssl we will connect with ssl 
+mysql --ssl -uxyz -p -h <ip-of-server>
+mysql>status
+SSL:                    Cipher in use is TLS_AES_256_GCM_SHA384
+
+```
+
+#### Force to use ssl 
+
+
+```
+## on server 
+## now client can only connect, when using ssl 
+mysql> grant USAGE on *.* to remote@10.10.9.144 require ssl;
+```
+
+
+
+
+
+### Variant 2: 1-way ssl-encryption but checking server certificate 
+
+#### Prerequisites 
+
+```
+server1: 192.168.56.103 
+client1: 192.168.56.104
+```
+
+#### Copy ca-cert to client 
+
+```
+## on server1 
+cd /etc/my.cnf.d/ssl
+scp ca-cert.pem kurs@192.168.56.104:/tmp 
+
+## on clien1 
+cd /etc/my.cnf.d 
+mkdir ssl 
+cd ssl
+mv /tmp/ca-cert.pem . 
+```
+
+#### Configure client1 - client -config  
+
+```
+sudo vi /etc/my.cnf.d/mysql-clients.cnf
+
+Append/edit in [mysql] section:
+
+### MySQL Client Configuration ##
+ssl-ca=/etc/my.cnf.d/ssl/ca-cert.pem
+
+###  Force TLS version for client too
+##tls_version = TLSv1.2,TLSv1.3
+#### This option is disabled by default ###
+#### ssl-verify-server-cert ###
+
+## only works if you have no self-signed certificate
+ssl-verify-server-cert
+ssl
+
+## domain-name in hosts setzen 
+## because in dns
+vi /etc/hosts 
+192.168.56.103 server1.training.local 
+
+## now you to connect with hostname
+## otherwice no check against certificate can be done 
+mysql -uext -p -h server1.training.local 
+
+## if it does not work, you get 
+ERROR 2026 (HY000): SSL connection error: Validation of SSL server certificate failed
+
+```
+
+### Variant 3: 2-way - Security (Encryption) - validated on server and client 
+
+#### Client - Create certificate on server
+  * we are using the same ca as on the server
+
+```
+## on server1
+cd /etc/my.cnf.d/ssl
+## Bitte Common-Name: MariaDB Client 
+openssl req -newkey rsa:2048 -days 365 -nodes -keyout client-key.pem -out client-req.pem
+
+## process RSA - Key 
+## Eventually also works without - what does it do ? 
+## openssl rsa -in client-key.pem -out client-key.pem
+
+## sign certficate with CA 
+openssl x509 -req -in client-req.pem -days 365 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem
+
+```
+
+#### Client - Zertifikate validieren 
+
+```
+openssl verify -CAfile ca-cert.pem client-cert.pem
+```
+
+#### Zertifikate für Client zusammenpacken
+
+```
+mkdir cl-certs; cp -a client* cl-certs; cp -a ca-cert.pem cl-certs ; tar cvfz cl-certs.tar.gz cl-certs 
+```
+
+
+#### Zertifikate auf Client transferieren 
+
+```
+scp cl-certs.tar.gz kurs@192.168.56.104:/tmp 
+```
+
+
+
+#### Zertifikate einrichten 
+
+```
+## on client1 
+## cleanup old config 
+rm /etc/my.cnf.d/ssl/ca-cert.pem 
+
+mv /tmp/cl-certs.tar.gz /etc/my.cnf.d/ssl
+cd /etc/my.cnf.d; tar xzvf cl-certs.tar.gz 
+
+vi mysql-clients.cnf 
+[mysql]
+ssl-ca=/etc/my.cnf.d/cl-certs/ca-cert.pem
+ssl-cert=/etc/my.cnf.d/cl-certs/client-cert.pem
+ssl-key=/etc/my.cnf.d/cl-certs/client-key.pem
+
+```
+
+#### Test the certificate
+
+```
+## on server1 verify: X509 for user 
+select user,ssl_type from mysql.user where user='ext'
+
+## connect from client1 
+## Sollte die Verbindung nicht klappen stimmt auf dem 
+## Client etwas mit der Einrichtung nicht
+mysql -uext -p -h192.168.56.103
+mysql> status 
+
+```
+
+
+### Ref 
+
+  * https://www.cyberciti.biz/faq/how-to-setup-mariadb-ssl-and-secure-connections-from-clients/
+  
+
+
+### Auth with unix_socket
+
+
+```
+mysql>create user training@localhost identified via unix_socket
+useradd training
+passwd training
+
+## testing
+su - training
+## mysql 
+## shouuld not work without password 
+## Be sure, that use has access to socket 
+cd /var/lib/mysql 
+ls -la mysql.socket 
+```
+
+### User- and Permission-concepts (best-practice)
+
+
+```
+## user should have as little permissions as possible
+## so many as needed ;o) 
+MariaDB [mysql]> create database eventplanner;
+Query OK, 1 row affected (0.000 sec)
+
+MariaDB [mysql]> create user eventplanner@localhost identified by 'eventplanner';
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [mysql]> grant all on eventplanner.* to eventplanner@localhost;
+Query OK, 0 rows affected (0.003 sec)
+```
+
+### Setup external access
+
+
+### Testing 
+
+```
+## Where .104 is the server you want to connect to 
+## Variante 1 
+mysqladmin ping -h 192.168.56.104
+echo $? 
+-> 0 // it is possible to reach mysql - server 
+
+## Variante 2
+mysqladmin ping -h 192.168.56.104
+echo $?
+-> 1 // i cannot reach mysql-server  -> port might close / firewall ? 
+
+## or use telnet
+telnet 192.168.56.104 3306
+
+```
+
+### Checks on MariaDB  (Theory) 
+
+  * Is MariaDB - Server running ? 
+  * Is 3306 port open (exposed to the outside)
+  * Is firewall open for port 3306  
+  * Is there a valid user, who connect) 
+
+### Checks on MariaDB (Practical) 
+
+```
+## Step 1: Running 
+systemctl status mariadb 
+## Step 2: Port open ?
+lsof -i # does it listen to all interfaces. -> * 
+        # or an externel interface 
+## Step 3: Firewall open -> see next block 
+## Step 4: User who can connet ? 
+```
+
+### Checks on Firewall. 
+
+```
+## Is firwall running and enabled 
+systemctl status firewalld 
+firewall-cmd --state 
+
+## Is interface setup for usage of firewalld 
+firewall-cmd --get-active-zones 
+
+## Is service "mysql" in zones 
+firewall-cmd --list-all-zones | less # is it within public - zone -> mysql
+
+## To enable it, if not set 
+firewall-cmd --add-service=mysql --zone=public --permanent # writes to filesystem config 
+firewall-cmd --reload # rereads settings from filesystem 
+```
+
+### Setup valid user 
+
+```
+## on server you want to connect to 
+mysql> create user extern@'192.168.56.%' identified by 'mysecretpass'
+mysql> grant all on sakila.* to extern@'192.168.56.%'
+```
+
+### Now test from external with mysql
+
+```
+mysql -uextern -p -h 192.168.56.104 
+mysql>show databases;
+```
+
+### Table encryption
+
+
+### Step 1: Set up keys 
+```
+mkdir -p /etc/mysql/encryption;
+echo "1;"$(openssl rand -hex 32) > /etc/mysql/encryption/keyfile;
+
+openssl rand -hex 128 > /etc/mysql/encryption/keyfile.key;
+openssl enc -aes-256-cbc -md sha1 -pass file:/etc/mysql/encryption/keyfile.key -in /etc/mysql/encryption/keyfile -out /etc/mysql/encryption/keyfile.enc;
+
+rm -f /etc/mysql/encryption/keyfile;
+
+chown -R mysql:mysql /etc/mysql;
+chmod -R 500 /etc/mysql;
+
+
+```
+
+### Step 2: Verify data before encryption 
+
+```
+cd /var/lib/mysql/mysql
+strings gtid_slave_pos.ibd 
+
+```
+
+### Step 3: Setup configuration 
+
+```
+## vi /etc/my.cnf.d/z_encryption.cnf 
+
+[mysqld]
+plugin_load_add = file_key_management
+file_key_management_filename = /etc/mysql/encryption/keyfile.enc
+file_key_management_filekey = FILE:/etc/mysql/encryption/keyfile.key
+file_key_management_encryption_algorithm = AES_CTR
+
+innodb_encrypt_tables = FORCE
+innodb_encrypt_log = ON
+innodb_encrypt_temporary_tables = ON
+
+encrypt_tmp_disk_tables = ON
+encrypt_tmp_files = ON
+encrypt_binlog = ON
+aria_encrypt_tables = ON
+
+innodb_encryption_threads = 4
+innodb_encryption_rotation_iops = 2000
+
+
+```
+
+### Step 4: Restart server 
+
+```
+systemctl restart mariadb 
+```
+
+### Step 5: Verify encryption
+
+```
+cd /var/lib/mysql/mysql
+strings gtid_slave_pos;
+
+use information_schema;
+select * from innodb_tablespaces_encryption;
+SELECT CASE WHEN INSTR(NAME, '/') = 0 
+                   THEN '01-SYSTEM TABLESPACES'
+                   ELSE CONCAT('02-', SUBSTR(NAME, 1, INSTR(NAME, '/')-1)) END 
+                     AS "Schema Name",
+         SUM(CASE WHEN ENCRYPTION_SCHEME > 0 THEN 1 ELSE 0 END) "Tables Encrypted",
+         SUM(CASE WHEN ENCRYPTION_SCHEME = 0 THEN 1 ELSE 0 END) "Tables Not Encrypted"
+FROM information_schema.INNODB_TABLESPACES_ENCRYPTION
+GROUP BY CASE WHEN INSTR(NAME, '/') = 0 
+                   THEN '01-SYSTEM TABLESPACES'
+                   ELSE CONCAT('02-', SUBSTR(NAME, 1, INSTR(NAME, '/')-1)) END
+ORDER BY 1;
+```
+
+### Step 6: disable encryption runtime 
+
+```
+SET GLOBAL innodb_encrypt_tables = OFF;
+```
+
+
+### Ref:
+
+  * https://mariadb.com/de/resources/blog/mariadb-encryption-tde-using-mariadbs-file-key-management-encryption-plugin/
+
+## SELinux 
+
+### Welche Ports sind freigegeben? (MariaDb startet damit)
+
+
+### Welche Ports 
+
+```
+semanage port -l | grep mysql 
+```
+
+### Neues Datenverzeichnis SELinux bekanntmachen - semanage fcontext
+
+
+```
+mkdir /data
+chown mysql:mysql /data
+semanage fcontext -a -t mysqld_db_t "/data(/.*)?"
+restorecon -vr /data
+## type _t should mysqld_db_t 
+ls -laZ
+```
+
+### Probleme mit SELinux erkennen und debuggen
+
+
+``` 
+## Wenn mariadb nicht startet, dann zunächst Loganalyse
+systemctl status mariadb 
+## Gibt es ERROR - Einträge ? 
+## Gibt es Permission / Access Denied - Einträge 
+## Wenn ansonsten alle Rechte stimmen, weisst das Probleme mit SELinux 
+journalctl -u mariadb | less 
+
+
+## Logs von selinux laufen über den Audit-Daemon 
+/var/log/audit/audit.log 
+## Dies können mit sealert analysiert werden
+## Wichtig: Geduld haben, die Analyse dauert einen Moment 
+## auch nach 100% noch abwarten 
+sealert -a /var/log/audit/audit.log 
+
+## Allheilmittel ist meistens 
+## Setzt den richtigen Context, den SELinux braucht, 
+## damit mariadb starten kann 
+restorecon -rv /var/lib/mysql 
+
+```
+
+
+
+## Database - Objects  
+
+### Triggers
+
+
+### Create the structure 
+
+```
+create table countries (
+    country_id int auto_increment,
+    name varchar(50) not null,
+    primary key(country_id) 
+);
+
+INSERT INTO countries (name) values ('Germany'), ('Austria'); 
+
+create table country_stats(
+    country_id int,
+    year int,
+    population int,
+    primary key (country_id, year),
+    foreign key(country_id)
+	references countries(country_id)
+);
+
+INSERT INTO country_stats (country_id, year, population) values (1,2020,100000);
+
+
+create table population_logs(
+    log_id int auto_increment,
+    country_id int not null,
+    year int not null,
+    old_population int not null,
+    new_population int not null,
+    updated_at timestamp default current_timestamp,
+    primary key(log_id)
+);
+
+```
+
+### Create the trigger 
+
+```
+create trigger before_country_stats_update 
+    before update on country_stats
+    for each row
+    insert into population_logs(
+        country_id, 
+        year, 
+        old_population, 
+        new_population
+    )
+    values(
+        old.country_id,
+        old.year,
+        old.population,
+        new.population
+    );
+
+```
+
+## Create trigger (the same) but with BEGIN/END - Block 
+
+```
+create trigger before_country_stats_update 
+    before update on country_stats
+    for each row
+
+    BEGIN
+    SET @anfang = 1;
+    insert into population_logs(
+        country_id, 
+        year, 
+        old_population, 
+        new_population
+    )
+    values(
+        old.country_id,
+        old.year,
+        old.population,
+        new.population
+    );
+    END
+
+```
+
+### Run a test 
+
+```
+update 
+    country_stats
+set 
+    population = 1352617399
+where 
+    country_id = 1 and 
+    year = 2020;
+
+-- what's the new result 
+
+select * from population_logs;
+
+```
+
+### Ref:
+
+  * https://mariadb.com/kb/en/trigger-overview/
+
+
+
+
+### Ref with walkthrough 
+
+  * https://mariadb.com/kb/en/trigger-overview/
+
+### Functions
+
+
+```
+CREATE FUNCTION hello (s CHAR(20))
+    RETURNS CHAR(50) DETERMINISTIC
+    RETURN CONCAT('Hello, ',s,'!');
+
+SELECT hello('world');
++----------------+
+| hello('world') |
++----------------+
+| Hello, world!  |
++----------------+
+
+### Stored Procedure
+
+
+### Example 
+
+```
+USE sakila;
+DELIMITER //
+
+CREATE PROCEDURE simpleproc (OUT param1 INT)
+ BEGIN
+  SELECT COUNT(*) INTO param1 FROM actor;
+ END;
+//
+
+DELIMITER ;
+
+CALL simpleproc(@a);
+
+SELECT @a;
++------+
+| @a   |
++------+
+|    1 |
++------+
+
+
+```
+
+### Reference 
+
+  * https://mariadb.com/kb/en/create-procedure/
+
+### Events
+
+
+### Preparation 
+
+```
+-- scheduler is not there 
+SHOW PROCESSLIST;
+
+-- Prüfen ob scheduler läuft 
+show variables like '%event%';
+set GLOBAL event_scheduler = on; 
+
+-- scheduler appears 
+SHOW PROCESSLIST;
+
+-- Events anzeigen 
+show events; 
+```
+
+### preparation  
+
+```
+
+USE schulung;
+CREATE TABLE messages (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    message VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL
+);
+```
+
+### One time event 
+
+```
+USE schulung 
+CREATE EVENT IF NOT EXISTS test_event_01
+ON SCHEDULE AT CURRENT_TIMESTAMP
+DO
+  INSERT INTO messages(message,created_at)
+  VALUES('Test MariaDB Event 1',NOW());
+  
+SELECT * FROM messages;  
+  
+```
+
+### Show all events from a specific database 
+
+```
+
+
+
+SHOW EVENTS FROM schulung;
+```
+
+### Show all events in active database 
+
+```
+USE schulung;
+SHOW EVENTS;
+
+```
+
+### One time event but preserved (so runs once every minute) 
+
+```
+To keep the event after it is expired, you use the  ON COMPLETION PRESERVE clause.
+
+CREATE EVENT test_event_02
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
+ON COMPLETION PRESERVE
+DO
+   INSERT INTO messages(message,created_at)
+   VALUES('Test MariaDB Event 2',NOW());
+
+
+
+
+
+```
+
+### Same version, but with begin end block 
+
+```
+DELIMITER /
+CREATE EVENT test_event_03
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
+ON COMPLETION PRESERVE
+DO
+   BEGIN
+   INSERT INTO messages(message,created_at)
+   VALUES('Test MariaDB Event 3',NOW());
+   END /
+DELIMITER ;
+
+SELECT * FROM messages;
+
+```
+
+### Recurring Example 
+
+```
+CREATE EVENT test_event_03
+ON SCHEDULE EVERY 1 MINUTE
+STARTS CURRENT_TIMESTAMP
+ENDS CURRENT_TIMESTAMP + INTERVAL 1 HOUR
+DO
+   INSERT INTO messages(message,created_at)
+   VALUES('Test MariaDB recurring Event',NOW());
+
+SELECT * FROM messages;
+
+// after 1 minute 
+SELECT * FROM messages;
+
+
+```
+
+### Drop an event 
+
+```
+DROP EVENT IF EXIST test_event_03;
+```
+
+
+### Set event-scheduler in config / my.cnf / my.ini
+
+```
+[mysqld]
+event-scheduler
+
+## after that restawrt 
+systemctl restart mariadb 
+```
+
+### Fix timezone problem Linux (when time is displayed wrong) 
+
+```
+## 09:32 UTC should be 11:32 CEST 
+## also root ausführen 
+timedatectl list-timezones  | grep 'Europe/Berlin';
+timedatectl set-timezone Europe/Berlin
+timedatectl
+date
+systemctl restart mariadb 
+mysql
+mysql>select now();
+mysql>--- time should ok now 
+```
+
+
+### Data Types
+
+  * https://mariadb.com/kb/en/data-types/
+
+## Locking 
+
+### Implicit Locks
+
+
+### How do the work in general 
+
+  * Implicit locks are done by InnoDB itself 
+  * We can only partly influence them. 
+  
+### Who wants what ? 
+
+```
+<who?, what?, how?, granted?>
+```
+
+### Explanation (a bit clumsy) 
+
+  * IS and IX (intended share an intended write lock) 
+  * IS and IX can be trigged on SQL
+  * IX -> SUFFIX -> FOR UPDATE (this triggers a IX lock) 
+  * IX and IS are the first step (on table layer) 
+  * After that IX -> tries to get an write lock on row-level -> X 
+  * Works unless there is another X 
+  * IX and IS is not retrieved on TABLE spaced operations (construction --- alter) 
+
+### Lock Type compability matrix 
+
+```
+    X           IX          S           IS
+X   Conflict    Conflict    Conflict    Conflict
+IX  Conflict    Compatible  Conflict    Compatible
+S   Conflict    Conflict    Compatible  Compatible
+IS  Conflict    Compatible  Compatible  Compatible
+```
+
+
+### The best explanation across the internet ;o) 
+
+  * http://stackoverflow.com/questions/25903764/why-is-an-ix-lock-compatible-with-another-ix-lock-in-innodb|IX_and_IS-locks
+
+```
+Many people, both visitors and curators, enter the museum. 
+The visitors want to view paintings, so they wear a badge labeled "IS". 
+The curators may replace paintings, so they wear a badge labeled "IX". 
+There can be many people in the museum at the same time, with both types of badges. 
+They don't block each other.
+
+During their visit, the serious art fans will get as close to the painting as they can, 
+and study it for lengthy periods. 
+
+They're happy to let other art fans stand next to them before the same painting. 
+They therefore are doing SELECT ... LOCK IN SHARE MODE and they have "S" lock, 
+because they at least don't want the painting to be replaced while they're studying it.
+
+The curators can replace a painting, but they are courteous to the serious art fans, 
+and they'll wait until these viewers are done and move on. 
+So they are trying to do SELECT ... FOR UPDATE (or else simply UPDATE or DELETE). 
+They will acquire "X" locks at this time, by hanging a little sign up saying "exhibit being redesigned." 
+The serious art fans want to see the art presented in a proper manner, with nice lighting and some descriptive placque. 
+They'll wait for the redesign to be done before they approach (they get a lock wait if they try).
+```
+
+### Identify Deadlocks in innodb
+
+
+### Prerequisite 
+
+```
+2 sessions (connected to same server):
+Session 1
+Session 2 
+
+sakila database is installed 
+
+```
+
+### Session 1:
+
+```
+## Start transaction and lock row by updating it 
+mysql>use sakila;
+mysql>begin;
+mysql>update actor set last_name='Johnsson' where actor_id = 200
+
+## Attention: not commit yet please, leave transaction open 
+
+```
+
+### Session 2:
+
+```
+## Start transactio and try to update same row 
+mysql>use sakila;
+mysql>begin;
+mysql>update actor set last_name='John' where actor_id = 2000
+
+## Now update cannot be done, because of lock from session one 
+
+```
+
+### Session 1: / or new Session 3 
+
+```
+## find out who blocks session 2 
+mysql>use information_schema;
+## find out trx_id of session 2 
+mysql>select * from innodb_trx;
+## assuming we have trx_id 1468; 
+## now we find out what is blocking this transaction
+mysql>select * from innodb_locks_wait; 
+MariaDB [information_schema]> select * from innodb_lock_waits;
++-------------------+-------------------+-----------------+------------------+
+| requesting_trx_id | requested_lock_id | blocking_trx_id | blocking_lock_id |
++-------------------+-------------------+-----------------+------------------+
+| 1469              | 1469:66:3:201     | 1468            | 1468:66:3:201    |
++-------------------+-------------------+-----------------+------------------+
+1 row in set (0.001 sec)
+
+## either additional infos 
+select + from innodb_trx where trx_id = 1468;
+
+## or directly kill this transaction 
+show processlist;
+kill 1468;
+
+```
+
+### Refs ( 3 important tables )  
+
+  * https://mariadb.com/kb/en/information-schema-innodb_lock_waits-table/ (most important one) 
+  * https://mariadb.com/kb/en/information-schema-innodb_locks-table/
+  * https://mariadb.com/kb/en/information-schema-innodb_trx-table/
+
+## Upgrade 
+
+### MariaDB Upgrade 10.3 (Centos) -> 10.4 (Mariadb.org)
+
+
+### Prerequisites
+
+```
+Ubuntu 20.04 
+MariaDB-Server from Distri
+
+Install new 10.4 from Mariadb.org 
+
+```
+### Prepare 
+
+  * Create backup of system (with mariabackup and/or mysqldump) 
+
+### Steps 
+
+```
+## 1. systemctl stop mariadb 
+## 2. dnf remove mariadb-* 
+## 3. Doublecheck if components left: apt list --installed | grep mariadb
+## 4. Setup repo for mariadb
+## 5. dnf install MariaDB-server 
+
+## 7. systemctl enable --now mariadb # enable for next reboot and start immediately 
+## necessary for redhat 
+
+## 8. Perform mysql_upgrade 
+## On centos/redhat mysql_upgrade need to be done
+mysql_upgrade 
+
+## 9. Check if it was succesfull 
+cat /var/lib/mysql_upgrade_info 
+
+```
+
+### Important - Check mysql - configuration structure
+
+```
+## Which directories are loaded in 
+/etc/mysql/my.cnf 
+
+## Eventually move files to the right directory
+## As needed in migration from 10.3 (Distri) to 10.4 (mariadb.org) on Ubuntu 20.04
+
+```
+
+### Documentation 
+
+  * https://mariadb.com/kb/en/upgrading-from-mariadb-103-to-mariadb-104/
+  * https://mariadb.com/kb/en/mysql_upgrade/
+
+### MariaDB Upgrade 10.4 -> 10.5 (Centos)
+
+
+```
+## Step 0;
+## Sicherung anlegen (mysqldump / mariabackup) 
+
+## Step 1:
+## Change version in 
+## or where you have your repo definition
+## Change 10.4 -> 10.5 
+/etc/yum.repos./MariaDB.repo 
+
+## Step 2:
+systemctl stop mariadb 
+
+## Step 3
+sudo yum remove MariaDB-server
+
+## Step 4
+sudo yum install MariaDB-server 
+yum list --installed | grep MariaDB # sind alle Versionen gleich ! Wichtig ! 
+sudo yum update ## Achtung: abweichend von Doku MariaDB 
+
+## Step 4.5 
+## Check if old config files were saved as .rpmsave after delete of package 10.4 
+cd /etc/my.cnf.d 
+ls -la
+## e.g. 
+mv server.cnf.rpmsave server.cnf
+
+## Step 5:
+systemctl start mariadb 
+systemctl enable mariadb
+mysql_upgrade # After that mysql_upgrade_info will be present in /var/lib/mysql with version-info 
+```
+
+## Reference 
+
+  * https://mariadb.com/kb/en/upgrading-from-mariadb-104-to-mariadb-105/
+
+### MariaDB Upgrade 5.5 -> 10.5
+
+  * https://mariadb.com/kb/en/upgrading-between-major-mariadb-versions/
+
+## Performance 
+
+### io-Last/CPU-Last
+
+
+### IO-gebundene - Last (Input/Output) 
+
+```
+Gegeben wenn:
+- Hoher waiting wert in top (wa-wert in CPU-Liste) 
+- + Hohelast   1,5, 15 min     1,2   1.5  2 (Load) -> top 
+```
+
+### CPU-Gebundene - Last 
+
+```
+Gegeben wenn: 
+- NUR: Hohe Last -> Wert in top -> 2 1.5 0.5 (Load) 
+- Waiting-wert: 0 
+
+```
+
+### Views and performance
+
+
+### General  
+
+```
+SHOW CREATE VIEW
+```
+
+### Views and Algorithms
+
+   * Views can use 3 algorithms:
+     * merge 
+     * simple rewrites (translates the query)  
+   * temptable 
+     * Creates a temptable to retrieve information
+     * In this case no indexes can be used 
+   * Shows up explain with derived
+   * undefined 
+     * MySQL chooses, if to use merge or temptable 
+     * prefers merge over temptable if possible 
+
+### Example 
+
+```
++----+-------------+------------+------+---------------+------+---------+------+------+-------+
+| id | select_type | table      | type | possible_keys | key  | key_len | ref  | rows | Extra |
++----+-------------+------------+------+---------------+------+---------+------+------+-------+
+|  1 | PRIMARY     | <derived2> | ALL  | NULL          | NULL | NULL    | NULL |   33 | NULL  |
+|  2 | DERIVED     | task       | ALL  | NULL          | NULL | NULL    | NULL |   33 | NULL  |
++----+-------------+------------+------+---------------+------+---------+------+------+-------+
+```
+      
+
+### Handling (best practice)
+
+   * You can define the algorithm when creating the view 
+   * If you define merge and mysql cannot handle it
+     * you will get a warning 
+
+
+### Example of handling 
+
+```
+mysql> CREATE ALGORITHM=MERGE VIEW priority_counts AS SELECT priority_id, COUNT(1) AS quanity FROM task GROUP BY priority_id;
+Query OK, 0 rows affected, 1 warning (0.12 sec)
+
+mysql> SHOW WARNINGS;
++---------+------+-------------------------------------------------------------------------------+
+| Level   | Code | Message                                                                       |
++---------+------+-------------------------------------------------------------------------------+
+| Warning | 1354 | View merge algorithm can't be used here for now (assumed undefined algorithm) |
++---------+------+-------------------------------------------------------------------------------+
+1 row in set (0.08 sec)
+```
+   
+### Reference
+
+   * Ref: https://dba.stackexchange.com/questions/54481/determining-what-algorithm-mysql-view-is-using
+ 
+
+### Partitions and Explain
+
+
+### Walkthrough 
+
+```
+-- EXPLAIN PARTITIONS
+
+DROP TABLE IF EXISTS audit_log;
+CREATE TABLE audit_log (
+  yr    YEAR NOT NULL,
+  msg   VARCHAR(100) NOT NULL)
+ENGINE=InnoDB
+PARTITION BY RANGE (yr) (
+  PARTITION p0 VALUES LESS THAN (2010),
+  PARTITION p1 VALUES LESS THAN (2011),
+  PARTITION p2 VALUES LESS THAN (2012),
+  PARTITION p3 VALUES LESS THAN MAXVALUE);
+INSERT INTO audit_log(yr,msg) VALUES (2005,'2005'),(2006,'2006'),(2011,'2011'),(2020,'2020');
+EXPLAIN PARTITIONS SELECT * from audit_log WHERE yr in (2011,2012)\G
+```
+
+### Partitions sliced by hash of field 
+
+```
+CREATE TABLE employees (
+    id INT NOT NULL,
+    fname VARCHAR(30),
+    lname VARCHAR(30),
+    hired DATE NOT NULL DEFAULT '1970-01-01',
+    separated DATE NOT NULL DEFAULT '9999-12-31',
+    job_code INT,
+    store_id INT
+)
+PARTITION BY HASH(store_id)
+PARTITIONS 4;
+```
+
+### 3 Phases of DataSize
+
+
+### Phase 1: Table content is small (only some rows) 
+
+```
+## table scan is quicker than index search 
+## e.g. 10 entries 
+
+## so eventually index is not needed 
+
+```
+
+### Phase 2: Index is good !! 
+
+```
+## performance gain by using index
+## Step 1: Obtaining id's from index (primary key id) 
+## Step 2: Retrieving data 
+```
+
+### Phase 3: Index is not improve performance / or would makes performance worse
+
+```
+Step 1: lookup in index:
+1
+70
+1040
+2100
+35000
+-> there is a lot of space (other rows) in between.
+
+Step 2: Lookup data, but a lot lookups needed 
+
+
+-> random reads
+-> So mysql might be better off to do a table scan. 
+
+```
+
+
+
+### Slow Query Log
+
+
+### Walkthrough 
+
+```
+## Step 1
+/etc/my.cnf.d/mariadb-server.cnf 
+[mysqld]
+slow-query-log 
+
+## Step 2
+mysql>SET GLOBAL slow_query_log = 1 
+mysql>SET slow_query_log = 1 
+mysql>SET GLOBAL long_query_time = 0.000001 
+mysql>SET long_query_time = 0.000001
+
+## Step 3
+## run some time / data
+## and look into your slow-query-log 
+/var/lib/mysql/hostname-slow.log 
+
+```
+
+### Show queries that do not use indexes 
+
+```
+SET GLOBAL log_queries_not_using_indexes=ON;
+```
+
+### Geschwätzigkeit (Verbosity) erhöhen 
+
+```
+SET GLOBAL log_slow_verbosity='query_plan,explain'
+```
+
+### Reference 
+
+  * https://mariadb.com/kb/en/slow-query-log-overview/
+
+
+## Optimal use of indexes
+
+### Describe and indexes
+
+
+### Walkthrough 
+
+#### Step 1:
+
+```
+## Database  and Table with primary key
+create database descindex;
+use descindex; 
+create table people (id int unsigned auto_increment, first_name varchar(25), last_name varchar(25), primary key (id), passcode mediumint unsigned);
+## add an index 
+## This will always !! translate into an alter statement. 
+create index idx_last_name_first_name on people (last_name,first_name) 
+## 
+create unique index idx_passcode on people (passcode)   
+
+desc people;
++------------+-----------------------+------+-----+---------+----------------+
+| Field      | Type                  | Null | Key | Default | Extra          |
++------------+-----------------------+------+-----+---------+----------------+
+| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(25)           | YES  |     | NULL    |                |
+| last_name  | varchar(25)           | YES  |     | NULL    |                |
+| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
++------------+-----------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+```
+
+#### Step 2: 
+
+```
+## Add simple combined index on first_name, last_name 
+create index idx_first_name_last_name on people (first_name, last_name);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+desc people;
+
+-- show the column where the combined index starts (MUL = Multi) 
+
++------------+-----------------------+------+-----+---------+----------------+
+| Field      | Type                  | Null | Key | Default | Extra          |
++------------+-----------------------+------+-----+---------+----------------+
+| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(25)           | YES  | MUL | NULL    |                |
+| last_name  | varchar(25)           | YES  |     | NULL    |                |
+| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
++------------+-----------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+
+```
+
+#### Step 3:
+
+```
+## Add a unique index on passcode 
+create index idx_passcode on people (passcode) 
+mysql> desc people;
+
+-- Line with UNI shows this indexes. 
++------------+-----------------------+------+-----+---------+----------------+
+| Field      | Type                  | Null | Key | Default | Extra          |
++------------+-----------------------+------+-----+---------+----------------+
+| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(25)           | YES  | MUL | NULL    |                |
+| last_name  | varchar(25)           | YES  |     | NULL    |                |
+| passcode   | mediumint(8) unsigned | YES  | UNI | NULL    |                |
++------------+-----------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+```
+
+
+#### Step 4: 
+
+```
+## Get to know all your indexes on a table 
+show indexes for people 
+mysql> show index from people;
++--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table  | Non_unique | Key_name                 | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| people |          0 | PRIMARY                  |            1 | id          | A         |           0 |     NULL | NULL   |      | BTREE      |         |               |
+| people |          0 | idx_passcode             |            1 | passcode    | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
+| people |          1 | idx_first_name_last_name |            1 | first_name  | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
+| people |          1 | idx_first_name_last_name |            2 | last_name   | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
++--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+4 rows in set (0.01 sec)
+```
+
+### Find out indexes
+
+
+### Show index from table 
+
+```
+create database showindex; 
+use showindex;
+CREATE TABLE `people` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(25) DEFAULT NULL,
+  `last_name` varchar(25) DEFAULT NULL,
+  `passcode` mediumint(8) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_passcode` (`passcode`),
+  KEY `idx_first_name_last_name` (`first_name`,`last_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+show index from people 
+```
+
+#### Show create table 
+
+```
+show create table peple 
+```
+
+#### show index from 
+
+```
+show index from contributions 
+```
+
+### Index and Functions
+
+
+### No function can be used on an index:
+
+```
+explain select * from actor where upper(last_name) like 'A%';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | actor | NULL       | ALL  | NULL          | NULL | NULL    | NULL |  200 |   100.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+```
+
+### Workaround with generated columns 
+
+```
+## 1. Create Virtual Column with upper 
+MariaDB [sakila](45) AS (upper(la              st_name)) VIRTUAL;
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [sakila](last_name_upper);
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [sakila]> explain select * from actor where last_name_upper like 'A%';                +------+-------------+-------+-------+---------------+-----------+---------+----              --+------+-------------+
+| id   | select_type | table | type  | possible_keys | key       | key_len | ref                | rows | Extra       |
++------+-------------+-------+-------+---------------+-----------+---------+----              --+------+-------------+
+|    1 | SIMPLE      | actor | range | idx_upper     | idx_upper | 183     | NUL              L |    7 | Using where |
++------+-------------+-------+-------+---------------+-----------+---------+----              --+------+-------------+
+1 row in set (0.001 sec)
+```
+  
+### Now we try to search the very same 
+
+```
+explain select * from actor where last_name_upper like 'A%';
++----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type  | possible_keys       | key                 | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | actor | NULL       | range | idx_last_name_upper | idx_last_name_upper | 183     | NULL |    7 |   100.00 | Using where |
++----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+```
+
+### Reference 
+
+  * https://mariadb.com/kb/en/generated-columns/
+  * https://mariadb.com/kb/en/slow-query-log-overview/
+
+### Index and Likes
+
+
+### 1. like 'Will%' - Index works 
+
+explain select last_name from donors where last_name like 'Will%';
+
+### 2. like '%iams' - Index does not work 
+
+```
+-- because like starts with a wildcard 
+explain select last_name from donors where last_name like '%iams';
+```
+
+### 3. How to fix 3, if you are using this often ? 
+
+```
+## Walkthrough 
+## Step 1: modify table 
+alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name));
+create index idx_last_name_reversed on donors (last_name_reversed);
+
+## besser - Variante 2 - untested 
+alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name)), add index idx_last_name_reversed on donors (last_name_reversed);
+
+## Step 2: update table - this take a while 
+update donors set last_name_reversed = reversed(last_name)
+## Step 3: work with it 
+select last_name,last_name_reversed from donor where last_name_reversed like reverse('%iams');  
+```
+
+```
+## Version 2 with pt-online-schema-change 
+
+```
+
+### profiling-get-time-for-execution-of.query
+
+ 
+   * Get better values, how long queries take
+
+### Example 
+
+```
+set profiling = 1 
+## Step 2 - Execute query 
+select last_name as gross from donors where last_name like lower('WILLI%')  
+
+## Step 3 - Show profiles 
+show profiles;
++----------+------------+-----------------------------------------------------------------------------------+
+| Query_ID | Duration   | Query                                                                             |
++----------+------------+-----------------------------------------------------------------------------------+
+|        1 | 0.01993525 | select last_name as gross from donors where last_name like lower('WILLI%')        |
+4 rows in set, 1 warning (0.00 sec) 
+
+## Step 4 - Show profile for a specific query 
+mysql> show profile for query 1;
++----------------------+----------+
+| Status               | Duration |
++----------------------+----------+
+| starting             | 0.000062 |
+| checking permissions | 0.000006 |
+| Opening tables       | 0.000021 |
+| init                 | 0.000017 |
+| System lock          | 0.000007 |
+| optimizing           | 0.000007 |
+| statistics           | 0.000083 |
+| preparing            | 0.000012 |
+| executing            | 0.000004 |
+| Sending data         | 0.022251 |
+| end                  | 0.000005 |
+| query end            | 0.000008 |
+| closing tables       | 0.000007 |
+| freeing items        | 0.001792 |
+| cleaning up          | 0.000016 |
++----------------------+----------+
+15 rows in set, 1 warning (0.00 sec)
+```
+
+### Find out cardinality without index
+
+
+### Find out cardinality without creating index 
+```
+select count(distinct donor_id) from contributions;
+```
+
+```
+select count(distinct(vendor_city)) from contributions;
++------------------------------+
+| count(distinct(vendor_city)) |
++------------------------------+
+|                         1772 |
++------------------------------+
+1 row in set (4.97 sec)
+```
+
+## Replication 
+
+### Slave einrichten - Centos - old style (master_pos)
+
+
+### Configure master 
+
+```
+## /etc/my.cnf.d/server.cnf 
+## /etc/my.cnf.d/mariadb-server.cnf 
+[mysqld]
+log-bin=mariadb-bin 
+server_id=1
+log-basename=master1
+binlog-format=row
+
+systemctl stop mariadb
+systemctl start mariadb 
+```
+
+### Setup replication user on master 
+
+```
+CREATE USER 'replication_user'@'%' IDENTIFIED BY 'bigs3cret';
+GRANT REPLICATION SLAVE ON *.* TO 'replication_user'@'%';
+
+```
+
+### Slave aufsetzen 
+
+```
+### Wichtig: möglichst gleiche Version 
+
+## repo einrichten von mariadb 
+
+## /etc/yum.repos.d/mariadb.repo 
+## MariaDB 10.4 CentOS repository list - created 2022-01-14 08:34 UTC
+## https://mariadb.org/download/
+[mariadb]
+name = MariaDB
+baseurl = https://mirror.kumi.systems/mariadb/yum/10.4/centos8-amd64
+module_hotfixes=1
+gpgkey=https://mirror.kumi.systems/mariadb/yum/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+## MariaDB 10.4 CentOS repository list - created 2022-01-14 08:34 UTC
+## https://mariadb.org/download/
+[mariadb]
+name = MariaDB
+baseurl = https://mirror.kumi.systems/mariadb/yum/10.4/centos8-amd64
+module_hotfixes=1
+gpgkey=https://mirror.kumi.systems/mariadb/yum/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+
+## MariaDB - Server installieren 
+dnf install -y MariaDB-server 
+
+
+
+## server - config von master rüberspielen 
+## auf server 
+cd /etc
+tar cvfz my.cnf.d.tar.gz my.cnf.d 
+scp my.cnf.d.tar.gz kurs@192.168.56.104:/tmp
+
+## auf slave ausrollen 
+cd /etc
+mv my.cnf.d my.cnf.d.bkup
+mv /tmp/my.cnf.d.tar.gz . 
+tar cvfz my.cnf.d.tar.gz 
+
+## config anpassen 
+## /etc/my.cnf.d/server.cnf 
+## pr: /etc/my.cnf.d/mariadb-server.cnf
+[mysqld]
+
+
+innodb-buffer-pool-size=3G
+innodb-flush-method=O_DIRECT
+
+## Enable slow-query-log
+slow-query-log
+
+server_id=2
+
+## only necessary, if you want the slave to
+## become master later on
+log-bin=mariadb-bin
+binlog-format=row
+log-slave-updates=1
+log-basename=slave1
+
+## server restarten
+systemctl stop mariadb 
+systemctl start mariadb 
+
+```
+
+### backup auf master ausspielen und auf slave kopieren
+
+```
+mysqldump --all-databases --single-transaction --events --routines --master-data=2 --flush-logs --delete-master-logs > /usr/src/master-dump.sql
+
+scp /usr/src/master-dump.sql kurs@192.168.56.104:/tmp 
+
+```
+
+### auf slave backup einspielen einspielen und konfigurieren
+
+```
+## vi /root/.my.cnf 
+[client]
+password=mysupersecret 
+
+mv /tmp/master-dump.sql /usr/src 
+mysql < master-dump.sql 
+
+## vi /root/master.sql 
+CHANGE MASTER TO
+  MASTER_HOST='192.168.56.103',
+  MASTER_USER='replication_user',
+  MASTER_PASSWORD='bigs3cret',
+  MASTER_PORT=3306,
+  MASTER_LOG_FILE='master1-bin.000002',
+  MASTER_LOG_POS=389,
+  MASTER_CONNECT_RETRY=10;
+
+mysql < /root/master.sql 
+
+```
+
+### slave starten 
+
+```
+mysql>slave start 
+mysql>show slave status \G
+
+```
+
+### Ref: 
+
+  * https://mariadb.com/kb/en/setting-up-replication/
+
+### Skip-Counter 
+
+```
+SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1;
+START SLAVE;
+```
 
 ### MaxScale installieren
 
@@ -2663,23 +3783,17 @@ maxctrl list services
 maxctrl show service ReadWrite-Split-Router 
 ```
 
-<div class="page-break"></div>
-
 ### Reference: MaxScale-Proxy mit Monitoring
 
 
 
 [MaxScale MariaDB-Monitor](https://mariadb.com/kb/en/mariadb-maxscale-25-mariadb-monitor/)
 
-<div class="page-break"></div>
-
 ### Walkthrough:Automatic Failover Master Slave
 
 
 https://mariadb.com/kb/en/mariadb-maxscale-25-automatic-failover-with-mariadb-monitor/
 
-
-<div class="page-break"></div>
 
 ## Tools & Tricks
 
@@ -2701,23 +3815,6 @@ apt update;
 apt install -y percona-toolkit; 
 ```
 
-<div class="page-break"></div>
-
-### Percona-toolkit-Installation - Centos
-
-
-### Walkthrough 
-
-```
-## Howto 
-## https://www.percona.com/doc/percona-toolkit/LATEST/installation.html
-
-## Step 1: repo installieren mit rpm -paket 
-yum install -y https://repo.percona.com/yum/percona-release-latest.noarch.rpm; yum install -y percona-toolkit
-```
-
-<div class="page-break"></div>
-
 ### pt-query-digest under Windows
 
 
@@ -2730,8 +3827,6 @@ https://www.percona.com/get/pt-query-digest
 ### Reference 
 
   * http://www.jonathanlevin.co.uk/2012/01/query-digest-on-windows.html
-
-<div class="page-break"></div>
 
 ### pt-query-digest - analyze slow logs
 
@@ -2761,8 +3856,6 @@ less report-slow.txt
 
 ```
 
-<div class="page-break"></div>
-
 ### pt-online-schema-change howto
 
 
@@ -2790,8 +3883,6 @@ pt-online-schema-change --alter "ADD INDEX idx_city (city)" --execute D=contribu
 https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html#:~:text=pt%2Donline%2Dschema%2Dchange%20works%20by%20creating%20an%20empty,it%20with%20the%20new%20one.
 
 ```
-
-<div class="page-break"></div>
 
 ### Ubuntu-with-Vagrant
 
@@ -2838,8 +3929,6 @@ end
 vagrant destroy -f 
 ```
 
-<div class="page-break"></div>
-
 ### mysql-client
 
 
@@ -2863,16 +3952,12 @@ mysql> -- so schalte ich ihn wieder ab
 mysql> pager
 ```
 
-<div class="page-break"></div>
-
 ### Schweizer Such-Taschenmesser grep -r
 
 
 ```
 grep -r "PermitRootLogin" /etc
 ```
-
-<div class="page-break"></div>
 
 ### Set timezone in Centos 7/8
 
@@ -2884,8 +3969,6 @@ timedatectl set-timezone 'Europe/Berlin'
 timedatectl
 ```
 
-<div class="page-break"></div>
-
 ### Ist die Netzwerkkarte eingerichtet - nmtui
 
 
@@ -2893,21 +3976,6 @@ timedatectl
 ## Grafische Oberfläche auf der Kommandozeile 
 nmtui 
 ```
-
-<div class="page-break"></div>
-
-### Set hostname on systemd-Systems
-
-
-```
-## you have to be root 
-hostnamectl set-hostname mariadb1.training.local 
-## so that you will see it in your current prompt 
-su -
-hostnamectl 
-```
-
-<div class="page-break"></div>
 
 ### User anlegen und passwort vergeben (Centos/Redhat)
 
@@ -2917,8 +3985,6 @@ hostnamectl
 useradd training
 passwd training
 ```
-
-<div class="page-break"></div>
 
 ### Scripts for deploying galera-cluster to Ubuntu 20.04
 
@@ -2945,8 +4011,6 @@ set @mypass='password';
 create user someuser@somehost identified by @mypass; 
 ```
 
-<div class="page-break"></div>
-
 ### Installation sakila-db
 
 
@@ -2960,8 +4024,6 @@ mysql < sakila-schema.sql
 mysql < sakila-data.sql 
 
 ```
-
-<div class="page-break"></div>
 
 ## Diagnosis and measurement of performance 
 
@@ -2999,8 +4061,6 @@ mysql>kill 44
 ```
 Explain Select.... 
 ```
-
-<div class="page-break"></div>
 
 ## Performance and optimization of SQL statements
 
@@ -3062,16 +4122,12 @@ PAGER set to 'grep 'rows in set''
 
   * https://www.oreilly.com/library/view/high-performance-mysql/9780596101718/ch04.html
 
-<div class="page-break"></div>
-
 ### Optimizer-hints (and why you should not use them)
 
 
 ### Tell the optimizer what to do and what not to do 
 
   * https://dev.mysql.com/doc/refman/5.7/en/optimizer-hints.html#optimizer-hints-syntax
-
-<div class="page-break"></div>
 
 ## Replication 
 
@@ -3118,8 +4174,6 @@ PAGER set to 'grep 'rows in set''
   * use a virtual field and index virtual field (possible from mysql > 5.7) 
   * Massive improvements in mysqL 8 
 
-<div class="page-break"></div>
-
 ### Example sys-schema and Reference
 
 
@@ -3149,8 +4203,6 @@ total_memory_allocated: 0 bytes
   
   
 
-<div class="page-break"></div>
-
 ### Change schema online (pt-online-schema-change)
 
   * https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html
@@ -3162,13 +4214,7 @@ total_memory_allocated: 0 bytes
 
   * https://dev.mysql.com/doc/refman/5.7/en/optimizer-hints.html#optimizer-hints-syntax
 
-<div class="page-break"></div>
-
 ## Documentation / Literature 
-
-### Server System Variables
-
-  * https://mariadb.com/kb/en/server-system-variables/#bind_address
 
 ### MySQL - Peformance Blog
 
@@ -3186,10 +4232,6 @@ total_memory_allocated: 0 bytes
 
   * https://github.com/jmetzger/training-mysql-developers-basics
 
-### MySQL - Performance - PDF
-
-  * http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf
-
 ### MariaDB Galera Cluster
 
   * http://schulung.t3isp.de/documents/pdfs/mariadb/mariadb-galera-cluster.pdf
@@ -3197,6 +4239,10 @@ total_memory_allocated: 0 bytes
 ### MySQL Galera Cluster
 
   * https://galeracluster.com/downloads/
+
+### Releases List - Long Time / Stable
+
+  * https://mariadb.com/kb/en/mariadb-server-release-dates/
 
 ## Questions and Answers 
 
@@ -3296,8 +4342,6 @@ No, there is no testing framework with MySQL
   ```
 
 
-<div class="page-break"></div>
-
 ### Best filesystem for MariaDB
 
   * https://mariadb.com/de/resources/blog/what-is-the-best-linux-filesystem-for-mariadb/
@@ -3329,5 +4373,3 @@ select * from donors where upper(last_name) like 'Willia%'
 1 row in set, 1 warning (0.00 sec)
 
 ```
-
-<div class="page-break"></div>
