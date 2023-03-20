@@ -17,6 +17,16 @@
      * [Show structure of table](show-create-table-describe.md)
      * [Show all tables within db](show-tables.md) 
 
+  1. Security and User Rights 
+     * [Disabled unix_socket authentication for user](/security/no-unix-socket-auth.md)
+     * [Debug and Setup External Connection](/security/debug-external-conn.md) 
+     * [Get Rights of user](/security/get-rights-for-user.md)
+     * [Secure with SSL server/client](/security/ssl.md)
+     * [Auth with unix_socket](create-user-unix-socket.md)
+     * [User- and Permission-concepts (best-practice)](/security/user-db-best-practice.md)
+     * [Setup external access](external-access.md)
+     * [Table encryption](table-encryption.md)
+
   1. InnoDB - Storage Engine 
      * [InnoDB - Storage Engine - Structure](/innodb/innodb-structure.md) 
      * [Important InnoDB - configuration - options to optimized performance](/innodb/innodb.md) 
