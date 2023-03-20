@@ -18,7 +18,7 @@
      * [Show all tables within db](show-tables.md) 
 
   1. Security and User Rights 
-     * [Disabled unix_socket authentication for user](/security/no-unix-socket-auth.md)
+     * [Disabld unix_socket authentication for user](/security/no-unix-sock-auth.md)
      * [Debug and Setup External Connection](/security/debug-external-conn.md) 
      * [Get Rights of user](/security/get-rights-for-user.md)
      * [Secure with SSL server/client](/security/ssl.md)
