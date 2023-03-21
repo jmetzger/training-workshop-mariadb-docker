@@ -1,16 +1,24 @@
 # Mariabackup 
 
-## Installation von Repo mariadb (von mariadb.org)
+## Installation 
 
+### dnf 
 ```
 dnf install MariaDB-backup 
 ```
 
-## Installation von Distri (Centos/Rocky/RHEL)
+### Installation von Distri (Centos/Rocky/RHEL)
 
 ```
 # Rocky 8 
 dnf install mariadb-backup 
+```
+
+### Installation deb (Ubuntu/Debian) 
+
+```
+apt search mariadb-backup 
+apt install -y mariadb-backup 
 ```
 
 ## Walkthrough (Ubuntu/Debian)
