@@ -9,6 +9,7 @@
 # or where you have your repo definition
 # Change 10.6 -> 10.11 
 /etc/apt/sources.list
+apt update
 # Step 2:
 systemctl stop mariadb 
 
