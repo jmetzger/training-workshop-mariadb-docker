@@ -13,8 +13,12 @@ apt update
 # Step 2:
 systemctl stop mariadb 
 
+# STep 3:
+apt list --installed | grep -i mariadb
+
 # Step 3
-sudo apt remove MariaDB-server
+apt remove -y mariadb*10.6
+apt autoremove -y 
 
 # Step 4
 sudo apt install MariaDB-server 
