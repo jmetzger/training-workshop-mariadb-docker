@@ -1,4 +1,4 @@
-# Upgrade MariaDB 10.4 -> 10.5 (Centos) 
+# Upgrade MariaDB 10.6 -> 10.11 (Debian/Ubuntu) 
 
 ```
 # Step 0;
@@ -7,7 +7,7 @@
 # Step 1:
 # Change version in 
 # or where you have your repo definition
-# Change 10.4 -> 10.5 
+# Change 10.6 -> 10.11 
 /etc/apt/sources.list
 # Step 2:
 systemctl stop mariadb 
