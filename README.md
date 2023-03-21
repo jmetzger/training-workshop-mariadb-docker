@@ -63,6 +63,10 @@
      * [Frisches Datenverzeichnis anlegen](create-fresh-datadir-centos.md)
      * [In den Root-Benutzer wechseln](sudo-root.md)
      * [Service Debuggen](debug-service.md)
+            
+  1. Locking 
+     * [Implicit Locks](locks/innodb-implicit-locks.md)
+     * [Identify Deadlocks in innodb](locks/deadlocks.md)
      
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
@@ -129,10 +133,6 @@
      * [Stored Procedure](stored-procedure.md)
      * [Events](events.md)
      * [Data Types](https://mariadb.com/kb/en/data-types/)
-     
-  1. Locking 
-     * [Implicit Locks](locks/innodb-implicit-locks.md)
-     * [Identify Deadlocks in innodb](locks/deadlocks.md)
 
   1. Upgrade 
      * [MariaDB Upgrade 10.3 (Centos) -> 10.4 (Mariadb.org)](mariadb-upgrade-10-3-centos-to-10-4-maria-org.md)
