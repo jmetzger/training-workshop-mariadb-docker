@@ -71,6 +71,7 @@
      * [MariaDB - Information Schema Tables](https://mariadb.com/kb/en/information-schema-tables/)
      * [MariaDB - slow query log](https://mariadb.com/kb/en/slow-query-log-overview/)
      * [MariaDB - sys - vor 10.6](https://github.com/FromDual/mariadb-sys)
+     * [mysql performance blog](https://www.percona.com/blog/innodb-performance-optimization-basics-updated/)
 
 ## Backlog 
 
@@ -201,7 +202,6 @@
      * [Source-Code MariaDB](https://github.com/MariaDB/server)
      * [Effective MySQL](https://www.amazon.com/Effective-MySQL-Optimizing-Statements-Oracle/dp/0071782796)
      * [Last Training](https://github.com/jmetzger/training-mysql-developers-basics)
-
      * [MariaDB Galera Cluster](http://schulung.t3isp.de/documents/pdfs/mariadb/mariadb-galera-cluster.pdf)
      * [MySQL Galera Cluster](https://galeracluster.com/downloads/)   
      * [Releases List - Long Time / Stable](https://mariadb.com/kb/en/mariadb-server-release-dates/)
