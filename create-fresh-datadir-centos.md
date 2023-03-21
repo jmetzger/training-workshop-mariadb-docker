@@ -34,6 +34,8 @@ mv mysql mysql.bkup
 
 # Schritt 2: Fresh 
 mysql_install_db --user=mysql
+
+# not sure, but safe ! 
 chown mysql:mysql mysql
 chmod g+rx,o+rx mysql 
 
