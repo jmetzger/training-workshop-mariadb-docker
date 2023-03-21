@@ -31,15 +31,15 @@ user=root
 
 mkdir /backups 
 # target-dir needs to be empty or not present 
-mariabackup --target-dir=/backups/20210120 --backup 
+mariabackup --target-dir=/backups/20230321 --backup 
 # apply ib_logfile0 to tablespaces 
 # after that ib_logfile0 ->  0 bytes 
-mariabackup --target-dir=/backups/20210120 --prepare 
+mariabackup --target-dir=/backups/20230321 --prepare 
 
 ## Recover 
 systemctl stop mariadb 
 mv /var/lib/mysql /var/lib/mysql.bkup 
-mariabackup --target-dir=/backups/20200120 --copy-back 
+mariabackup --target-dir=/backups/20230321 --copy-back 
 chown -R mysql:mysql /var/lib/mysql
 chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
 systemctl start mariadb 
