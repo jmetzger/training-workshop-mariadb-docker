@@ -34,6 +34,13 @@ SET GLOBAL log_queries_not_using_indexes=ON;
 SET GLOBAL log_slow_verbosity='query_plan,explain'
 ```
 
+## Queries die keine Indizes verwenden 
+
+```
+SET GLOBAL log_queries_not_using_indexes=ON;
+```
+
+
 ## Reference 
 
   * https://mariadb.com/kb/en/slow-query-log-overview/
