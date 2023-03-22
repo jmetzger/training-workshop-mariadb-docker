@@ -53,6 +53,16 @@ mysql>show variables like 'innodb%buffer%';
   * https://www.percona.com/blog/2018/06/19/chunk-change-innodb-buffer-pool-resizing/
 
 
+## innodb_log_buffer_size  
+
+```
+1 commit should fit in this buffer 
+
+Question: In your application are your commits bigger or smaller 
+
+
+```
+
 
 ## innodb_flush_method 
 
