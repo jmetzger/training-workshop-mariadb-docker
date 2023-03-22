@@ -44,7 +44,7 @@ mysql>use information_schema;
 mysql>select * from innodb_trx;
 # assuming we have trx_id 1468; 
 # now we find out what is blocking this transaction
-mysql>select * from innodb_locks_wait; 
+mysql>select * from innodb_locks_waits; 
 MariaDB [information_schema]> select * from innodb_lock_waits;
 +-------------------+-------------------+-----------------+------------------+
 | requesting_trx_id | requested_lock_id | blocking_trx_id | blocking_lock_id |
@@ -54,11 +54,13 @@ MariaDB [information_schema]> select * from innodb_lock_waits;
 1 row in set (0.001 sec)
 
 # either additional infos 
-select + from innodb_trx where trx_id = 1468;
+select * from innodb_trx where trx_id = 1468;
+
+# get thread_id -> e.g. 50
 
 # or directly kill this transaction 
 show processlist;
-kill 1468;
+kill 50;
 
 ```
 
