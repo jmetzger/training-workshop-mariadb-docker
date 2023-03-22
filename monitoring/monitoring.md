@@ -24,7 +24,7 @@
 | Average Read/Write time | Time it takes to finish disk access operations (latency) |  -- |
 | Read/Write bandwidth | Data transfer from and towards your disk | -- |
 
-### Gneral mysql metrics 
+### General mysql metrics 
 
  ```
  mysql -E -e "select variable_value from information_schema.session_status where variable_name = 'uptime'";
