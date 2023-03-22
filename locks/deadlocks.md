@@ -17,7 +17,7 @@ sakila database is installed
 # Start transaction and lock row by updating it 
 mysql>use sakila;
 mysql>begin;
-mysql>update actor set last_name='Johnsson' where actor_id = 200
+mysql>update actor set last_name='Johnsson' where actor_id = 200;
 
 # Attention: not commit yet please, leave transaction open 
 
@@ -29,7 +29,7 @@ mysql>update actor set last_name='Johnsson' where actor_id = 200
 # Start transactio and try to update same row 
 mysql>use sakila;
 mysql>begin;
-mysql>update actor set last_name='John' where actor_id = 2000
+mysql>update actor set last_name='John' where actor_id = 200;
 
 # Now update cannot be done, because of lock from session one 
 
