@@ -1,6 +1,6 @@
 # Install percona - toolkit (Centos) 
 
-## Walkthrough 
+## Walkthrough (Centos / Redhat) 
 
 ```
 # Howto 
@@ -8,4 +8,15 @@
 
 # Step 1: repo installieren mit rpm -paket 
 dnf install -y https://repo.percona.com/yum/percona-release-latest.noarch.rpm; dnf install -y percona-toolkit
+```
+
+## Debian / Ubuntu 
+
+```
+curl -O https://repo.percona.com/apt/percona-release_latest.generic_all.deb
+sudo apt install gnupg2 lsb-release ./percona-release_latest.generic_all.deb
+apt update
+apt install percona-toolkit 
+
+
 ```
