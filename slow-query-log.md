@@ -4,7 +4,8 @@
 
 ```
 # Step 1
-/etc/my.cnf.d/mariadb-server.cnf 
+# /etc/my.cnf.d/mariadb-server.cnf 
+# or: debian /etc/mysql/mariadb.conf.d/50-server.cnf 
 [mysqld]
 slow-query-log 
 
