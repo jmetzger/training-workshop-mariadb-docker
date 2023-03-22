@@ -83,6 +83,12 @@ ORDER BY 1;
 SET GLOBAL innodb_encrypt_tables = OFF;
 ```
 
+```
+# Create a user that is not allowed to do so .... no set global 
+create user noroot@'localhost' identified by 'password';
+grant all on *.* to noroot@'localhost';
+revoke super on *.* from noroot@'localhost';
+```
 
 ## Ref:
 
