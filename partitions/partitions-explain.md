@@ -34,3 +34,25 @@ CREATE TABLE employees (
 PARTITION BY HASH(store_id)
 PARTITIONS 4;
 ```
+
+## Partitioning by datetime 
+
+```
+CREATE TABLE tbl (
+        dt DATETIME NOT NULL,  -- or DATE
+        ...
+        PRIMARY KEY (..., dt),
+        UNIQUE KEY (..., dt),
+        ...
+    )
+    PARTITION BY RANGE (TO_DAYS(dt)) (
+        PARTITION start        VALUES LESS THAN (0),
+        PARTITION from20120315 VALUES LESS THAN (TO_DAYS('2012-03-16')),
+        PARTITION from20120316 VALUES LESS THAN (TO_DAYS('2012-03-17')),
+        ...
+        PARTITION from20120414 VALUES LESS THAN (TO_DAYS('2012-04-15')),
+        PARTITION from20120415 VALUES LESS THAN (TO_DAYS('2012-04-16')),
+        PARTITION future       VALUES LESS THAN MAXVALUE
+);
+
+```
