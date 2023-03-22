@@ -69,6 +69,15 @@
      * [Implicit Locks](locks/innodb-implicit-locks.md)
      * [Identify Deadlocks in innodb](locks/deadlocks.md)
      
+  1. Optimal use of indexes 
+     * Index-Types 
+     * [Describe and indexes](/indexes/describe-table.md)
+     * [Find out indexes](indexes/findout-indexes.md) 
+     * [Index and Functions](index-and-functions.md) 
+     * [Index and Likes](/indexes/like-index-not-index.md)   
+     * [profiling-get-time-for-execution-of.query](/indexes/profiling.md) 
+     * [Find out cardinality without index](/indexes/cardinality.md)
+
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
