@@ -54,6 +54,7 @@
 
   1. Monitoring 
      * [What to monitor?](/monitoring/monitoring.md) 
+     * [Percona Management and Monitoring](/monitoring/pmm.md)
 
   1. Replication 
      * [Slave einrichten - gtid (mit mariabackup)](/replication/01-master-slave-gtid.md)
