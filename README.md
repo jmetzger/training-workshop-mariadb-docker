@@ -70,7 +70,7 @@
      * [Identify Deadlocks in innodb](locks/deadlocks.md)
      
   1. Optimal use of indexes 
-     * Index-Types 
+     * [Index-Types](/indexes/type-of-indexes.md) 
      * [Describe and indexes](/indexes/describe-table.md)
      * [Find out indexes](indexes/findout-indexes.md) 
      * [Index and Functions](index-and-functions.md) 
