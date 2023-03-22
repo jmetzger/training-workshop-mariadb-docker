@@ -7,8 +7,8 @@
 ```
 
 # On Server - create ca and certificates 
-sudo mkdir -p /etc/mysql/ssl
-sudo cd /etc/mysql/ssl
+mkdir -p /etc/mysql/ssl
+cd /etc/mysql/ssl
 
 # create ca.  
 sudo openssl genrsa 4096 > ca-key.pem
@@ -51,7 +51,7 @@ ssl-key=/etc/mysql/mariadb.conf.d/ssl/server-key.pem
 tls_version = TLSv1.2,TLSv1.3
 
 # Set ownership 
-chown -vR mysql:mysql /etc/my.cnf.d/ssl/
+chown -vR mysql:mysql /etc/mysql/ssl/
 
 ```
 
