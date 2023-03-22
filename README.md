@@ -88,6 +88,7 @@
      * [MariaDB - slow query log](https://mariadb.com/kb/en/slow-query-log-overview/)
      * [MariaDB - sys - vor 10.6](https://github.com/FromDual/mariadb-sys)
      * [mysql performance blog](https://www.percona.com/blog/innodb-performance-optimization-basics-updated/)
+     * [Differences Community / Enterprise Version - nearly the same](https://fromdual.com/mariadb-enterprise-server-vs-mariadb-community-server)
 
 ## Backlog 
 
