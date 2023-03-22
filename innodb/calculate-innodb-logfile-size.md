@@ -1,4 +1,4 @@
-# Calculate innodb-log-filze-size
+# Calculate innodb-log-file-size
 
 ```
 pager grep sequence;
