@@ -30,6 +30,7 @@
   1. InnoDB - Storage Engine 
      * [InnoDB - Storage Engine - Structure](/innodb/innodb-structure.md) 
      * [Important InnoDB - configuration - options to optimized performance](/innodb/innodb.md) 
+     * [Calculate innodb logfile size](calculate-innodb-logfile-size.md)
 
   1. Training Data 
      * [Setup training data "contributions"](/indexes/setup-training-data-contributions.md)
