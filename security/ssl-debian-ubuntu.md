@@ -7,8 +7,8 @@
 ```
 
 # On Server - create ca and certificates 
-sudo mkdir -p /etc/my.cnf.d/ssl
-sudo cd /etc/my.cnf.d/ssl
+sudo mkdir -p /etc/mysql/ssl
+sudo cd /etc/mysql/ssl
 
 # create ca.  
 sudo openssl genrsa 4096 > ca-key.pem
@@ -41,11 +41,11 @@ openssl verify -CAfile ca-cert.pem server-cert.pem
 ### Configure Server 
 ```
 # create file 
-# /etc/my.cnf.d/z_ssl.cnf 
+# /etc/mysql/mariadb.conf.d/z_ssl.cnf 
 [mysqld]
-ssl-ca=/etc/my.cnf.d/ssl/ca-cert.pem
-ssl-cert=/etc/my.cnf.d/ssl/server-cert.pem
-ssl-key=/etc/my.cnf.d/ssl/server-key.pem
+ssl-ca=/etc/mysql/mariadb.conf.d/ssl/ca-cert.pem
+ssl-cert=/etc/mysql/mariadb.conf.d/ssl/server-cert.pem
+ssl-key=/etc/mysql/mariadb.conf.d/ssl/server-key.pem
 ## Set up TLS version here. For example TLS version 1.2 and 1.3 ##
 # Starts from mariadb 10.4.6 not possible before. !!!! 
 tls_version = TLSv1.2,TLSv1.3
