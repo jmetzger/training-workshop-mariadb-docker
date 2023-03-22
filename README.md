@@ -64,6 +64,7 @@
      * [Frisches Datenverzeichnis anlegen](create-fresh-datadir-centos.md)
      * [In den Root-Benutzer wechseln](sudo-root.md)
      * [Service Debuggen](debug-service.md)
+     * [online schema change without blocking](pt-online-schema-change.md)
             
   1. Locking 
      * [Implicit Locks](locks/innodb-implicit-locks.md)
