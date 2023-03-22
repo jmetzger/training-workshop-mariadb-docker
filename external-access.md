@@ -64,6 +64,11 @@ mysql> create user extern@'192.168.56.%' identified by 'mysecretpass'
 mysql> grant all on sakila.* to extern@'192.168.56.%'
 ```
 
+```
+# alternative with subnet mask 
+CREATE USER 'maria'@'247.150.130.0/255.255.255.0';
+```
+
 ## Now test from external with mysql
 
 ```
