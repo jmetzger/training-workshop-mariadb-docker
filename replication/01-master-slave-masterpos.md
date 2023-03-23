@@ -55,6 +55,12 @@ show grants
 ```
 [mysqld]
 server-id=1
+log-bin 
+# just in case, falls master irgendwann mal slave werden soll
+# unwahrscheinlich, aber dann ist das sauber 
+log-slave-updates 
+# mariadb empfiehlt auch mix als möglichkeit (default) 
+log-format=ROW
 
 systemctl restart mariadb 
 ## 
