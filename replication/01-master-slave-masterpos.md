@@ -21,7 +21,6 @@ mkdir /backups
 # target-dir needs to be empty or not present 
 mariabackup --target-dir=/backups/2023032301 --backup 
 # apply ib_logfile0 to tablespaces 
-# after that ib_logfile0 ->  0 bytes 
 mariabackup --target-dir=/backups/2023032301 --prepare 
 ```
 
