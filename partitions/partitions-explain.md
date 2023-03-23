@@ -74,6 +74,18 @@ ls -la /var/lib/mysql/sakila/audit_log*
 
 ```
 
+```
+# Reorganize for new diretories does not work but you might want to 
+change it with vi 
+
+systemctl stop mariadb
+cd /var/lib/mysql/sakila 
+vi audit_log#P#pmax.isl
+/tmp/foo/sakila/audit_log#P#pmax.ibd
+systemctl start mariadb
+```
+
+
 
 
 ## Partitions sliced by hash of field 
