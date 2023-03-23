@@ -1,11 +1,12 @@
 # procedure 
 
 ```
+use sakila;
 DELIMITER //
 
 CREATE PROCEDURE simpleproc (OUT param1 INT)
  BEGIN
-  SELECT COUNT(*) INTO param1 FROM t;
+  SELECT COUNT(*) INTO param1 FROM actor;
  END;
 //
 
@@ -17,6 +18,6 @@ SELECT @a;
 +------+
 | @a   |
 +------+
-|    1 |
+|  200 |
 +------+
 ```
