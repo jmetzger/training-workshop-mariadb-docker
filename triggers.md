@@ -102,6 +102,46 @@ select * from population_logs;
 
 ```
 
+## Continue although we have an error
+
+```
+
+delimiter //
+create or replace trigger before_country_stats_update 
+    before update on country_stats
+    for each row
+
+    BEGIN
+    DECLARE CONTINUE HANDLER FOR 1146 
+      SET @a= 1;
+     
+
+
+    SET @anfang = 1;
+    insert into population_logs2(
+        country_id, 
+        year, 
+        old_population, 
+        new_population
+    )
+    values(
+        old.country_id,
+        old.year,
+        old.population,
+        new.population
+    );
+    END//
+
+delimiter ;
+
+
+```
+
+```
+update country_stats set population = 1352617399 where country_id = 1 and year = 2020;
+
+```
+
 ## Ref:
 
   * https://mariadb.com/kb/en/trigger-overview/
