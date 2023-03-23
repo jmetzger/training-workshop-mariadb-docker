@@ -90,6 +90,13 @@ grant all on *.* to noroot@'localhost';
 revoke super on *.* from noroot@'localhost';
 ```
 
+## working with mysqlbinlog and encryption 
+
+```
+mysqlbinlog -vv --read-from-remote-server --socket /run/mysqld/mysqld.sock mysqld-bin.000003 | less
+```
+
+
 ## Ref:
 
   * https://mariadb.com/de/resources/blog/mariadb-encryption-tde-using-mariadbs-file-key-management-encryption-plugin/
