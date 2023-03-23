@@ -59,6 +59,7 @@ create trigger before_country_stats_update
 # Create trigger (the same) but with BEGIN/END - Block 
 
 ```
+delimiter //
 create trigger before_country_stats_update 
     before update on country_stats
     for each row
@@ -77,7 +78,10 @@ create trigger before_country_stats_update
         old.population,
         new.population
     );
-    END
+    END //
+  
+ delimiter ; 
+    
 
 ```
 
