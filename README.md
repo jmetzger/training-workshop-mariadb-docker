@@ -56,6 +56,9 @@
      * [What to monitor?](/monitoring/monitoring.md) 
      * [Percona Management and Monitoring](/monitoring/pmm.md)
 
+  1. Galera / MariaDB Cluster 
+     * [Upgrade Minor/Major](/galera/upgrade.md) 
+ 
   1. Replication 
      * [Slave einrichten - gtid (mit mariabackup)](/replication/01-master-slave-gtid.md)
      * [Binary Logs auf master bis slave-log-master-position ändern](purge-logs-with-slave-check.md)
