@@ -107,6 +107,8 @@ CHANGE MASTER TO
    MASTER_PORT=3306, 
    MASTER_USER="repl",  
    MASTER_PASSWORD="password", 
+   MASTER_LOG_FILE = 'master_log_name',
+   MASTER_LOG_POS = master_log_pos
 
 
 mysql < master.txt 
