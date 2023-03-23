@@ -43,6 +43,9 @@ MariaDB [sakila]> show warnings;
 | Warning | 1982 | <DATA DIRECTORY> option ignored for InnoDB partition |
 +---------+------+------------------------------------------------------+
 4 rows in set (0,000 sec)
+
+https://jira.mariadb.org/browse/MDEV-16594
+https://github.com/MariaDB/server/commit/031c695b8c865e5eb6c4c09ced404ae08f98430f
 ```
 
 ## Adding new partition with other DATA DIRECTORY 
@@ -61,7 +64,7 @@ PARTITION BY RANGE (yr) (
   PARTITION pmax VALUES LESS THAN MAXVALUE);
 
 # Step 2: Delete pmax, add new year, and add pmax again 
-ALTER TABLE audit_log DROP PARTITION  pmax:
+ALTER TABLE audit_log DROP PARTITION  pmax;
 ALTER TABLE audit_log ADD PARTITION (PARTITION p2026 VALUES LESS than (2027) DATA DIRECTORY='/tmp');
 ALTER TABLE audit_log ADD PARTITION (PARTITION pmax VALUES LESS than maxvalue DATA DIRECTORY='/tmp');
 
