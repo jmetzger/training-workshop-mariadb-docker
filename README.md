@@ -94,6 +94,7 @@
      * [MariaDB - sys - vor 10.6](https://github.com/FromDual/mariadb-sys)
      * [mysql performance blog](https://www.percona.com/blog/innodb-performance-optimization-basics-updated/)
      * [Differences Community / Enterprise Version - nearly the same](https://fromdual.com/mariadb-enterprise-server-vs-mariadb-community-server)
+     * [Hardware Optimization](https://mariadb.com/kb/en/hardware-optimization/)
 
 ## Backlog 
 
