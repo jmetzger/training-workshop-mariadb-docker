@@ -36,8 +36,8 @@ rsync -e ssh -avP /backups/2023032301 kurs@192.168.56.103:/home/kurs/
 ```
 # as root@master 
 #mysql>
-CREATE USER repl@'10.10.9.%' IDENTIFIED BY 'password';
-GRANT REPLICATION SLAVE ON *.*  TO 'repl'@'10.10.9.%';
+CREATE USER repl@'192.168.56.%' IDENTIFIED BY 'password';
+GRANT REPLICATION SLAVE ON *.*  TO 'repl'@'192.168.56.%';
 ```
 
 ## Step 3a (Optional): Test repl user (connect) from slave 
