@@ -1,6 +1,6 @@
 # Partitions - Explain 
 
-## Walkthrough 
+## Walkthrough (Version 1) - RANGE 
 
 ```
 -- EXPLAIN PARTITIONS
@@ -18,6 +18,22 @@ PARTITION BY RANGE (yr) (
 INSERT INTO audit_log(yr,msg) VALUES (2005,'2005'),(2006,'2006'),(2011,'2011'),(2020,'2020');
 EXPLAIN PARTITIONS SELECT * from audit_log WHERE yr in (2011,2012)\G
 ```
+
+## Walkthrough (Version 1) - RANGE - testing DATA DIR 
+
+```
+ALTER TABLE audit_log REORGANIZE PARTITION p1,p2 INTO (
+PARTITION p0 DATA DIRECTORY = '/home/kurs/mysql/', 
+PARTITION p1 DATA DIRECTORY = '/home/kurs/mysql/', 
+PARTITION p2 DATA DIRECTORY = '/home/kurs/mysql/',
+PARTITION p3 DATA DIRECTORY = '/home/kurs/mysql/'
+
+);
+
+
+```
+
+
 
 ## Partitions sliced by hash of field 
 
