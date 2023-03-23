@@ -19,17 +19,17 @@ user=root
 ```
 mkdir /backups 
 # target-dir needs to be empty or not present 
-mariabackup --target-dir=/backups/20210121 --backup 
+mariabackup --target-dir=/backups/2023032301 --backup 
 # apply ib_logfile0 to tablespaces 
 # after that ib_logfile0 ->  0 bytes 
-mariabackup --target-dir=/backups/20210121 --prepare 
+mariabackup --target-dir=/backups/2023032301 --prepare 
 ```
 
 ## Step 2: Transfer to new slave (from master) 
 
 ```
 # root@master:
-rsync -e ssh -avP /backups/20210121 student@10.10.9.144:/home/student/
+rsync -e ssh -avP /backups/2023032301 kurs@192.168.56.103:/home/kurs/
 ```
 
 ## Step 3: Setup replication user on master 
