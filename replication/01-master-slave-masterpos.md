@@ -99,7 +99,7 @@ systemctl start mariadb
 $ cat xtrabackup_binlog_info
 mariadb-bin.000096 568 0-1-2
 
-SET GLOBAL gtid_slave_pos = "0-1-2";
+
 # /root/master.txt 
 # get information from master-databases.sql dump 
 CHANGE MASTER TO 
@@ -107,7 +107,7 @@ CHANGE MASTER TO
    MASTER_PORT=3306, 
    MASTER_USER="repl",  
    MASTER_PASSWORD="password", 
-   MASTER_USE_GTID=slave_pos;
+
 
 mysql < master.txt 
 # or: copy paste into mysql> 
