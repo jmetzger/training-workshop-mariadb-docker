@@ -7,6 +7,9 @@
     
   1. Administration
      * [Zugriff auf container mit mariadb](docker/zugriff-auf-docker-mariadb-container.md)
+    
+  1. Dokumentation
+     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
 
 
 ## Backlog
