@@ -2,6 +2,12 @@
 
 ## Agenda 
 
+  1. Installation
+     * [Installation mit docker-compose](docker/installation-mariadb-docker-compose.md)
+
+
+## Backlog
+
   1. Architektur MariaDB
      * [Architecture Server](/basics/mariadb-architecture.md)
      * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
