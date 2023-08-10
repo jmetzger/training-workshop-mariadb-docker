@@ -2,6 +2,9 @@
 
 ## Agenda 
 
+  1. Architektur MariaDB
+     * [Architecture Server (Steps)](/performance/mysql-server-architecture.md)
+
   1. Installation
      * [Installation mit docker-compose](docker/installation-mariadb-docker-compose.md)
     
