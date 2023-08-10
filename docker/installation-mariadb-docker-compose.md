@@ -51,7 +51,8 @@ volumes:
 ```
 
 ```
-docker compose up -d 
+docker compose up -d
+docker container ls 
 ```
 
 ## Ref:
