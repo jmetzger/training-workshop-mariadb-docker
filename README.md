@@ -4,6 +4,9 @@
 
   1. Installation
      * [Installation mit docker-compose](docker/installation-mariadb-docker-compose.md)
+    
+  1. Administration
+     * [Zugriff auf container mit mariadb](docker/zugriff-auf-docker-mariadb-container.md)
 
 
 ## Backlog
