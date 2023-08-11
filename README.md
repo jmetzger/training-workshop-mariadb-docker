@@ -12,6 +12,9 @@
      * [Zugriff auf container mit mariadb](docker/zugriff-auf-docker-mariadb-container.md)
      * [Manage global variables / server system variables](set-global-variable.md)
     
+  1. Performance
+     * [binlog aktivieren in docker-compose](docker/binlog-mit-docker-compose-aktivieren.md)
+    
   1. Dokumentation
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
      * [System Versioned Tables](https://mariadb.com/kb/en/system-versioned-tables/)
