@@ -28,6 +28,8 @@
   1. Performance
      * [binlog aktivieren in docker-compose](docker/binlog-mit-docker-compose-aktivieren.md)
      * [binlog abfragen und stand (docker)](docker/binlog-abfragen-und-stand.md)
+     * [Slow Query Log](slow-query-log.md)
+     * [Percona-toolkit-Installation - Centos](/tools/percona-toolkit-centos.md)
     
   1. Dokumentation
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
@@ -70,12 +72,7 @@
 
   1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
      * [binlog aktivieren und auslesen](binlog.md)
-     * [Backup with mysqldump - best practices](backup-restore/mysqldump.md) 
      * [Flashback](/backup-restore/flashback.md) 
-
-  1. Performance  
-     * [Slow Query Log](slow-query-log.md)
-     * [Percona-toolkit-Installation - Centos](/tools/percona-toolkit-centos.md)
 
   1. Monitoring 
      * [What to monitor?](/monitoring/monitoring.md) 
