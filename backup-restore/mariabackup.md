@@ -1,5 +1,24 @@
 # Mariabackup 
 
+## MariaBackup kurz und knapp 
+
+```
+
+## Phase I: Backup
+# Schritt 1:
+# Jedes backup muss ein eigenes Verzeichnis haben, was leer ist
+mariabackup --target-dir=/backups/20230811/ --backup # user / password / host 
+
+# Schritt 2: (nach dem Backup machen)
+mariabackup  --target-dir=/backups/20230811/ --prepare
+# End of Phase I
+
+## Phase II. Recovery
+# Schritt 3: 
+mariadbackup --target-dir=/backups/20230911/ --copy-back
+```
+
+
 ## Installation 
 
 ### dnf 
