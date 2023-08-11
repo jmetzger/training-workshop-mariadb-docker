@@ -14,6 +14,9 @@
     
   1. Training Data
      * [Setup sakila test db](sakila.md)
+
+  1. Binlog, Backup und Restore (PIT aka. Point-In-Time-Recovery)
+     * [Backup with mysqldump - best practices](backup-restore/mysqldump.md) 
     
   1. Performance
      * [binlog aktivieren in docker-compose](docker/binlog-mit-docker-compose-aktivieren.md)
