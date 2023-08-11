@@ -14,6 +14,7 @@
     
   1. Performance
      * [binlog aktivieren in docker-compose](docker/binlog-mit-docker-compose-aktivieren.md)
+     * [binlog abfragen und stand (docker)](docker/binlog-abfragen-und-stand.md)
     
   1. Dokumentation
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
