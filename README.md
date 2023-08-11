@@ -16,7 +16,9 @@
      * [Setup sakila test db](sakila.md)
 
   1. Binlog, Backup und Restore (PIT aka. Point-In-Time-Recovery)
-     * [Backup with mysqldump - best practices](backup-restore/mysqldump.md) 
+     * [Backup with mysqldump - best practices](backup-restore/mysqldump.md)
+     * [PIT - Point in time Recovery - Exercise](backup-restore/pit-exercise.md)
+     * [mariabackup](backup-restore/mariabackup.md) 
     
   1. Performance
      * [binlog aktivieren in docker-compose](docker/binlog-mit-docker-compose-aktivieren.md)
@@ -25,7 +27,6 @@
   1. Dokumentation
      * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
      * [System Versioned Tables](https://mariadb.com/kb/en/system-versioned-tables/)
-
 
 ## Backlog I
 
@@ -70,10 +71,8 @@
   1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
      * [binlog aktivieren und auslesen](binlog.md)
      * [Backup with mysqldump - best practices](backup-restore/mysqldump.md) 
-     * [PIT - Point in time Recovery - Exercise](backup-restore/pit-exercise.md)
      * [Flashback](/backup-restore/flashback.md) 
-     * [mariabackup](backup-restore/mariabackup.md) 
-   
+
   1. Performance  
      * [Slow Query Log](slow-query-log.md)
      * [Percona-toolkit-Installation - Centos](/tools/percona-toolkit-centos.md)
