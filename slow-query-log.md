@@ -37,6 +37,13 @@ docker compose down
 docker compose up -d 
 ```
 
+```
+# in mysql-client
+# Step 2
+mysql>SET GLOBAL long_query_time = 0.000001 
+mysql>SET long_query_time = 0.000001
+```
+
 
 ## Walkthrough (Classic)
 
