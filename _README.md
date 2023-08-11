@@ -3,6 +3,52 @@
 
 ## Agenda
   1. Architektur MariaDB
+     * [Architecture Server (Steps)](#architecture-server-steps)
+
+  1. Installation
+     * [Installation mit docker-compose](#installation-mit-docker-compose)
+    
+  1. Administration
+     * [Zugriff auf container mit mariadb](#zugriff-auf-container-mit-mariadb)
+     * [Manage global variables / server system variables](#manage-global-variables--server-system-variables)
+    
+  1. Training Data
+     * [Setup sakila test db](#setup-sakila-test-db)
+
+  1. Binlog, Backup und Restore (PIT aka. Point-In-Time-Recovery)
+     * [Backup with mysqldump - best practices](#backup-with-mysqldump---best-practices)
+     * [PIT - Point in time Recovery - Exercise](#pit---point-in-time-recovery---exercise)
+     * [mariabackup](#mariabackup)
+
+  1. InnoDB - Storage Engine 
+     * [InnoDB - Storage Engine - Structure](#innodb---storage-engine---structure)
+     * [Important InnoDB - configuration - options to optimized performance](#important-innodb---configuration---options-to-optimized-performance)
+     * [Calculate innodb logfile size](#calculate-innodb-logfile-size)
+    
+  1. Performance
+     * [binlog aktivieren in docker-compose](#binlog-aktivieren-in-docker-compose)
+     * [binlog abfragen und stand (docker)](#binlog-abfragen-und-stand-docker)
+     * [Slow Query Log](#slow-query-log)
+     * [Percona-toolkit-Installation - Centos](#percona-toolkit-installation---centos)
+
+  1. Optimal Use of Indexes   
+     * [Index-Types](#index-types)
+     * [Describe and indexes](#describe-and-indexes)
+     * [Find out indexes](#find-out-indexes)
+     * [Index and Functions](#index-and-functions)
+     * [Index and Likes](#index-and-likes)
+     * [Find out cardinality without index](#find-out-cardinality-without-index)
+    
+  1. Joins
+     * [Overview](#overview)
+    
+  1. Dokumentation
+     * [Server System Variables](https://mariadb.com/kb/en/server-system-variables/#bind_address)
+     * [System Versioned Tables](https://mariadb.com/kb/en/system-versioned-tables/)
+
+## Backlog I
+
+  1. Architektur MariaDB
      * [Architecture Server](#architecture-server)
      * [Architecture Server (Steps)](#architecture-server-steps)
      * [Storage Engines](#storage-engines)
@@ -27,15 +73,9 @@
      * [Setup external access](#setup-external-access)
      * [Table encryption](#table-encryption)
 
-  1. InnoDB - Storage Engine 
-     * [InnoDB - Storage Engine - Structure](#innodb---storage-engine---structure)
-     * [Important InnoDB - configuration - options to optimized performance](#important-innodb---configuration---options-to-optimized-performance)
-     * [Calculate innodb logfile size](#calculate-innodb-logfile-size)
-
   1. Training Data 
      * [Setup training data "contributions"](#setup-training-data-"contributions")
-     * [Setup sakila test db](#setup-sakila-test-db)
-
+ 
   1. Security and User Rights 
      * [Create User/Grant/Revoke - Management of users](#create-usergrantrevoke---management-of-users)
      * [Change password of user](#change-password-of-user)
@@ -43,14 +83,7 @@
 
   1. Binlog, Backup and Restore (Point-In-Time aka PIT) 
      * [binlog aktivieren und auslesen](#binlog-aktivieren-und-auslesen)
-     * [Backup with mysqldump - best practices](#backup-with-mysqldump---best-practices)
-     * [PIT - Point in time Recovery - Exercise](#pit---point-in-time-recovery---exercise)
      * [Flashback](#flashback)
-     * [mariabackup](#mariabackup)
-   
-  1. Performance  
-     * [Slow Query Log](#slow-query-log)
-     * [Percona-toolkit-Installation - Centos](#percona-toolkit-installation---centos)
 
   1. Monitoring 
      * [What to monitor?](#what-to-monitor)
@@ -76,13 +109,7 @@
      * [Identify Deadlocks in innodb](#identify-deadlocks-in-innodb)
      
   1. Optimal use of indexes 
-     * [Index-Types](#index-types)
-     * [Describe and indexes](#describe-and-indexes)
-     * [Find out indexes](#find-out-indexes)
-     * [Index and Functions](#index-and-functions)
-     * [Index and Likes](#index-and-likes)
      * [profiling-get-time-for-execution-of.query](#profiling-get-time-for-execution-ofquery)
-     * [Find out cardinality without index](#find-out-cardinality-without-index)
 
   1. Dokumentation 
      * [MySQL - Performance - PDF](http://schulung.t3isp.de/documents/pdfs/mysql/mysql-performance.pdf)
@@ -96,11 +123,7 @@
      * [Differences Community / Enterprise Version - nearly the same](https://fromdual.com/mariadb-enterprise-server-vs-mariadb-community-server)
      * [Hardware Optimization](https://mariadb.com/kb/en/hardware-optimization/)
 
-## Backlog 
-
-  1. Architecture of MariaDB
-     * [Query Cache Usage and Performance](#query-cache-usage-and-performance)
-     * [Optimizer-Basics](#optimizer-basics)
+## Backlog II
  
   1. Installation 
      * [Installation SLES15](https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5)
@@ -233,6 +256,1218 @@
      * [mysql-do-nots](#mysql-do-nots)
 
 <div class="page-break"></div>
+
+## Architektur MariaDB
+
+### Architecture Server (Steps)
+
+
+![MariaDB Server Architecture](/images/mysql-server-architecture.png)
+
+## Installation
+
+### Installation mit docker-compose
+
+
+### Welche Version ? 
+
+  * Immer die letzte Long Time Support - Version. (long term mariadb stable release)
+  * Bitte hier nachschauen: 
+    * https://mariadb.com/kb/en/mariadb-server-release-dates/
+
+### Dazugehörige docker-compose.yaml - file finden 
+
+  * Hier finden: 
+  * https://github.com/bitnami/containers/tree/main/bitnami/mariadb
+  * Für 10.6
+  * https://github.com/bitnami/containers/blob/main/bitnami/mariadb/10.6/debian-11/docker-compose.yml
+
+### Walkthrough 
+
+```
+sudo su -
+mkdir mariadb
+cd mariadb
+vi docker-compose.yaml
+```
+
+```
+## Copyright VMware, Inc.
+## SPDX-License-Identifier: APACHE-2.0
+
+version: '2.1'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      #- ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=12ZaSpelle22
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  mariadb_data:
+    driver: local
+```
+
+```
+docker compose up -d
+docker container ls 
+```
+
+### Ref:
+
+  * docker/installation-mariadb-docker-compose.md
+  
+
+## Administration
+
+### Zugriff auf container mit mariadb
+
+
+### Walkthough 
+
+```
+docker container ls
+docker exec -it mariadb-mariadb-1 bash
+```
+
+```
+mysql -uroot -p<vergebene passwort bei installation über docker-compose.yaml>
+```
+
+
+### Manage global variables / server system variables
+
+
+### Find out current value 
+
+```
+## show global variable 
+show global variables like '%automatic_sp%'
+## or // variable_name needs to be in captitals 
+use information_schema
+select * from global_variables where variable_name like '%AUTOMATIC_SP%';
+
+## If you know the exact name 
+select @@global.automatic_sp_privileges;
+select @@GLOBAL.automatic_sp_privileges;
+```
+
+### Set global Variable 
+
+```
+## will be set like so till next restart of mysql server 
+set global automatic_sp_privileges = 0 
+```
+
+### automatic_sp_privileges can only be set globally 
+
+```
+## Refer to: server system variable doku 
+
+## Has same value in global an session scope 
+MariaDB [information_schema]> select @@automatic_sp_privileges; select @@global.automatic_sp_privileges;
++---------------------------+
+| @@automatic_sp_privileges |
++---------------------------+
+|                         0 |
++---------------------------+
+1 row in set (0.000 sec)
+
++----------------------------------+
+| @@global.automatic_sp_privileges |
++----------------------------------+
+|                                0 |
++----------------------------------+
+1 row in set (0.000 sec)
+```
+
+### Reference:
+
+  * https://mariadb.com/kb/en/server-system-variables/#automatic_sp_privileges
+
+## Training Data
+
+### Setup sakila test db
+
+
+```
+cd /usr/src
+wget https://downloads.mysql.com/docs/sakila-db.tar.gz
+tar xzvf sakila-db.tar.gz
+
+cd sakila-db 
+## mysql < sakila-schema.sql 
+## mysql < sakila-data.sql 
+
+## Vebinden mit dem MySQL im Container
+## Schritt 1: unsere IP herausfinden
+docker inspect mariadb-mariadb-1
+
+## mysql -uroot -p -h <ip-des-docker-containers < sakila-schema.sql
+## mysql -uroot -p -h <ip-des-docker-containers < sakila-data.sql
+
+mysql -uroot -p -h 172.21.0.2 < sakila-schema.sql
+mysql -uroot -p -h 172.21.0.2 < sakila-data.sql
+
+
+
+```
+
+## Binlog, Backup und Restore (PIT aka. Point-In-Time-Recovery)
+
+### Backup with mysqldump - best practices
+
+
+### Dumping (best option) without active binary log 
+
+```
+mysqldump --all-databases --single-transaction > /usr/src/all-databases
+## if you want to include procedures use --routines 
+## with event - scheduled tasks 
+mysqldump --all-databases --single-transaction --routines --events > /usr/src/all-databases
+```
+
+### Useful options for PIT 
+
+```
+## —quick not needed, because included in —opt which is enabled by default 
+
+## on local systems using socket, there are no huge benefits concerning --compress
+## when you dump over the network use it for sure 
+mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs  > /usr/src/all-databases.sql;
+```
+
+### With PIT_Recovery you can use --delete-master-logs 
+
+  * All logs before flushing will be deleted 
+  
+```
+mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --delete-master-logs > /usr/src/all-databases.sql;
+```
+
+### Flush binary logs from mysql 
+
+```
+mysql -e "PURGE BINARY LOGS BEFORE '2013-04-22 09:55:22'";
+
+```
+
+### Version with zipping 
+
+```
+mysqldump —-all-databases —-single-transaction —-gtid —-master-data=2 —-routines 
+--events —-flush-logs --compress | gzip > /usr/src/all-databases.sql.gz  
+```
+
+### Performance Test mysqldump (1.7 Million rows in contributions) 
+
+```
+date; mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --compress > /usr/src/all-databases.sql; date
+Mi 20. Jan 09:40:44 CET 2021
+Mi 20. Jan 09:41:55 CET 2021 
+```
+
+### Seperated sql-structure files and data-txt files including master-data for a specific database 
+
+```
+ # backups needs to be writeable for mysql 
+ mkdir /backups
+ chmod 777 /backups
+ chown mysql:mysql /backups
+ mysqldump --tab=/backups contributions
+ mysqldump --tab=/backups --master-data=2 contributions
+ mysqldump --tab=/backups --master-data=2 contributions > /backups/master-data.tx
+```
+
+### Create new database base on sakila database 
+
+```
+cd /usr/src
+mysqldump sakila > sakila-all.sql 
+echo "create database mynewdb" | mysql
+mysql mynewdb < sakila-all.sql 
+```
+
+### PIT - Point in time Recovery - Exercise
+
+
+### Problem coming up  
+
+```
+## Step 1 : Create full backup (assuming 24:00 o'clock) 
+mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --delete-master-logs > /usr/src/all-databases.sql;
+
+## Step 2: Working on data 
+mysql>use sakila; 
+mysql>insert into actor (first_name,last_name) values ('john','The Rock');
+mysql>insert into actor (first_name,last_name) values ('johanne','Johannson');
+
+## Optional: Step 3: Looking into binary to see this data 
+cd /bitnami/mariadb/data
+## last binlog 
+mysqlbinlog -vv mariadb-bin.000005
+
+## Step 4: Some how a guy deletes data 
+mysql>use sakila; delete from actor where actor_id > 200;
+## now only 200 datasets 
+mysql>use sakila; select * from actor;
+
+```
+  
+### Fixing the problem 
+
+```
+## WITHIN CONTAINER mariadb-mariadb-1 
+## find out the last binlog 
+## Simple take the last binlog 
+
+cd /bitnami/mariadb/data
+## Find the position where the problem occured 
+## and create a recover.sql - file (before apply full backup)
+mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 > /usr/src/recover.sql
+## in case of multiple binlog like so:
+## mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 mysqld-bin.000096 > /usr/src/recover.sql
+```
+
+
+
+## Step 1: Apply full backup (OUTSIDE OF CONTAINER ON HOST) 
+
+```
+cd /var/lib/docker/volumes/mariadb_mariadb_data/_data/data/
+cp recover.sql /usr/src 
+cd /usr/src/
+## ip des mariadb-servers 
+mysql -uroot -p<dein-pw> -h 172.0.2.21 < all-databases.sql 
+
+```
+
+```
+## now connect to the server
+mysql -uroot -p<dein-pw> -h 172.0.2.21
+```
+
+```
+-- im mysql-client durch eingeben des Befehls 'mysql'
+-- should be 200 or 202
+use sakila; select * from actor;
+```
+
+```
+## auf der Kommandozeile 
+mysql < recover.sql 
+```
+
+```
+-- im mysql client 
+-- now it should have all actors before deletion 
+use sakila; select * from actor;
+```
+
+### mariabackup
+
+
+### MariaBackup kurz und knapp 
+
+```
+
+### Phase I: Backup
+## Schritt 1:
+## Jedes backup muss ein eigenes Verzeichnis haben, was leer ist
+mariabackup --target-dir=/backups/20230811/ --backup # user / password / host 
+
+## Schritt 2: (nach dem Backup machen)
+mariabackup  --target-dir=/backups/20230811/ --prepare
+## End of Phase I
+
+### Phase II. Recovery
+## Schritt 3: 
+mariadbackup --target-dir=/backups/20230911/ --copy-back
+```
+
+
+### Installation 
+
+#### dnf 
+```
+dnf install MariaDB-backup 
+```
+
+#### Installation von Distri (Centos/Rocky/RHEL)
+
+```
+## Rocky 8 
+dnf install mariadb-backup 
+```
+
+#### Installation deb (Ubuntu/Debian) 
+
+```
+apt search mariadb-backup 
+apt install -y mariadb-backup 
+```
+
+### Walkthrough (Ubuntu/Debian)
+
+```
+## user eintrag in /root/.my.cnf
+[mariabackup]
+user=root 
+## pass is not needed here, because we have the user root with unix_socket - auth 
+
+mkdir /backups 
+## target-dir needs to be empty or not present 
+mariabackup --target-dir=/backups/20230321 --backup 
+## apply ib_logfile0 to tablespaces 
+## after that ib_logfile0 ->  0 bytes 
+mariabackup --target-dir=/backups/20230321 --prepare 
+
+### Recover 
+systemctl stop mariadb 
+mv /var/lib/mysql /var/lib/mysql.bkup 
+mariabackup --target-dir=/backups/20230321 --copy-back 
+chown -R mysql:mysql /var/lib/mysql
+chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
+systemctl start mariadb 
+```
+
+### Walkthrough (Redhat/Centos/Rocky Linux 8 mit mariadb for mariadb.org)
+
+```
+## user eintrag in /root/.my.cnf
+[mariabackup]
+user=root 
+## pass is not needed here, because we have the user root with unix_socket - auth 
+## or generic 
+## /etc/my.cnf.d/mariabackup.cnf
+[mariabackup]
+user=root
+
+mkdir /backups 
+## target-dir needs to be empty or not present 
+mariabackup --target-dir=/backups/20210120 --backup 
+## apply ib_logfile0 to tablespaces 
+## after that ib_logfile0 ->  0 bytes 
+mariabackup --target-dir=/backups/20210120 --prepare 
+
+### Recover 
+systemctl stop mariadb 
+mv /var/lib/mysql /var/lib/mysql.bkup 
+mariabackup --target-dir=/backups/20200120 --copy-back 
+chown -R mysql:mysql /var/lib/mysql
+chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
+systemctl start mariadb 
+
+### important for selinux if it does not work 
+### does not start
+restorecon -vr /var/lib/mysql 
+systemctl start mariadb 
+```
+
+
+
+### Ref. 
+https://mariadb.com/kb/en/full-backup-and-restore-with-mariabackup/
+
+## InnoDB - Storage Engine 
+
+### InnoDB - Storage Engine - Structure
+
+
+![InnoDB Structure](/images/InnoDB-Structure.jpg)
+
+### Important InnoDB - configuration - options to optimized performance
+
+
+### How big is the innodb buffer currently (setup) ?
+
+```
+mysql>select @@innodb_buffer_pool_size; 
+mysql>show variables like '%buffer%';
+```
+
+### Innodb buffer pool
+
+  * How much data fits into memory 
+  * Free buffers = pages of 16 Kbytes 
+  * Free buffer * 16Kbytes = free innodb buffer pool in KByte  
+```
+## does not in windows -> pager grep
+pager grep -i 'free buffers'
+## does not work with workbench or heidisql because of formatting + \G only works in client
+show engine innodb status \G
+Free buffers       7905
+1 row in set (0.00 sec)
+```
+
+### Innodb buffer pool stats with status 
+
+```
+## Also works in heidisql or workbench 
+show status like '%buffer%';
+
+```
+
+### Overview innodb server variables / settings 
+
+  * https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html
+
+### Change innodb_buffer_pool in docker container with docker - compose
+
+```
+cd mariadb 
+nano docker-compose.yaml 
+```
+
+
+```
+## nur Änderung bei der Environment variablen  
+## Copyright VMware, Inc.
+## SPDX-License-Identifier: APACHE-2.0
+
+version: '2.1'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      #- ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=12ZaSpelle22
+      - MARIADB_EXTRA_FLAGS=--log-bin --innodb-buffer-pool-size=256M
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  mariadb_data:
+    driver: local
+
+
+```
+
+```
+docker compose down
+docker compose up -d 
+
+```
+
+
+### Change innodb_buffer_pool 
+
+```
+## /etc/mysql/mysql.conf.d/mysqld.cnf 
+## 70-80% of memory on dedicated mysql
+[mysqld]
+innodb-buffer-pool-size=6G
+
+##
+systemctl restart mysql
+
+## 
+mysql
+mysql>show variables like 'innodb%buffer%';
+```
+### problems, when dynamically increasing buffer 
+
+  * https://www.percona.com/blog/2018/06/19/chunk-change-innodb-buffer-pool-resizing/
+
+
+### innodb_log_buffer_size  
+
+```
+1 commit should fit in this buffer 
+
+Question: In your application are your commits bigger or smaller 
+
+
+```
+
+
+### innodb_flush_method 
+
+```
+Ideally O_DIRECT on Linux, but please test it, if it really works well. 
+```
+
+### 	innodb_flush_log_at_trx_commit
+
+```
+When is fliushing done from innodb_log_buffer to log.
+Default: 1 : After every commit 
+-> best performance 2. -> once per second
+
+## Good to use 2, if you are willing to loose 1 second of data on powerfail 
+```
+
+### innodb_flush_neighbors 
+
+```
+## on ssd disks set this to off, because there is no performance improvement 
+innodb_flush_neighbors=0 
+
+## Default = 1 
+
+```
+### innodb_log_file_size 
+
+```
+## Should hold 60-120 min of data flow 
+## Calculate like so:
+https://www.percona.com/blog/2008/11/21/how-to-calculate-a-good-innodb-log-file-size/
+
+```
+
+### skip-name-resolv.conf 
+
+```
+## work only with ip's - better for performance 
+/etc/my.cnf 
+skip-name-resolve
+```
+
+  * https://nixcp.com/skip-name-resolve/
+
+
+### Ref:
+
+  * https://dev.mysql.com/doc/refman/5.7/en/innodb-buffer-pool-resize.html
+  
+
+### Privileges for show engine innodb status 
+
+```
+ show engine innodb status \G
+ERROR 1227 (42000): Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+
+```
+
+### Calculate innodb logfile size
+
+## Performance
+
+### binlog aktivieren in docker-compose
+
+
+```
+## Copyright VMware, Inc.
+## SPDX-License-Identifier: APACHE-2.0
+
+version: '2.1'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_EXTRA_FLAGS=--log-bin
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  mariadb_data:
+    driver: local
+
+
+```
+
+### binlog abfragen und stand (docker)
+
+
+### Binlog ausgeben (docker) 
+
+```
+## Innerhalb des containers
+cd /bitnami/mariadb/data
+## no-defaults is important because of "bug" in bitnami/mariadb config
+## immer das letzte ist das aktuelle 
+mysqlbinlog --no-defaults mysqld-bin.000002
+```
+
+### Wo wird als nächste hingeschrieben 
+
+```
+mysql -e "show master status;" -uroot -p<dein passwort>
+```
+
+
+### Slow Query Log
+
+
+### Walkthrough (docker compose) 
+
+```
+## Copyright VMware, Inc.
+## SPDX-License-Identifier: APACHE-2.0
+
+version: '2.1'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      #- ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=<my-pass>
+      - MARIADB_EXTRA_FLAGS=--log-bin --innodb-buffer-pool-size=256M --slow-query-log --slow-query-log-file=slow.log
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  mariadb_data:
+    driver: local
+
+```
+
+```
+docker compose down
+docker compose up -d 
+```
+
+```
+## in mysql-client
+## Step 2
+mysql>SET GLOBAL long_query_time = 0.000001 
+mysql>SET long_query_time = 0.000001
+```
+
+
+### Walkthrough (Classic)
+
+```
+## Step 1
+## /etc/my.cnf.d/mariadb-server.cnf 
+## or: debian /etc/mysql/mariadb.conf.d/50-server.cnf 
+[mysqld]
+slow-query-log 
+
+## Step 2
+mysql>SET GLOBAL slow_query_log = 1 
+mysql>SET slow_query_log = 1 
+mysql>SET GLOBAL long_query_time = 0.000001 
+mysql>SET long_query_time = 0.000001
+
+## Step 3
+## run some time / data
+## and look into your slow-query-log 
+/var/lib/mysql/hostname-slow.log 
+
+```
+
+### Show queries that do not use indexes 
+
+```
+SET GLOBAL log_queries_not_using_indexes=ON;
+```
+
+### Geschwätzigkeit (Verbosity) erhöhen 
+
+```
+SET GLOBAL log_slow_verbosity='query_plan,explain'
+```
+
+### Queries die keine Indizes verwenden 
+
+```
+SET GLOBAL log_queries_not_using_indexes=ON;
+```
+
+
+### Reference 
+
+  * https://mariadb.com/kb/en/slow-query-log-overview/
+
+
+### Percona-toolkit-Installation - Centos
+
+
+### Walkthrough (Centos / Redhat) 
+
+```
+## Howto 
+## https://www.percona.com/doc/percona-toolkit/LATEST/installation.html
+
+## Step 1: repo installieren mit rpm -paket 
+dnf install -y https://repo.percona.com/yum/percona-release-latest.noarch.rpm; dnf install -y percona-toolkit
+```
+
+### Debian / Ubuntu 
+
+```
+curl -O https://repo.percona.com/apt/percona-release_latest.generic_all.deb
+sudo apt install gnupg2 lsb-release ./percona-release_latest.generic_all.deb
+apt update
+apt install percona-toolkit 
+
+
+```
+
+## Optimal Use of Indexes   
+
+### Index-Types
+
+
+  * Spatial (only for spatial - geo - date) 
+  * unique
+  * none-unique
+  * primary
+  * fulltext 
+  
+
+### Describe and indexes
+
+
+### Walkthrough 
+
+#### Step 1:
+
+```
+## Database  and Table with primary key
+create database descindex;
+use descindex; 
+create table people (id int unsigned auto_increment, first_name varchar(25), last_name varchar(25), primary key (id), passcode mediumint unsigned);
+## add an index 
+## This will always !! translate into an alter statement. 
+create index idx_last_name_first_name on people (last_name,first_name) 
+## 
+create unique index idx_passcode on people (passcode)   
+
+desc people;
++------------+-----------------------+------+-----+---------+----------------+
+| Field      | Type                  | Null | Key | Default | Extra          |
++------------+-----------------------+------+-----+---------+----------------+
+| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(25)           | YES  |     | NULL    |                |
+| last_name  | varchar(25)           | YES  |     | NULL    |                |
+| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
++------------+-----------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+```
+
+#### Step 2: 
+
+```
+## Add simple combined index on first_name, last_name 
+create index idx_first_name_last_name on people (first_name, last_name);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+desc people;
+
+-- show the column where the combined index starts (MUL = Multi) 
+
++------------+-----------------------+------+-----+---------+----------------+
+| Field      | Type                  | Null | Key | Default | Extra          |
++------------+-----------------------+------+-----+---------+----------------+
+| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(25)           | YES  | MUL | NULL    |                |
+| last_name  | varchar(25)           | YES  |     | NULL    |                |
+| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
++------------+-----------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+
+```
+
+#### Step 3:
+
+```
+## Add a unique index on passcode 
+create index idx_passcode on people (passcode) 
+mysql> desc people;
+
+-- Line with UNI shows this indexes. 
++------------+-----------------------+------+-----+---------+----------------+
+| Field      | Type                  | Null | Key | Default | Extra          |
++------------+-----------------------+------+-----+---------+----------------+
+| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(25)           | YES  | MUL | NULL    |                |
+| last_name  | varchar(25)           | YES  |     | NULL    |                |
+| passcode   | mediumint(8) unsigned | YES  | UNI | NULL    |                |
++------------+-----------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+```
+
+
+#### Step 4: 
+
+```
+## Get to know all your indexes on a table 
+show indexes for people 
+mysql> show index from people;
++--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table  | Non_unique | Key_name                 | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| people |          0 | PRIMARY                  |            1 | id          | A         |           0 |     NULL | NULL   |      | BTREE      |         |               |
+| people |          0 | idx_passcode             |            1 | passcode    | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
+| people |          1 | idx_first_name_last_name |            1 | first_name  | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
+| people |          1 | idx_first_name_last_name |            2 | last_name   | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
++--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+4 rows in set (0.01 sec)
+```
+
+### Find out indexes
+
+
+### Show index from table 
+
+```
+create database showindex; 
+use showindex;
+CREATE TABLE `people` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(25) DEFAULT NULL,
+  `last_name` varchar(25) DEFAULT NULL,
+  `passcode` mediumint(8) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_passcode` (`passcode`),
+  KEY `idx_first_name_last_name` (`first_name`,`last_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+show index from people 
+```
+
+#### Show create table 
+
+```
+show create table peple 
+```
+
+#### show index from 
+
+```
+show index from contributions 
+```
+
+### Index and Functions
+
+
+### No function can be used on an index:
+
+```
+explain select * from actor where upper(last_name) like 'A%';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | actor | NULL       | ALL  | NULL          | NULL | NULL    | NULL |  200 |   100.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+```
+
+### Workaround with generated columns 
+
+```
+## 1. Create Virtual Column with upper 
+MariaDB [sakila]> alter table actor add last_name_upper varchar(45) AS (upper(last_name)) VIRTUAL;
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [sakila]> create index idx_upper on actor (last_name_upper);
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [sakila]> explain select * from actor where last_name_upper like 'A%';                
++------+-------------+-------+-------+---------------+-----------+---------+------+------+-------------+
+| id   | select_type | table | type  | possible_keys | key       | key_len | ref  | rows | Extra       |
++------+-------------+-------+-------+---------------+-----------+---------+------+------+-------------+
+|    1 | SIMPLE      | actor | range | idx_upper     | idx_upper | 183     | NULL |    7 | Using where |
++------+-------------+-------+-------+---------------+-----------+---------+------+------+-------------+
+1 row in set (0.001 sec)
+```
+  
+### Now we try to search the very same 
+
+```
+explain select * from actor where last_name_upper like 'A%';
++----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type  | possible_keys       | key                 | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | actor | NULL       | range | idx_last_name_upper | idx_last_name_upper | 183     | NULL |    7 |   100.00 | Using where |
++----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+```
+
+### Reference 
+
+  * https://mariadb.com/kb/en/generated-columns/
+  * https://mariadb.com/kb/en/slow-query-log-overview/
+
+### Index and Likes
+
+
+### 1. like 'Will%' - Index works 
+
+explain select last_name from donors where last_name like 'Will%';
+
+### 2. like '%iams' - Index does not work 
+
+```
+-- because like starts with a wildcard 
+explain select last_name from donors where last_name like '%iams';
+```
+
+### 3. How to fix 3, if you are using this often ? 
+
+```
+## Walkthrough 
+## Step 1: modify table 
+alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name));
+create index idx_last_name_reversed on donors (last_name_reversed);
+
+## besser - Variante 2 - untested 
+alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name)), add index idx_last_name_reversed on donors (last_name_reversed);
+
+## Step 2: update table - this take a while 
+update donors set last_name_reversed = reversed(last_name)
+## Step 3: work with it 
+select last_name,last_name_reversed from donor where last_name_reversed like reverse('%iams');  
+```
+
+```
+## Version 2 with pt-online-schema-change 
+
+```
+
+### Find out cardinality without index
+
+
+### Find out cardinality without creating index 
+```
+select count(distinct donor_id) from contributions;
+```
+
+```
+select count(distinct(vendor_city)) from contributions;
++------------------------------+
+| count(distinct(vendor_city)) |
++------------------------------+
+|                         1772 |
++------------------------------+
+1 row in set (4.97 sec)
+```
+
+## Joins
+
+### Overview
+
+
+### What is a JOIN for ? 
+
+ * combines rows from two or more tables
+ * based on a related column between them.
+
+### MySQL/MariaDB (Inner) Join 
+
+![Inner Join](/images/img_innerjoin.gif)
+
+### MySQL/MariaDB (Inner) Join (explained) 
+
+  * Inner Join and Join are the same
+  * Returns records that have matching values in both tables
+  * Inner Join, Cross Join and Join 
+    * are the same in MySQL
+ 
+### MySQL/MariaDB Left Join 
+
+![Image Left Join](/images/img_leftjoin.gif)
+
+### MySQL/MariaDB Left (outer) Join (explained) 
+
+  * Return all records from the left table
+  * _AND_ the matched records from the right table
+  * The result is NULL on the right side
+    * if there are no matched columns on the right 
+  * Left Join and Left Outer Join are the same
+
+### MySQL Right Join 
+
+![Image Right Join](/images/img_rightjoin.gif)
+
+### MySQL Right Join (explained)  
+
+  * Return all records from the right table
+    * _AND_ the matched records from the left table
+  * Right Join and Right Outer Join are the same
+
+### MySQL Straight Join 
+
+  * MySQL (inner) Join and Straight Join are the same
+  * **Difference:**
+    * The left column is always read first
+  * **Downside:**
+    * Bad optimization through mysql (query optimizer) 
+  * **Recommendation:**
+    * Avoid straight join if possible 
+    * use join instead 
+  
+### Type of Joins 
+
+  * [inner] join
+    * **inner join** and **join** are the same  
+  * left [outer] join 
+  * right [outer] join
+  * full [outer] join
+  * straight join < equals > join
+  * cross join = join (in mysql)
+  * natural join <= equals => join (but syntax is different)
+
+### In Detail: [INNER] JOIN 
+
+  * Return rows when there 
+    * is a match in both tables 
+  * Example 
+
+```
+SELECT actor.first_name, actor.last_name, film.title FROM film_actor JOIN actor ON film_actor.actor_id = actor.actor_id JOIN film ON film_actor.film_id = film.film_id;
+```
+
+### In Detail: Joining without JOIN - Keyword
+
+  * Explanation: Will have the same query execution plan as [INNER] JOIN
+```
+SELECT actor.first_name, actor.last_name, film.title 
+FROM film_actor,actor,film 
+where film_actor.actor_id = actor.actor_id 
+and film_actor.film_id = film.film_id;
+```
+
+### In Detail: Left Join
+
+  * Return all rows from the left side
+    * even if there is not result on the right side
+  * Example 
+```
+SELECT 
+    c.customer_id, 
+    c.first_name, 
+    c.last_name,
+    a.actor_id,
+    a.first_name,
+    a.last_name
+FROM customer c
+LEFT JOIN actor a 
+ON c.last_name = a.last_name
+ORDER BY c.last_name;
+```
+
+### In Detail: Right Join 
+
+  * Return all rows from the right side
+    * even if there are no results on the left side
+  * Example 
+```
+SELECT 
+    c.customer_id, 
+    c.first_name, 
+    c.last_name,
+    a.actor_id,
+    a.first_name,
+    a.last_name
+FROM customer c
+RIGHT JOIN actor a 
+ON c.last_name = a.last_name
+ORDER BY a.last_name;
+```
+
+### In Detail: Having  
+
+  * Simple: WHERE for GroupBy (because where does not work here)
+  * Example 
+```
+SELECT last_name, COUNT(*) 
+FROM sakila.actor
+GROUP BY last_name
+HAVING count(last_name) > 2
+```
+ 
+### Internal (type of joins)  - NLJ 
+
+  * NLJ - (Nested Loop Join) 
+```
+for each row in t1 matching range {
+  for each row in t2 matching reference key {
+    for each row in t3 {
+      if row satisfies join conditions, send to client
+    }
+  }
+}
+```
+
+### Internal (type of joins) - BNL 
+ 
+  * BNL - (Block Nested Loop) 
+    * in explain: -> using join buffer 
+    * columns of interest to a join are stored in join buffer
+      * --> not whole rows.
+    * join_buffer_size system variable 
+      * -> determines the size of each join buffer used to process a query. 
+  * https://dev.mysql.com/doc/refman/5.7/en/nested-loop-joins.html
+
+### BNL - Who can I see, if it is used ? 
+
+  * Can be seen in explain 
+![Image Proof Nested Loop](/images/proof-nested-loop.png)
+
+```
+
+explain SELECT a.* FROM actor a  INNER JOIN actor b where a.actor_id > 20 and b.actor_id < 20
+
+```
+
+```
+When using a Block Nested-Loop Join, MySQL will, instead of automatically joining t2, 
+insert as many rows from t1 that it can into a join buffer 
+and then scan the appropriate range of t2 once, 
+matching each record in t2 to the join buffer. 
+From here, each matched row is then sent to the next join, 
+which, as previously discussed, may be another table, 
+t3, or, if t2 is the last table in the query, 
+the rows may be sent to the network.
+```
+
+### BNL's - Refs:
+
+  * https://www.burnison.ca/notes/fun-mysql-fact-of-the-day-block-nested-loop-joins
+
+## Dokumentation
+
+### Server System Variables
+
+  * https://mariadb.com/kb/en/server-system-variables/#bind_address
+
+### System Versioned Tables
+
+  * https://mariadb.com/kb/en/system-versioned-tables/
 
 ## Architektur MariaDB
 
@@ -1044,140 +2279,6 @@ mysqlbinlog -vv --read-from-remote-server --socket /run/mysqld/mysqld.sock mysql
 
   * https://mariadb.com/de/resources/blog/mariadb-encryption-tde-using-mariadbs-file-key-management-encryption-plugin/
 
-## InnoDB - Storage Engine 
-
-### InnoDB - Storage Engine - Structure
-
-
-![InnoDB Structure](/images/InnoDB-Structure.jpg)
-
-### Important InnoDB - configuration - options to optimized performance
-
-
-### How big is the innodb buffer currently (setup) ?
-
-```
-mysql>select @@innodb_buffer_pool_size; 
-mysql>show variables like '%buffer%';
-```
-
-### Innodb buffer pool
-
-  * How much data fits into memory 
-  * Free buffers = pages of 16 Kbytes 
-  * Free buffer * 16Kbytes = free innodb buffer pool in KByte  
-```
-## does not in windows -> pager grep
-pager grep -i 'free buffers'
-## does not work with workbench or heidisql because of formatting + \G only works in client
-show engine innodb status \G
-Free buffers       7905
-1 row in set (0.00 sec)
-```
-
-### Innodb buffer pool stats with status 
-
-```
-## Also works in heidisql or workbench 
-show status like '%buffer%';
-
-```
-
-### Overview innodb server variables / settings 
-
-  * https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html
-
-### Change innodb_buffer_pool 
-
-```
-## /etc/mysql/mysql.conf.d/mysqld.cnf 
-## 70-80% of memory on dedicated mysql
-[mysqld]
-innodb-buffer-pool-size=6G
-
-##
-systemctl restart mysql
-
-## 
-mysql
-mysql>show variables like 'innodb%buffer%';
-```
-### problems, when dynamically increasing buffer 
-
-  * https://www.percona.com/blog/2018/06/19/chunk-change-innodb-buffer-pool-resizing/
-
-
-### innodb_log_buffer_size  
-
-```
-1 commit should fit in this buffer 
-
-Question: In your application are your commits bigger or smaller 
-
-
-```
-
-
-### innodb_flush_method 
-
-```
-Ideally O_DIRECT on Linux, but please test it, if it really works well. 
-```
-
-### 	innodb_flush_log_at_trx_commit
-
-```
-When is fliushing done from innodb_log_buffer to log.
-Default: 1 : After every commit 
--> best performance 2. -> once per second
-
-## Good to use 2, if you are willing to loose 1 second of data on powerfail 
-```
-
-### innodb_flush_neighbors 
-
-```
-## on ssd disks set this to off, because there is no performance improvement 
-innodb_flush_neighbors=0 
-
-## Default = 1 
-
-```
-### innodb_log_file_size 
-
-```
-## Should hold 60-120 min of data flow 
-## Calculate like so:
-https://www.percona.com/blog/2008/11/21/how-to-calculate-a-good-innodb-log-file-size/
-
-```
-
-### skip-name-resolv.conf 
-
-```
-## work only with ip's - better for performance 
-/etc/my.cnf 
-skip-name-resolve
-```
-
-  * https://nixcp.com/skip-name-resolve/
-
-
-### Ref:
-
-  * https://dev.mysql.com/doc/refman/5.7/en/innodb-buffer-pool-resize.html
-  
-
-### Privileges for show engine innodb status 
-
-```
- show engine innodb status \G
-ERROR 1227 (42000): Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
-
-```
-
-### Calculate innodb logfile size
-
 ## Training Data 
 
 ### Setup training data "contributions"
@@ -1197,20 +2298,6 @@ cd mysql_example
 ## Only necessary if you cannot connect to db by entering "mysql" 
 ## password=<your_root_pw> 
 ./setup.sh 
-```
-
-### Setup sakila test db
-
-
-```
-cd /usr/src
-wget https://downloads.mysql.com/docs/sakila-db.tar.gz
-tar xzvf sakila-db.tar.gz
-
-cd sakila-db 
-mysql < sakila-schema.sql 
-mysql < sakila-data.sql 
-
 ```
 
 ## Security and User Rights 
@@ -1336,141 +2423,6 @@ mysqlbinlog -vv rechnername1-bin.000001
 mysql> show master status;
 ```
 
-### Backup with mysqldump - best practices
-
-
-### Dumping (best option) without active binary log 
-
-```
-mysqldump --all-databases --single-transaction > /usr/src/all-databases
-## if you want to include procedures use --routines 
-## with event - scheduled tasks 
-mysqldump --all-databases --single-transaction --routines --events > /usr/src/all-databases
-```
-
-### Useful options for PIT 
-
-```
-## —quick not needed, because included in —opt which is enabled by default 
-
-## on local systems using socket, there are no huge benefits concerning --compress
-## when you dump over the network use it for sure 
-mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs  > /usr/src/all-databases.sql;
-```
-
-### With PIT_Recovery you can use --delete-master-logs 
-
-  * All logs before flushing will be deleted 
-  
-```
-mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --delete-master-logs > /usr/src/all-databases.sql;
-```
-
-### Flush binary logs from mysql 
-
-```
-mysql -e "PURGE BINARY LOGS BEFORE '2013-04-22 09:55:22'";
-
-```
-
-### Version with zipping 
-
-```
-mysqldump —-all-databases —-single-transaction —-gtid —-master-data=2 —-routines 
---events —-flush-logs --compress | gzip > /usr/src/all-databases.sql.gz  
-```
-
-### Performance Test mysqldump (1.7 Million rows in contributions) 
-
-```
-date; mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --compress > /usr/src/all-databases.sql; date
-Mi 20. Jan 09:40:44 CET 2021
-Mi 20. Jan 09:41:55 CET 2021 
-```
-
-### Seperated sql-structure files and data-txt files including master-data for a specific database 
-
-```
- # backups needs to be writeable for mysql 
- mkdir /backups
- chmod 777 /backups
- chown mysql:mysql /backups
- mysqldump --tab=/backups contributions
- mysqldump --tab=/backups --master-data=2 contributions
- mysqldump --tab=/backups --master-data=2 contributions > /backups/master-data.tx
-```
-
-### Create new database base on sakila database 
-
-```
-cd /usr/src
-mysqldump sakila > sakila-all.sql 
-echo "create database mynewdb" | mysql
-mysql mynewdb < sakila-all.sql 
-```
-
-### PIT - Point in time Recovery - Exercise
-
-
-### Problem coming up  
-
-```
-## Step 1 : Create full backup (assuming 24:00 o'clock) 
-mysqldump --all-databases --single-transaction --gtid --master-data=2 --routines --events --flush-logs --delete-master-logs > /usr/src/all-databases.sql;
-
-## Step 2: Working on data 
-mysql>use sakila; 
-mysql>insert into actor (first_name,last_name) values ('john','The Rock');
-mysql>insert into actor (first_name,last_name) values ('johanne','Johannson');
-
-## Optional: Step 3: Looking into binary to see this data 
-cd /var/lib/mysql 
-## last binlog 
-mysqlbinlog -vv mariadb-bin.000005
-
-## Step 4: Some how a guy deletes data 
-mysql>use sakila; delete from actor where actor_id > 200;
-## now only 200 datasets 
-mysql>use sakila; select * from actor;
-
-```
-  
-### Fixing the problem 
-
-```
-## find out the last binlog 
-## Simple take the last binlog 
-
-cd /var/lib/mysql
-## Find the position where the problem occured 
-## and create a recover.sql - file (before apply full backup)
-mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 > /usr/src/recover.sql
-## in case of multiple binlog like so:
-## mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 mysqld-bin.000096 > /usr/src/recover.sql
-
-## Step 1: Apply full backup 
-cd /usr/src/
-mysql < all-databases.sql 
-
-```
-
-```
--- im mysql-client durch eingeben des Befehls 'mysql'
--- should be 200 or 202
-use sakila; select * from actor;
-```
-
-```
-## auf der Kommandozeile 
-mysql < recover.sql 
-```
-
-```
--- im mysql client 
--- now it should have all actors before deletion 
-use sakila; select * from actor;
-```
-
 ### Flashback
 
 
@@ -1479,167 +2431,6 @@ use sakila; select * from actor;
 ### Referenz:
 
   * https://mariadb.com/kb/en/flashback/
-
-### mariabackup
-
-
-### Installation 
-
-#### dnf 
-```
-dnf install MariaDB-backup 
-```
-
-#### Installation von Distri (Centos/Rocky/RHEL)
-
-```
-## Rocky 8 
-dnf install mariadb-backup 
-```
-
-#### Installation deb (Ubuntu/Debian) 
-
-```
-apt search mariadb-backup 
-apt install -y mariadb-backup 
-```
-
-### Walkthrough (Ubuntu/Debian)
-
-```
-## user eintrag in /root/.my.cnf
-[mariabackup]
-user=root 
-## pass is not needed here, because we have the user root with unix_socket - auth 
-
-mkdir /backups 
-## target-dir needs to be empty or not present 
-mariabackup --target-dir=/backups/20230321 --backup 
-## apply ib_logfile0 to tablespaces 
-## after that ib_logfile0 ->  0 bytes 
-mariabackup --target-dir=/backups/20230321 --prepare 
-
-### Recover 
-systemctl stop mariadb 
-mv /var/lib/mysql /var/lib/mysql.bkup 
-mariabackup --target-dir=/backups/20230321 --copy-back 
-chown -R mysql:mysql /var/lib/mysql
-chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
-systemctl start mariadb 
-```
-
-### Walkthrough (Redhat/Centos/Rocky Linux 8 mit mariadb for mariadb.org)
-
-```
-## user eintrag in /root/.my.cnf
-[mariabackup]
-user=root 
-## pass is not needed here, because we have the user root with unix_socket - auth 
-## or generic 
-## /etc/my.cnf.d/mariabackup.cnf
-[mariabackup]
-user=root
-
-mkdir /backups 
-## target-dir needs to be empty or not present 
-mariabackup --target-dir=/backups/20210120 --backup 
-## apply ib_logfile0 to tablespaces 
-## after that ib_logfile0 ->  0 bytes 
-mariabackup --target-dir=/backups/20210120 --prepare 
-
-### Recover 
-systemctl stop mariadb 
-mv /var/lib/mysql /var/lib/mysql.bkup 
-mariabackup --target-dir=/backups/20200120 --copy-back 
-chown -R mysql:mysql /var/lib/mysql
-chmod 755 /var/lib/mysql # otherwice socket for unprivileged user does not work
-systemctl start mariadb 
-
-### important for selinux if it does not work 
-### does not start
-restorecon -vr /var/lib/mysql 
-systemctl start mariadb 
-```
-
-
-
-### Ref. 
-https://mariadb.com/kb/en/full-backup-and-restore-with-mariabackup/
-
-## Performance  
-
-### Slow Query Log
-
-
-### Walkthrough 
-
-```
-## Step 1
-## /etc/my.cnf.d/mariadb-server.cnf 
-## or: debian /etc/mysql/mariadb.conf.d/50-server.cnf 
-[mysqld]
-slow-query-log 
-
-## Step 2
-mysql>SET GLOBAL slow_query_log = 1 
-mysql>SET slow_query_log = 1 
-mysql>SET GLOBAL long_query_time = 0.000001 
-mysql>SET long_query_time = 0.000001
-
-## Step 3
-## run some time / data
-## and look into your slow-query-log 
-/var/lib/mysql/hostname-slow.log 
-
-```
-
-### Show queries that do not use indexes 
-
-```
-SET GLOBAL log_queries_not_using_indexes=ON;
-```
-
-### Geschwätzigkeit (Verbosity) erhöhen 
-
-```
-SET GLOBAL log_slow_verbosity='query_plan,explain'
-```
-
-### Queries die keine Indizes verwenden 
-
-```
-SET GLOBAL log_queries_not_using_indexes=ON;
-```
-
-
-### Reference 
-
-  * https://mariadb.com/kb/en/slow-query-log-overview/
-
-
-### Percona-toolkit-Installation - Centos
-
-
-### Walkthrough (Centos / Redhat) 
-
-```
-## Howto 
-## https://www.percona.com/doc/percona-toolkit/LATEST/installation.html
-
-## Step 1: repo installieren mit rpm -paket 
-dnf install -y https://repo.percona.com/yum/percona-release-latest.noarch.rpm; dnf install -y percona-toolkit
-```
-
-### Debian / Ubuntu 
-
-```
-curl -O https://repo.percona.com/apt/percona-release_latest.generic_all.deb
-sudo apt install gnupg2 lsb-release ./percona-release_latest.generic_all.deb
-apt update
-apt install percona-toolkit 
-
-
-```
 
 ## Monitoring 
 
@@ -2171,228 +2962,6 @@ kill 50;
 
 ## Optimal use of indexes 
 
-### Index-Types
-
-
-  * Spatial (only for spatial - geo - date) 
-  * unique
-  * none-unique
-  * primary
-  * fulltext 
-  
-
-### Describe and indexes
-
-
-### Walkthrough 
-
-#### Step 1:
-
-```
-## Database  and Table with primary key
-create database descindex;
-use descindex; 
-create table people (id int unsigned auto_increment, first_name varchar(25), last_name varchar(25), primary key (id), passcode mediumint unsigned);
-## add an index 
-## This will always !! translate into an alter statement. 
-create index idx_last_name_first_name on people (last_name,first_name) 
-## 
-create unique index idx_passcode on people (passcode)   
-
-desc people;
-+------------+-----------------------+------+-----+---------+----------------+
-| Field      | Type                  | Null | Key | Default | Extra          |
-+------------+-----------------------+------+-----+---------+----------------+
-| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
-| first_name | varchar(25)           | YES  |     | NULL    |                |
-| last_name  | varchar(25)           | YES  |     | NULL    |                |
-| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
-+------------+-----------------------+------+-----+---------+----------------+
-4 rows in set (0.01 sec)
-```
-
-#### Step 2: 
-
-```
-## Add simple combined index on first_name, last_name 
-create index idx_first_name_last_name on people (first_name, last_name);
-Query OK, 0 rows affected (0.05 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-desc people;
-
--- show the column where the combined index starts (MUL = Multi) 
-
-+------------+-----------------------+------+-----+---------+----------------+
-| Field      | Type                  | Null | Key | Default | Extra          |
-+------------+-----------------------+------+-----+---------+----------------+
-| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
-| first_name | varchar(25)           | YES  | MUL | NULL    |                |
-| last_name  | varchar(25)           | YES  |     | NULL    |                |
-| passcode   | mediumint(8) unsigned | YES  |     | NULL    |                |
-+------------+-----------------------+------+-----+---------+----------------+
-4 rows in set (0.01 sec)
-
-
-```
-
-#### Step 3:
-
-```
-## Add a unique index on passcode 
-create index idx_passcode on people (passcode) 
-mysql> desc people;
-
--- Line with UNI shows this indexes. 
-+------------+-----------------------+------+-----+---------+----------------+
-| Field      | Type                  | Null | Key | Default | Extra          |
-+------------+-----------------------+------+-----+---------+----------------+
-| id         | int(10) unsigned      | NO   | PRI | NULL    | auto_increment |
-| first_name | varchar(25)           | YES  | MUL | NULL    |                |
-| last_name  | varchar(25)           | YES  |     | NULL    |                |
-| passcode   | mediumint(8) unsigned | YES  | UNI | NULL    |                |
-+------------+-----------------------+------+-----+---------+----------------+
-4 rows in set (0.01 sec)
-```
-
-
-#### Step 4: 
-
-```
-## Get to know all your indexes on a table 
-show indexes for people 
-mysql> show index from people;
-+--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| Table  | Non_unique | Key_name                 | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
-+--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| people |          0 | PRIMARY                  |            1 | id          | A         |           0 |     NULL | NULL   |      | BTREE      |         |               |
-| people |          0 | idx_passcode             |            1 | passcode    | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
-| people |          1 | idx_first_name_last_name |            1 | first_name  | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
-| people |          1 | idx_first_name_last_name |            2 | last_name   | A         |           0 |     NULL | NULL   | YES  | BTREE      |         |               |
-+--------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-4 rows in set (0.01 sec)
-```
-
-### Find out indexes
-
-
-### Show index from table 
-
-```
-create database showindex; 
-use showindex;
-CREATE TABLE `people` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(25) DEFAULT NULL,
-  `last_name` varchar(25) DEFAULT NULL,
-  `passcode` mediumint(8) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_passcode` (`passcode`),
-  KEY `idx_first_name_last_name` (`first_name`,`last_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
-show index from people 
-```
-
-#### Show create table 
-
-```
-show create table peple 
-```
-
-#### show index from 
-
-```
-show index from contributions 
-```
-
-### Index and Functions
-
-
-### No function can be used on an index:
-
-```
-explain select * from actor where upper(last_name) like 'A%';
-+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
-| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | actor | NULL       | ALL  | NULL          | NULL | NULL    | NULL |  200 |   100.00 | Using where |
-+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
-```
-
-### Workaround with generated columns 
-
-```
-## 1. Create Virtual Column with upper 
-MariaDB [sakila](45) AS (upper(last_name)) VIRTUAL;
-Query OK, 0 rows affected (0.006 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-MariaDB [sakila](last_name_upper);
-Query OK, 0 rows affected (0.008 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-MariaDB [sakila]> explain select * from actor where last_name_upper like 'A%';                
-+------+-------------+-------+-------+---------------+-----------+---------+------+------+-------------+
-| id   | select_type | table | type  | possible_keys | key       | key_len | ref  | rows | Extra       |
-+------+-------------+-------+-------+---------------+-----------+---------+------+------+-------------+
-|    1 | SIMPLE      | actor | range | idx_upper     | idx_upper | 183     | NULL |    7 | Using where |
-+------+-------------+-------+-------+---------------+-----------+---------+------+------+-------------+
-1 row in set (0.001 sec)
-```
-  
-### Now we try to search the very same 
-
-```
-explain select * from actor where last_name_upper like 'A%';
-+----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
-| id | select_type | table | partitions | type  | possible_keys       | key                 | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | actor | NULL       | range | idx_last_name_upper | idx_last_name_upper | 183     | NULL |    7 |   100.00 | Using where |
-+----+-------------+-------+------------+-------+---------------------+---------------------+---------+------+------+----------+-------------+
-1 row in set, 1 warning (0.00 sec)
-
-```
-
-### Reference 
-
-  * https://mariadb.com/kb/en/generated-columns/
-  * https://mariadb.com/kb/en/slow-query-log-overview/
-
-### Index and Likes
-
-
-### 1. like 'Will%' - Index works 
-
-explain select last_name from donors where last_name like 'Will%';
-
-### 2. like '%iams' - Index does not work 
-
-```
--- because like starts with a wildcard 
-explain select last_name from donors where last_name like '%iams';
-```
-
-### 3. How to fix 3, if you are using this often ? 
-
-```
-## Walkthrough 
-## Step 1: modify table 
-alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name));
-create index idx_last_name_reversed on donors (last_name_reversed);
-
-## besser - Variante 2 - untested 
-alter table donors add last_name_reversed varchar(70) GENERATED ALWAYS AS (reverse(last_name)), add index idx_last_name_reversed on donors (last_name_reversed);
-
-## Step 2: update table - this take a while 
-update donors set last_name_reversed = reversed(last_name)
-## Step 3: work with it 
-select last_name,last_name_reversed from donor where last_name_reversed like reverse('%iams');  
-```
-
-```
-## Version 2 with pt-online-schema-change 
-
-```
-
 ### profiling-get-time-for-execution-of.query
 
  
@@ -2437,24 +3006,6 @@ mysql> show profile for query 1;
 15 rows in set, 1 warning (0.00 sec)
 ```
 
-### Find out cardinality without index
-
-
-### Find out cardinality without creating index 
-```
-select count(distinct donor_id) from contributions;
-```
-
-```
-select count(distinct(vendor_city)) from contributions;
-+------------------------------+
-| count(distinct(vendor_city)) |
-+------------------------------+
-|                         1772 |
-+------------------------------+
-1 row in set (4.97 sec)
-```
-
 ## Dokumentation 
 
 ### MySQL - Performance - PDF
@@ -2496,117 +3047,6 @@ select count(distinct(vendor_city)) from contributions;
 ### Hardware Optimization
 
   * https://mariadb.com/kb/en/hardware-optimization/
-
-## Architecture of MariaDB
-
-### Query Cache Usage and Performance
-
-
-### Performance query cache 
-
-  * Always try to optimize innodb with disabled query cache first (innodb_buffer_pool) 
-  * If you use query_cache system can only use on CPU-Core. !! 
-  
-### How to enable query cache 
-
-```
-## have_query_cache means compiled in mysql 
-## query_cache_type off means not enable by config
--- query cache is diabled 
-mysql> show variables like '%query_cache%';
-+------------------------------+---------+
-| Variable_name                | Value   |
-+------------------------------+---------+
-| have_query_cache             | YES     |
-| query_cache_limit            | 1048576 |
-| query_cache_min_res_unit     | 4096    |
-| query_cache_size             | 1048576 |
-| query_cache_type             | OFF     |
-| query_cache_wlock_invalidate | OFF     |
-+------------------------------+---------+
-6 rows in set (0.01 sec)
-
-root@trn01:/etc/mysql/mysql.conf.d# tail mysqld.cnf
-[mysqld]
-pid-file        = /var/run/mysqld/mysqld.pid
-socket          = /var/run/mysqld/mysqld.sock
-datadir         = /var/lib/mysql
-log-error       = /var/log/mysql/error.log
-## By default we only accept connections from localhost
-bind-address    = 0.0.0.0
-## Disabling symbolic-links is recommended to prevent assorted security risks
-symbolic-links=0
-query-cache-type=1
-
-systemctl restart mysql 
-
-mysql> show variables like '%query_cache%';
-+------------------------------+---------+
-| Variable_name                | Value   |
-+------------------------------+---------+
-| have_query_cache             | YES     |
-| query_cache_limit            | 1048576 |
-| query_cache_min_res_unit     | 4096    |
-| query_cache_size             | 1048576 |
-| query_cache_type             | ON      |
-| query_cache_wlock_invalidate | OFF     |
-+------------------------------+---------+
-6 rows in set (0.01 sec)
-
-
-mysql> show status like '%Qcache%';
-+-------------------------+---------+
-| Variable_name           | Value   |
-+-------------------------+---------+
-| Qcache_free_blocks      | 1       |
-| Qcache_free_memory      | 1031832 |
-| Qcache_hits             | 0       |
-| Qcache_inserts          | 0       |
-| Qcache_lowmem_prunes    | 0       |
-| Qcache_not_cached       | 0       |
-| Qcache_queries_in_cache | 0       |
-| Qcache_total_blocks     | 1       |
-+-------------------------+---------+
-8 rows in set (0.00 sec)
-
-## status in session zurücksetzen. 
-mysql> flush status;
-Query OK, 0 rows affected (0.00 sec)
-
-```
-
-### Performance bottleneck - mutex 
-
-https://mariadb.com/de/resources/blog/flexible-mariadb-server-query-cache/
-
-```
-
-```
-
-### Something planned ?
-
-  * Nope ;o( Demand is new  
-  * You might be able to use Demand together with maxscale 
-  * Refer to: 
-  https://mariadb.com/de/resources/blog/flexible-mariadb-server-query-cache/
-  
-  
-  ```
-  A mutual exclusion object (mutex) is a programming object that allows multiple program threads to share a resource (such as a folder) but not simultaneously. Mutex is set to unlock when the data is no longer needed or when a routine is finished. Mutex creates a bottleneck effect. The blocking means only one query can look at the Query Cache at a time and other queries must wait. A query that must wait to look in the cache only to find it isn’t in the cache will be slowed instead of being accelerated.
-  ```
-
-### Optimizer-Basics
-
-
-### General 
-
-  * All optimizer today are cost-based 
-
-### Cost-Based 
-
-```
-## How much costs are needed to get the information 
-```
 
 ## Installation 
 
@@ -4361,7 +4801,52 @@ Step 2: Lookup data, but a lot lookups needed
 ### Slow Query Log
 
 
-### Walkthrough 
+### Walkthrough (docker compose) 
+
+```
+## Copyright VMware, Inc.
+## SPDX-License-Identifier: APACHE-2.0
+
+version: '2.1'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      #- ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=<my-pass>
+      - MARIADB_EXTRA_FLAGS=--log-bin --innodb-buffer-pool-size=256M --slow-query-log --slow-query-log-file=slow.log
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  mariadb_data:
+    driver: local
+
+```
+
+```
+docker compose down
+docker compose up -d 
+```
+
+```
+## in mysql-client
+## Step 2
+mysql>SET GLOBAL long_query_time = 0.000001 
+mysql>SET long_query_time = 0.000001
+```
+
+
+### Walkthrough (Classic)
 
 ```
 ## Step 1
@@ -4550,11 +5035,11 @@ explain select * from actor where upper(last_name) like 'A%';
 
 ```
 ## 1. Create Virtual Column with upper 
-MariaDB [sakila](45) AS (upper(last_name)) VIRTUAL;
+MariaDB [sakila]> alter table actor add last_name_upper varchar(45) AS (upper(last_name)) VIRTUAL;
 Query OK, 0 rows affected (0.006 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 
-MariaDB [sakila](last_name_upper);
+MariaDB [sakila]> create index idx_upper on actor (last_name_upper);
 Query OK, 0 rows affected (0.008 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 
@@ -5254,8 +5739,20 @@ wget https://downloads.mysql.com/docs/sakila-db.tar.gz
 tar xzvf sakila-db.tar.gz
 
 cd sakila-db 
-mysql < sakila-schema.sql 
-mysql < sakila-data.sql 
+## mysql < sakila-schema.sql 
+## mysql < sakila-data.sql 
+
+## Vebinden mit dem MySQL im Container
+## Schritt 1: unsere IP herausfinden
+docker inspect mariadb-mariadb-1
+
+## mysql -uroot -p -h <ip-des-docker-containers < sakila-schema.sql
+## mysql -uroot -p -h <ip-des-docker-containers < sakila-data.sql
+
+mysql -uroot -p -h 172.21.0.2 < sakila-schema.sql
+mysql -uroot -p -h 172.21.0.2 < sakila-data.sql
+
+
 
 ```
 
