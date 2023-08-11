@@ -52,6 +52,11 @@ mysql -uroot -p<dein-pw> -h 172.0.2.21 < all-databases.sql
 ```
 
 ```
+# now connect to the server
+mysql -uroot -p<dein-pw> -h 172.0.2.21
+```
+
+```
 -- im mysql-client durch eingeben des Befehls 'mysql'
 -- should be 200 or 202
 use sakila; select * from actor;
