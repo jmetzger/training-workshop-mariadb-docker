@@ -18,7 +18,12 @@
   1. Binlog, Backup und Restore (PIT aka. Point-In-Time-Recovery)
      * [Backup with mysqldump - best practices](backup-restore/mysqldump.md)
      * [PIT - Point in time Recovery - Exercise](backup-restore/pit-exercise.md)
-     * [mariabackup](backup-restore/mariabackup.md) 
+     * [mariabackup](backup-restore/mariabackup.md)
+
+  1. InnoDB - Storage Engine 
+     * [InnoDB - Storage Engine - Structure](/innodb/innodb-structure.md) 
+     * [Important InnoDB - configuration - options to optimized performance](/innodb/innodb.md) 
+     * [Calculate innodb logfile size](calculate-innodb-logfile-size.md)
     
   1. Performance
      * [binlog aktivieren in docker-compose](docker/binlog-mit-docker-compose-aktivieren.md)
@@ -54,11 +59,6 @@
      * [User- and Permission-concepts (best-practice)](/security/user-db-best-practice.md)
      * [Setup external access](external-access.md)
      * [Table encryption](table-encryption.md)
-
-  1. InnoDB - Storage Engine 
-     * [InnoDB - Storage Engine - Structure](/innodb/innodb-structure.md) 
-     * [Important InnoDB - configuration - options to optimized performance](/innodb/innodb.md) 
-     * [Calculate innodb logfile size](calculate-innodb-logfile-size.md)
 
   1. Training Data 
      * [Setup training data "contributions"](/indexes/setup-training-data-contributions.md)
