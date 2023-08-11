@@ -19,7 +19,7 @@ services:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       #- ALLOW_EMPTY_PASSWORD=yes
       - MARIADB_ROOT_PASSWORD=<my-pass>
-      - MARIADB_EXTRA_FLAGS=--log-bin --innodb-buffer-pool-size=256M --slow-query-log
+      - MARIADB_EXTRA_FLAGS=--log-bin --innodb-buffer-pool-size=256M --slow-query-log --slow-query-log-file=slow.log
     healthcheck:
       test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
       interval: 15s
