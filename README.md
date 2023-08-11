@@ -12,6 +12,9 @@
      * [Zugriff auf container mit mariadb](docker/zugriff-auf-docker-mariadb-container.md)
      * [Manage global variables / server system variables](set-global-variable.md)
     
+  1. Training Data
+     * [Setup sakila test db](sakila.md)
+    
   1. Performance
      * [binlog aktivieren in docker-compose](docker/binlog-mit-docker-compose-aktivieren.md)
      * [binlog abfragen und stand (docker)](docker/binlog-abfragen-und-stand.md)
@@ -55,8 +58,7 @@
 
   1. Training Data 
      * [Setup training data "contributions"](/indexes/setup-training-data-contributions.md)
-     * [Setup sakila test db](sakila.md)
-
+ 
   1. Security and User Rights 
      * [Create User/Grant/Revoke - Management of users](grant-revoke.md)
      * [Change password of user](passwd-change-user.md)
