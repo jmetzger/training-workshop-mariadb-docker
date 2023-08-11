@@ -12,7 +12,7 @@ mysql>insert into actor (first_name,last_name) values ('john','The Rock');
 mysql>insert into actor (first_name,last_name) values ('johanne','Johannson');
 
 # Optional: Step 3: Looking into binary to see this data 
-cd /var/lib/mysql 
+cd /bitnami/mariadb/data
 # last binlog 
 mysqlbinlog -vv mariadb-bin.000005
 
@@ -26,19 +26,28 @@ mysql>use sakila; select * from actor;
 ## Fixing the problem 
 
 ```
+# WITHIN CONTAINER mariadb-mariadb-1 
 # find out the last binlog 
 # Simple take the last binlog 
 
-cd /var/lib/mysql
+cd /bitnami/mariadb/data
 # Find the position where the problem occured 
 # and create a recover.sql - file (before apply full backup)
 mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 > /usr/src/recover.sql
 # in case of multiple binlog like so:
 # mysqlbinlog -vv --stop-position=857 mysqld-bin.000005 mysqld-bin.000096 > /usr/src/recover.sql
+```
 
-# Step 1: Apply full backup 
+
+
+# Step 1: Apply full backup (OUTSIDE OF CONTAINER ON HOST) 
+
+```
+cd /var/lib/docker/volumes/mariadb_mariadb_data/_data/data/
+cp recover.sql /usr/src 
 cd /usr/src/
-mysql < all-databases.sql 
+# ip des mariadb-servers 
+mysql -uroot -p<dein-pw> -h 172.0.2.21 < all-databases.sql 
 
 ```
 
