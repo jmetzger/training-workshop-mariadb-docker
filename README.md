@@ -27,7 +27,7 @@
      * [System Versioned Tables](https://mariadb.com/kb/en/system-versioned-tables/)
 
 
-## Backlog
+## Backlog I
 
   1. Architektur MariaDB
      * [Architecture Server](/basics/mariadb-architecture.md)
@@ -122,11 +122,7 @@
      * [Differences Community / Enterprise Version - nearly the same](https://fromdual.com/mariadb-enterprise-server-vs-mariadb-community-server)
      * [Hardware Optimization](https://mariadb.com/kb/en/hardware-optimization/)
 
-## Backlog 
-
-  1. Architecture of MariaDB
-     * [Query Cache Usage and Performance](/performance/query-cache.md)
-     * [Optimizer-Basics](optimizer-basics.md) 
+## Backlog II
  
   1. Installation 
      * [Installation SLES15](https://downloads.mariadb.org/mariadb/repositories/#distro=SLES&distro_release=sles15-amd64--sles15&mirror=timo&version=10.5) 
