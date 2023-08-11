@@ -1,6 +1,44 @@
 # Slow Query Log 
 
-## Walkthrough 
+## Walkthrough (docker compose) 
+
+```
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+version: '2.1'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      #- ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=<my-pass>
+      - MARIADB_EXTRA_FLAGS=--log-bin --innodb-buffer-pool-size=256M --slow-query-log
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  mariadb_data:
+    driver: local
+
+```
+
+```
+docker compose down
+docker compose up -d 
+```
+
+
+## Walkthrough (Classic)
 
 ```
 # Step 1
